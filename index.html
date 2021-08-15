@@ -27,8 +27,8 @@
       <form class="form-signin" id="update" method="GET" action="http://localhost:42074/update">
         <h1 class="form-signin-heading" id="title">Twitch To TikTok</h1>
         <p id="version">v1.2.3</p>
-        <p style="max-width: 500px">While this window is open, we'll be uploading your twitch clips to TikTok every few
-          hours! Keep this program open, and change any settings below.</p>
+        <p style="max-width: 500px"><marquee>While this window is open, we'll be uploading your twitch clips to TikTok every few
+          hours! Keep this program open, and change any settings below.</marquee></p>
           <br/> Next Clip: <br/>
           <video
             src="https://clips-media-assets2.twitch.tv/AT-cm%7C1279351229.mp4"
@@ -38,23 +38,25 @@
             width="450px" height="255px"
           ></video>
         <p style="margin-bottom: 10px;">
-          Last Successful Upload:
-          <strong><span id="lastUploaded">Your upload is scheduled!</span></strong>
+         <marquee direction='right'> Last Successful Upload:</marquee>
+          <strong><span id="lastUploaded"><marquee>Your upload is scheduled!</marquee></span></strong>
+        </p>
+        <p style="margin-bottom: 10px;"><marquee direction='up'>
+          Next Upload:</marquee>
+          <strong><span id="whatever"><marquee direction='down'>^that plus like 5 prob lmao</marquee></span></strong>
         </p>
         <p style="margin-bottom: 10px;">
-          Next Upload:
-          <strong><span id="whatever">^that plus like 5 prob lmao</span></strong>
-        </p>
-        <p style="margin-bottom: 10px;">
-          Vertical video:
+         <marquee> <blink>Vertical video:</blink></marquee>
           <strong><span id="whatever">OFF</span></strong>
         </p>
         <div class="morebuttons">
-          <button class="btn" id="settings" type="reset"><img src='upload.png' width=16px height=100% />Main Settings</button>
+          <button class="btn" id="settings" type="reset"><img src='upload.png' width=16px height=100% />Main Settings</button>    
+          <blink>
+
           <button class="btn" id="cropmenu" type="reset">Video Settings</button>
           <button class="btn" id="helpmenu" type="reset">
             <img src='https://static-cdn.jtvnw.net/emoticons/v1/86/1.0' width=20px
-              height=100% style='margin-right: 5px;'/>Need Help?</button>
+              height=100% style='margin-right: 5px;'/>Need Help?</button></blink>
         </div>
       </form>
     </div>
