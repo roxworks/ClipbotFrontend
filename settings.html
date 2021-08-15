@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Twitch To TikTok</title>
+  <meta name="description" content="Automatically upload your twitch clips to TikTok!" />
+  <meta name="author" content="Roxkstar74" />
+  <meta property="og:title" content="Twitch To TikTok" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.twitchtotiktok.com/" />
+  <meta property="og:description" content="Automatically upload your twitch clips to TikTok!" />
+  <meta property="og:image" content="image.png" />
+  <!-- <link rel="icon" href="/favicon.ico">
+      <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+      <link rel="apple-touch-icon" href="/apple-touch-icon.png"> -->
+  <link rel="stylesheet" href="electron.css" />
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="uploadClip.js"></script>
+  <script src="frontend-settings.js"></script>
+</head>
+
+<body id="settings" class='mid-body'>
+  <div class="container">
+    <div class="centered">
+      <form class="form-signin" id="update" method="GET" action="http://localhost:42074/update">
+        <h1 class="form-signin-heading" id="title">Settings</h1>
+        <p id="version">v1.2.3</p>
+        <div class="form-group" id="hashtags-form">
+          <label><img src='hashtag.png' class='icon' /> Hashtags <p class="what">(What's this?)</p></label>
+          <input type="text" name="hashtags" id="hashtags" placeholder="#smallstreamer #twitch" />
+        </div>
+        <div class="form-group" id="delay-form">
+          <label><img src='clock.png'  class='icon'/> Clip Age <p class="what">Clips must be this old to get posted</p></label>
+          <input type="number" name="delay" id="delay" placeholder="24" />
+        </div>
+
+        <div class="form-group" id="minViewCount-form">
+          <label><img src='eye.png' class='icon'/> Minimum views <p class="what">Clips must have this many views to get posted</p></label>
+          <input type="number" name="minViewCount" id="minViewCount" placeholder="0" />
+        </div>
+        <div class="form-group" id="uploadFrequency-form">
+          <label><img src='arrow.png' class='icon'/> Time Between Posts <p class="what">Wait this long between posts</p>
+            </label>
+          <input type="number" name="uploadFrequency" id="uploadFrequency" placeholder="8" />
+        </div>
+        <div class="right-container">
+          <button class="btn" type="submit" id="savesettings"><img src='upload.png' width=16px height=100% /> Save settings</button><br/>
+        </div>
+        
+      </form>
+    </div>
+  </div>
+</body>
+</html>
