@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Twitch To TikTok</title>
+  <meta name="description" content="Automatically upload your twitch clips to TikTok!" />
+  <meta name="author" content="Roxkstar74" />
+  <meta property="og:title" content="Twitch To TikTok" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.twitchtotiktok.com/" />
+  <meta property="og:description" content="Automatically upload your twitch clips to TikTok!" />
+  <meta property="og:image" content="image.png" />
+  <!-- <link rel="icon" href="/favicon.ico">
+      <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+      <link rel="apple-touch-icon" href="/apple-touch-icon.png"> -->
+  <link rel="stylesheet" href="electron.css" />
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="uploadClip.js"></script>
+  <script src="index.js"></script>
+</head>
+
+<body class='mid-body'>
+  <div class="container">
+    <div class="centered">
+
+      <form class="form-signin" id="update" method="GET" action="http://localhost:42074/update">
+
+        <h1 class="form-signin-heading" id="title">Twitch To TikTok</h1>
+        <p id="version">v1.2.3</p>
+        <p style="max-width: 500px"><marquee>While this window is open, we'll be uploading your twitch clips to TikTok every few
+          hours! Keep this program open, and change any settings below.</marquee></p>
+          <br/> Next Clip YEp: <br/>
+          <iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ?&autoplay=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          <video
+            src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+            autoplay
+            loop
+            muted
+            width="450px" height="255px"
+          ></video>
+        <p style="margin-bottom: 10px;">
+         <marquee direction='right'> Last Successful Upload:</marquee>
+          <strong><span id="lastUploaded"><marquee>Your upload is scheduled!</marquee></span></strong>
+        </p>
+        <p style="margin-bottom: 10px;"><marquee direction='up'>
+          Next Upload:</marquee>
+          <strong><span id="whatever"><marquee direction='down'>^that plus like 5 prob lmao</marquee></span></strong>
+        </p>
+        <p style="margin-bottom: 10px;">
+         <marquee> <blink>Vertical video:</blink></marquee>
+          <strong><span id="whatever">OFF</span></strong>
+        </p>
+        <div class="morebuttons">
+          <button class="btn" id="settings" type="reset"><img src='upload.png' width=16px height=100% />Main Settings</button>    
+          <blink>
+
+          <button class="btn" id="cropmenu" type="reset">Video Settings</button>
+          <button class="btn" id="helpmenu" type="reset">
+            <img src='https://static-cdn.jtvnw.net/emoticons/v1/86/1.0' width=20px
+              height=100% style='margin-right: 5px;'/>Need Help?</button></blink>
+        </div>
+      </form>
+    </div>
+  </div>
+</body>
+</html>
