@@ -132,14 +132,39 @@ body {
 
 .morebuttons {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: flex-start;
   justify-content: flex-start;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+
+#nextcliptext {
+  margin-bottom: 5px;
+}
+
+#skip, #uploadEnabled {
+  margin: 10px 0px;
+}
+
+.tutorial {
+  min-width: 45%;
+  font-size: 26px !important;
 }
 
 .morebuttons > .btn {
-  margin-bottom: 10px;
-  width: 50%;
+  width: 47%;
+}
+
+.bigboi {
+  font-size: 1.5em;
 }
 
 h1 {
@@ -187,6 +212,10 @@ p.what:hover {
   width: 70%
 }
 
+#hotkey {
+  width: 70%
+}
+
 .form-group label {
   font-size: 1.3rem;
 }
@@ -213,6 +242,17 @@ p.what:hover {
   font-weight: 500;
   margin: 30px 5px 0px 5px;
   padding: 10px 32px;
+}
+
+#title-form {
+  margin: 0;
+  justify-content: start;
+  gap: 5px;
+}
+
+#cliptitle {
+  width: 75%;
+  padding: 0;
 }
 
 .btn {

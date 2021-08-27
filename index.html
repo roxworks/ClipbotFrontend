@@ -4,12 +4,12 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Twitch To TikTok</title>
+  <title>Clipbot</title>
   <meta name="description" content="Automatically upload your twitch clips to TikTok!" />
   <meta name="author" content="Roxkstar74" />
-  <meta property="og:title" content="Twitch To TikTok" />
+  <meta property="og:title" content="Clipbot" />
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://www.twitchtotiktok.com/" />
+  <meta property="og:url" content="https://www.Clipbot.tv/" />
   <meta property="og:description" content="Automatically upload your twitch clips to TikTok!" />
   <meta property="og:image" content="image.png" />
   <!-- <link rel="icon" href="/favicon.ico">
@@ -24,39 +24,63 @@
 <body class='mid-body'>
   <div class="container">
     <div class="centered">
-      <form class="form-signin" id="update" method="GET" action="http://localhost:42074/update">
-        <h1 class="form-signin-heading" id="title">Twitch To TikTok</h1>
+      <form class="form-signin" id="update" type='submit'>
+        <h1 class="form-signin-heading" id="title">Clipbot</h1>
         <p id="version">v1.2.3</p>
         <p style="max-width: 500px">While this window is open, we'll be uploading your twitch clips to TikTok every few
-          hours! Keep this program open, and change any settings below.</p>
-          <br/> Next Clip: <br/>
+        hours! Keep this program open, and change any settings below.</p>
+          <br/> 
+          <div class="form-group" id="title-form">
+            <label><p class='bigboi' id='nextcliptext'>Next Clip: </p></label>
+            <input type="text" name="cliptitle" oninput="validity.valid||(value='');" id="cliptitle" placeholder="Your clip title" />
+            <img src="arrow.png" class="icon" id='changetitlebutton' style="
+            height: 20px;
+            width: 20px;
+            margin: 5px 0 0 0;
+            ">          
+          </div>
           <video
             src="https://clips-media-assets2.twitch.tv/AT-cm%7C1279351229.mp4"
             autoplay
             loop
             muted
+            controls
             width="450px" height="255px"
           ></video>
-        <p style="margin-bottom: 10px;">
-          Last Successful Upload:
+          <div class="morebuttons">
+            <button class="btn" id="skip" type="reset">Skip This Clip</button>
+            <button class="btn" id="uploadEnabled" type="reset">Turn Clipbot ON</button>
+          </div>
+        <p style="margin-bottom: 10px;" class='bigboi'>
+          Last Upload:
           <strong><span id="lastUploaded">Your upload is scheduled!</span></strong>
         </p>
-        <p style="margin-bottom: 10px;">
+        <p style="margin-bottom: 10px;" class='bigboi'>
           Next Upload:
-          <strong><span id="whatever">^that plus like 5 prob lmao</span></strong>
+          <strong><span id="nextUpload">TBD</span></strong>
         </p>
-        <p style="margin-bottom: 10px;">
+        <p style="margin-bottom: 10px;" class='bigboi'>
           Vertical video:
-          <strong><span id="whatever">OFF</span></strong>
+          <strong><span id="videoEnabled">OFF</span></strong>
+        </p>
+        <p style="margin-bottom: 10px;" class='bigboi'>
+          Clip Hotkey:
+          <strong><span id="hotkey">F10</span></strong>
+        </p>
+        <p style="margin-bottom: 10px;" class='bigboi'>
+          Current status:
+          <strong><span id="status">Waiting until next upload</span></strong>
         </p>
         <div class="morebuttons">
-          <button class="btn" id="settings" type="reset"><img src='upload.png' width=16px height=100% />Main Settings</button>
+          <button class="btn" id="howitworks" type="reset">How It Works</button>
+          <button class="btn" id="settings" type="reset">Main Settings</button>
           <button class="btn" id="cropmenu" type="reset">Video Settings</button>
           <button class="btn" id="helpmenu" type="reset">
             <img src='https://static-cdn.jtvnw.net/emoticons/v1/86/1.0' width=20px
               height=100% style='margin-right: 5px;'/>Need Help?</button>
         </div>
       </form>
+      <!-- <button id="push-to-talk">Push to Talk</button> -->
     </div>
   </div>
 </body>
