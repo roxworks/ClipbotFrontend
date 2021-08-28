@@ -17,6 +17,10 @@ const updateDisplayedSettings = async () => {
         minute: "numeric",
     };
 
+    if(settings.broadcasterId == '' || settings.license == '' || settings.sessionId == '') {
+        return;
+    }
+
     if (result.status == 200) {
         result.json().then((state) => {
             console.log("Last uploaded: " + state.lastUploadToTikTokTime);
@@ -64,7 +68,9 @@ const updateDisplayedSettings = async () => {
                 document.getElementById("cliptitle").placeholder = settings?.title;
             }
             else {
-                uploadClip();
+                fetch("http://localhost:42074/title").then(res => res.json()).then(res => {
+                    document.getElementById("cliptitle").placeholder = res.title;
+                });
             }
         });
     }
