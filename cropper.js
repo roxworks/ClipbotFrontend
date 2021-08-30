@@ -39,7 +39,11 @@ window.addEventListener("load", async function (event) {
     // get current crop settings /settings from backend
     let cropDetails = await fetch("http://localhost:42074/settings").then(res => res.json());
     let state = await fetch("http://localhost:42074/state").then(res => res.json());
-    let clipToDisplay = state.clipToDisplay;
+    let currentClipId = state.currentClipId;
+    let clipToDisplayBlob = await fetch("http://localhost:42074/clip?id=" + currentClipId).then(res => res.json());
+    let clipToDisplay = clipToDisplayBlob.clip.download_url;
+    
+
     const video = document.querySelector("video");
     video.src = clipToDisplay;
 
@@ -72,8 +76,6 @@ window.addEventListener("load", async function (event) {
     //     console.log('canvas' + canvas);
     //     console.log('context' + context);
 
-        
-
     //     v.addEventListener('play', function(){
     //         var cw = v.videoWidth;
     //         var ch = v.videoHeight;
@@ -93,8 +95,6 @@ window.addEventListener("load", async function (event) {
     //     }
     // };
     // dovideostuff();
-
-    
 
     let doAllCropperStuff = () => {
         console.log("video height" + video.videoHeight);

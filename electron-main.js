@@ -24,7 +24,8 @@ const awaitAllFileCompilations = async () => {
     createBytecodeFile('tiktokclickclock'),
     createBytecodeFile('downloadvideo'),
     createBytecodeFile('settings'),
-    createBytecodeFile('editVideo')
+    createBytecodeFile('editVideo'),
+    createBytecodeFile('clipqueue')
   ]
   );
 }
@@ -91,7 +92,7 @@ else {
     const ret = globalShortcut.register(command, async () => {
       //hit backend clip endpoint
       console.log('creating clip from frontend');
-      let clipResponse = await fetch(`http://localhost:42074/clip`).then(response => response.json());
+      let clipResponse = await fetch(`http://localhost:42074/clip`, {method: 'post'}).then(response => response.json());
       console.log('clip creation finished or failed');
       if(clipResponse.status == 200) {
         WINDOWS.main.webContents.send('clip_success', JSON.stringify(clipResponse));

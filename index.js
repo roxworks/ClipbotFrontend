@@ -5,6 +5,7 @@ const addHours = function(date, h) {
 }
 
 let NEXT_UPLOAD_TIMEOUT_ID = undefined;
+const NO_CLIPS_URL = 'https://share.nyx.xyz/0eHFc1hHkzd';
 
 // run this to update main window fields
 const updateDisplayedSettings = async () => {
@@ -22,7 +23,7 @@ const updateDisplayedSettings = async () => {
     }
 
     if (result.status == 200) {
-        result.json().then((state) => {
+        result.json().then(async (state) => {
             console.log("Last uploaded: " + state.lastUploadToTikTokTime);
             let lastUploadedDateInternal = new Date(state.lastUploadToTikTokTime);
             let lastUploadedDate = lastUploadedDateInternal.toLocaleString(undefined, dateOptions);
@@ -59,18 +60,20 @@ const updateDisplayedSettings = async () => {
 
             document.getElementById("uploadEnabled").innerHTML = `Turn Clipbot ${settings.uploadEnabled == 'true' ? 'OFF' : 'ON'}`;
             document.querySelector("#videoEnabled").innerHTML = settings.verticalVideoEnabled == 'true' ? 'ON' : 'OFF';
-            document.querySelector("video").src = state.clipToDisplay;
+            let currentClipId = state.currentClipId;
+            let clipToDisplayBlob = await fetch("http://localhost:42074/clip?id=" + currentClipId).then(res => res.json());
+            let clipToDisplay = clipToDisplayBlob?.clip?.download_url;
+            console.log('state we got: ' + JSON.stringify(state)); 
+            document.querySelector("video").src = clipToDisplay || NO_CLIPS_URL;
             // updateGlobalShortcut(settings?.hotkey);
             ipcRenderer.send('hotkey_changed', settings?.hotkey);
             document.querySelector("#hotkey").innerText = settings?.hotkey;
             document.getElementById("cliptitle").value = '';
-            if(settings?.title != '' && settings?.title != undefined) {
-                document.getElementById("cliptitle").placeholder = settings?.title;
+            if(clipToDisplay != '' && clipToDisplay != undefined) {
+                document.getElementById("cliptitle").placeholder = clipToDisplayBlob?.clip?.title;
             }
             else {
-                fetch("http://localhost:42074/title").then(res => res.json()).then(res => {
-                    document.getElementById("cliptitle").placeholder = res.title;
-                });
+                document.getElementById("cliptitle").placeholder = "No clips yet!";
             }
         });
     }
@@ -248,7 +251,7 @@ document.addEventListener("DOMContentLoaded", async function (event) {
             console.log("croppin cam");
             // get state from backend
             let state = await fetch("http://localhost:42074/state").then(result => result.json());
-            if (state.clipToDisplay != "") {
+            if (state.currentClipId != "") {
                 ipcRenderer.send('camvas_open');
             }
             else {
@@ -376,12 +379,25 @@ document.addEventListener("DOMContentLoaded", async function (event) {
     const changeTitle = async () => {
         console.log("Change title");
         // hit setting endpoint with new title
+        let state = await fetch("http://localhost:42074/state").then(res => res.json());
+        console.log('Change title found state: ' + JSON.stringify(state));
         let newTitle = document.getElementById("cliptitle").value;
         if(newTitle == '') {
             return false;
         }
         let newTitleEncoded = encodeURIComponent(newTitle);
-        let result = await fetch("http://localhost:42074/update?title=" + newTitleEncoded);
+        let result = await fetch(
+            "http://localhost:42074/clip",
+        {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                title: newTitleEncoded,
+                id: state.currentClipId
+            })
+        });
         if (result.status === 200) {
             Swal.fire({
                 icon: 'success',
