@@ -385,7 +385,6 @@ document.addEventListener("DOMContentLoaded", async function (event) {
         if(newTitle == '') {
             return false;
         }
-        let newTitleEncoded = encodeURIComponent(newTitle);
         let result = await fetch(
             "http://localhost:42074/clip",
         {
@@ -394,7 +393,7 @@ document.addEventListener("DOMContentLoaded", async function (event) {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                title: newTitleEncoded,
+                title: newTitle,
                 id: state.currentClipId
             })
         });

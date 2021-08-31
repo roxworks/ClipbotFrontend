@@ -111,6 +111,13 @@ let uploadClip = async (force = false) => {
                     });
                     uploadClip();
                 }
+                else if(licenseDetails?.status == 303) {
+                    Swal.fire({
+                        icon: 'info',
+                        text: licenseDetails?.error,
+                        confirmButtonText: 'Try again',
+                    }).then(uploadClip); 
+                }
                 else {
                     console.log(`Licensing failed: ${JSON.stringify(licenseDetails)}`);
                     Swal.fire({
