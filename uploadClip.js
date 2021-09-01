@@ -135,7 +135,7 @@ let uploadClip = async (force = false) => {
             }
         });
     }
-    else if (result?.status == 304) {
+    else if (result?.status == 306) {
         let errorMessage = result?.error;
         Swal.fire({
             icon: 'info',

@@ -8,6 +8,7 @@ let NEXT_UPLOAD_TIMEOUT_ID = undefined;
 const NO_CLIPS_URL = 'https://share.nyx.xyz/0eHFc1hHkzd';
 
 // run this to update main window fields
+let newClipCheckerIntervalID = undefined;
 const updateDisplayedSettings = async () => {
     let result = await fetch("http://localhost:42074/state");
     let settings = await fetch("http://localhost:42074/settings").then(res => res.json());
@@ -24,6 +25,9 @@ const updateDisplayedSettings = async () => {
 
     if (result.status == 200) {
         result.json().then(async (state) => {
+            let currentClipId = state.currentClipId;
+            let clipToDisplayBlob = await fetch("http://localhost:42074/clip?id=" + currentClipId).then(res => res.json());
+            let clipToDisplay = clipToDisplayBlob?.clip?.download_url;
             console.log("Last uploaded: " + state.lastUploadToTikTokTime);
             let lastUploadedDateInternal = new Date(state.lastUploadToTikTokTime);
             let lastUploadedDate = lastUploadedDateInternal.toLocaleString(undefined, dateOptions);
@@ -44,25 +48,27 @@ const updateDisplayedSettings = async () => {
                     document.querySelector("#nextUpload").innerHTML = 'Clipbot is off'
                 }
                 else {
-                    document.querySelector("#nextUpload").innerHTML = nextUploadDate.toLocaleString(undefined, dateOptions);
-                    const MINUTE = (60 * 1000);
-                    let msUntilUpload = Math.ceil((nextUploadDate.getTime() - Date.now()) / MINUTE) * MINUTE;
-                    if(msUntilUpload > 0) {
-                        console.log(`uploading in ${msUntilUpload / MINUTE} minutes`);
-                        NEXT_UPLOAD_TIMEOUT_ID = setTimeout(uploadClip, msUntilUpload);
+                    if(clipToDisplay != '' && clipToDisplay != undefined) {
+                        document.querySelector("#nextUpload").innerHTML = nextUploadDate.toLocaleString(undefined, dateOptions);
+                        const MINUTE = (60 * 1000);
+                        let msUntilUpload = Math.ceil((nextUploadDate.getTime() - Date.now()) / MINUTE) * MINUTE;
+                        if(msUntilUpload > 0) {
+                            console.log(`uploading in ${msUntilUpload / MINUTE} minutes`);
+                            NEXT_UPLOAD_TIMEOUT_ID = setTimeout(uploadClip, msUntilUpload);
+                        }
+                        else {
+                            console.log(`uploading now`);
+                            uploadClip();
+                        }
                     }
                     else {
-                        console.log(`uploading now`);
-                        uploadClip();
+                        document.querySelector("#nextUpload").innerHTML = 'Need more clips!';
                     }
                 }
             }
 
             document.getElementById("uploadEnabled").innerHTML = `Turn Clipbot ${settings.uploadEnabled == 'true' ? 'OFF' : 'ON'}`;
             document.querySelector("#videoEnabled").innerHTML = settings.verticalVideoEnabled == 'true' ? 'ON' : 'OFF';
-            let currentClipId = state.currentClipId;
-            let clipToDisplayBlob = await fetch("http://localhost:42074/clip?id=" + currentClipId).then(res => res.json());
-            let clipToDisplay = clipToDisplayBlob?.clip?.download_url;
             console.log('state we got: ' + JSON.stringify(state)); 
             document.querySelector("video").src = clipToDisplay || NO_CLIPS_URL;
             // updateGlobalShortcut(settings?.hotkey);
@@ -71,9 +77,14 @@ const updateDisplayedSettings = async () => {
             document.getElementById("cliptitle").value = '';
             if(clipToDisplay != '' && clipToDisplay != undefined) {
                 document.getElementById("cliptitle").placeholder = clipToDisplayBlob?.clip?.title;
+                if(newClipCheckerIntervalID != undefined) {
+                    clearInterval(newClipCheckerIntervalID);
+                    newClipCheckerIntervalID = undefined;
+                }
             }
             else {
                 document.getElementById("cliptitle").placeholder = "No clips yet!";
+                newClipCheckerIntervalID = setInterval(uploadClip, 5 * 60 * 1000);
             }
         });
     }
