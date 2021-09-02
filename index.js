@@ -166,12 +166,9 @@ document.addEventListener("DOMContentLoaded", async function (event) {
 
 // skip clip
 document.addEventListener("DOMContentLoaded", async function (event) {
-    document.getElementById('skip').addEventListener('click', async function (event) {
+    document.getElementById('manageClips').addEventListener('click', async function (event) {
         event.preventDefault();
-        console.log('skipping');
-        //call skip endpoint
-        await fetch('http://localhost:42074/skip');
-        updateDisplayedSettings();
+        ipcRenderer.send('open_clips');
     });
 });
 

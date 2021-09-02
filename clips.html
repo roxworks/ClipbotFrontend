@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Clipbot</title>
+  <meta name="description" content="Automatically upload your twitch clips to TikTok!" />
+  <meta name="author" content="Roxkstar74" />
+  <meta property="og:title" content="Clipbot" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.Clipbot.tv/" />
+  <meta property="og:description" content="Automatically upload your twitch clips to TikTok!" />
+  <meta property="og:image" content="image.png" />
+  <!-- <link rel="icon" href="/favicon.ico">
+      <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+      <link rel="apple-touch-icon" href="/apple-touch-icon.png"> -->
+  <link rel="stylesheet" href="electron.css" />
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="uploadClip.js"></script>
+  <script src="clips.js"></script>
+</head>
+
+<body class='mid-body'>
+  <div class="container">
+    <div class="centered">
+      <form class="form-signin" id="clipform" type='submit'>
+        <h1 class="form-signin-heading" id="title">Clip Queue</h1> 
+          <video
+            src="https://clips-media-assets2.twitch.tv/AT-cm%7C1279351229.mp4"
+            autoplay
+            loop
+            muted
+            controls
+            width="450px" height="255px"
+          ></video>
+          <div class="form-group" id="title-form">
+            <input type="text" name="cliptitle" oninput="validity.valid||(value='');" id="cliptitle" placeholder="Your clip title" />
+            <img src="arrow.png" class="icon" id='changetitlebutton' style="
+            height: 20px;
+            width: 20px;
+            margin: 5px 0 0 0;
+            ">          
+          </div>
+          <div id="clipDetails">
+            <p style="margin-bottom: 10px;" class='bigboi'>
+            <span id="approvalStatus"></span>, 
+            <span id="uploadedStatus"></span>
+            </p>
+          </div>
+        <div class="morebuttons">
+          <button class="btn" id="prev" type="reset">&lt;&lt;</button>
+          <button class="btn" id="next" type="reset">&gt;&gt;</button>
+          <button class="btn" id="approve" type="reset">Approve</button>
+          <button class="btn" id="reject" type="reset">Reject</button>
+          <button class="btn" id="loadClips" type="reset">Load more</button>
+          <button class="btn" id="close" type="reset">
+            <img src='https://static-cdn.jtvnw.net/emoticons/v1/86/1.0' width=20px
+              height=100% style='margin-right: 5px;'/>Close</button>
+        </div>
+      </form>
+      <!-- <button id="push-to-talk">Push to Talk</button> -->
+    </div>
+  </div>
+</body>
+</html>

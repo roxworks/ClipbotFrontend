@@ -12,6 +12,7 @@ const WINDOWS = {
   settings: null,
   camvas: null,
   screenvas: null,
+  clips: null
 }
 
 exports.WINDOWS = WINDOWS;
@@ -170,6 +171,39 @@ else {
     });
 
     // const tiktokWindow = createTikTokWindow();
+  }
+
+  const createClipsWindow = () => {
+    let clipsWindow = new BrowserWindow({
+      width: 550,
+      height: 900,
+      webPreferences: {
+        nodeIntegration: true,
+        contextIsolation: false,
+        preload: path.join(__dirname, 'preload.js')
+      },
+      icon: 'icon.png'
+    });
+    WINDOWS.clips = clipsWindow;
+    console.log('settings window set: ' + WINDOWS.settings);
+
+
+    
+    clipsWindow.setResizable(false);
+
+    clipsWindow.loadFile(path.join(__dirname, "clips.html"));
+    clipsWindow.on("closed", function () {
+      clipsWindow = null;
+      WINDOWS.clips = null;
+    });
+    mainWindow.on("closed", () => {
+      //also close tiktokWindow
+      if(clipsWindow) {
+        clipsWindow.close();
+        clipsWindow = null;
+        WINDOWS.clips = null;
+      }
+    });
   }
 
   const createSettingsWindow = () => {
@@ -339,6 +373,11 @@ else {
     ipcMain.on('open-settings', (event) => {
       console.log("open settings called, creating settings window");
       createSettingsWindow();
+    });
+
+    ipcMain.on('open_clips', (event) => {
+      console.log("open clips called, creating clips window");
+      createClipsWindow();
     });
 
     ipcMain.on('settings_updated', (event, data) => {

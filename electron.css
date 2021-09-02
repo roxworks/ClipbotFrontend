@@ -150,9 +150,9 @@ input::-webkit-inner-spin-button {
   margin-bottom: 5px;
 }
 
-#skip, #uploadEnabled {
+/* #skip, #uploadEnabled {
   margin: 10px 0px;
-}
+} */
 
 .tutorial {
   min-width: 45%;
