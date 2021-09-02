@@ -5,10 +5,18 @@ let displayedClip = undefined;
 let currentIndex = 0;
 
 const setClip = (newIndex) => {
-    displayedClip = allClips[newIndex];
-    document.querySelector('video').src = displayedClip.download_url;
-    document.getElementById("cliptitle").placeholder = displayedClip.title;
-    changeFrontendStatuses();
+    if(newIndex > -1 && newIndex < allClips.length) {
+        displayedClip = allClips[newIndex];
+        document.querySelector('video').src = displayedClip.download_url;
+        document.getElementById("cliptitle").placeholder = displayedClip.title;
+        changeFrontendStatuses();
+    }
+    else {
+        document.getElementById("cliptitle").placeholder = "No clips found, load more clips!";
+        displayedClip = {};
+        changeFrontendStatuses("Press Load Clips To Get More clips!");
+
+    }
 }
 
 const changeClipOnFrontend = (newSettings) => {
@@ -21,7 +29,10 @@ const changeClipOnFrontend = (newSettings) => {
     changeFrontendStatuses();
 };
 
-const changeFrontendStatuses = () => {
+const changeFrontendStatuses = (customStatus) => {
+    if(customStatus) {
+        document.getElementById("approvalStatus").innerHTML = customStatus;
+    }
     //Change approvalStatus and uploadedStatus text based on displayedClip fields
     if(displayedClip.approved == true) {
         document.getElementById("approvalStatus").innerHTML = "Approved";
@@ -87,7 +98,10 @@ document.addEventListener('DOMContentLoaded', async function() {
     console.log(JSON.stringify(allClips));
     //check if current clip is in allClips
     let possibleCurrentClipIndex = allClips.findIndex(clip => clip.id === state.currentClipId);
-    currentIndex = possibleCurrentClipIndex > 0 ? possibleCurrentClipIndex : 0;    
+    currentIndex = possibleCurrentClipIndex >= 0 ? possibleCurrentClipIndex : 0;
+    if(allClips.length == 0) {
+        currentIndex = -1;
+    }    
     setClip(currentIndex);
 
     document.getElementById('prev').addEventListener('click', function() {
@@ -131,7 +145,7 @@ const setupTitleStuff = async() => {
         let titleDidChange = await changeTitle();
         if(titleDidChange) {
             document.getElementById("cliptitle").value = '';
-            document.getElementById("cliptitle").placeholder = displayedClip.title;
+            document.getElementById("cliptitle").placeholder = displayedClip?.title;
             console.log('placeholders changed');
         }
         return false;
@@ -153,7 +167,7 @@ const setupLoadButton = () => {
         console.log('load button clicked');
         let clipsResult = await fetch('http://localhost:42074/clip/load').then(res => res.json());
         if(clipsResult.status == 200) {
-            if(allClips.length === clipsResult.allClips.length) {
+            if(allClips?.length === clipsResult?.allClips?.length) {
                 console.log('no new clips');
                 Swal.fire({
                     icon: 'info',
