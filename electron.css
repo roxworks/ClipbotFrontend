@@ -169,10 +169,12 @@ input::-webkit-inner-spin-button {
 
 .btn:disabled {
   background-color: grey;
+  cursor: unset;
 }
 
 .btn:disabled:after {
   background-color: grey;
+  cursor: unset;
 }
 
 h1 {

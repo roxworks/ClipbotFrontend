@@ -14,9 +14,15 @@ const setClip = (newIndex) => {
         changeFrontendStatuses();
         if(currentIndex == allClips.length - 1) {
             document.getElementById("next").disabled = true;
+            document.getElementById("prev").disabled = false;
+        }
+        else if (currentIndex == 0) {
+            document.getElementById("next").disabled = false;
+            document.getElementById("prev").disabled = true;
         }
         else {
             document.getElementById("next").disabled = false;
+            document.getElementById("prev").disabled = false;
         }
     }
     else {
