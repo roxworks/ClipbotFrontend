@@ -1,3 +1,5 @@
+// const { ipcRenderer } = require("electron");
+
 // load clips from /clip/all on localhost:42074
 let allClips = [];
 let state = {};
@@ -53,13 +55,15 @@ const changeFrontendStatuses = (customStatus) => {
 
 const updateClipOnBackend = async (clipId, newSettings) => {
     //PUT to /clip with id and new settings
-    return fetch('http://localhost:42074/clip/', {
+    let res = await fetch('http://localhost:42074/clip/', {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({...newSettings, id: clipId})
     });
+    ipcRenderer.send('settings_updated');
+    return res;
 }
 
 const updateClipFrontendAndBackend = async (newSettings) => {

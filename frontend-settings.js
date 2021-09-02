@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", async function (event) {
             e.preventDefault();
 
             // must match id of element in html
-            let allSettings = ["hashtags", "delay", "minViewCount", "uploadFrequency", "hotkey"]
+            let allSettings = ["hashtags", "delay", "minViewCount", "uploadFrequency", "hotkey"];
             let params = {};
             let settingsWereChanged = false;
             for (setting of allSettings) {
@@ -19,6 +19,9 @@ document.addEventListener("DOMContentLoaded", async function (event) {
                     settingsWereChanged = true;
                 }
             }
+
+            params['defaultApprove'] = document.querySelector("#defaultApprove").checked;
+            settingsWereChanged = true;
 
             let url = new URL("http://localhost:42074/update");
 
@@ -35,7 +38,7 @@ document.addEventListener("DOMContentLoaded", async function (event) {
             }
 
             Object.keys(params).forEach((key) => {
-                if (params[key]) {
+                if (params[key] != undefined) {
                     url.searchParams.append(key, params[key]);
                 }
             }
@@ -62,6 +65,10 @@ let updateFields = (fields) => {
         console.log("val:" + fields[fieldName]);
 
         if (fields[fieldName] !== "" && fields[fieldName] !== undefined && fieldSpan) {
+            if(fieldName == 'defaultApprove') {
+                defaultApprove.checked = JSON.parse(fields[fieldName]);
+            }
+            
             fieldSpan.value = "";
             fieldSpan.placeholder = fields[fieldName];
             

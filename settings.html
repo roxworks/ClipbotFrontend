@@ -16,6 +16,7 @@
       <link rel="icon" href="/favicon.svg" type="image/svg+xml">
       <link rel="apple-touch-icon" href="/apple-touch-icon.png"> -->
   <link rel="stylesheet" href="electron.css" />
+  <link rel="stylesheet" href="settings.css" />
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="uploadClip.js"></script>
   <script src="frontend-settings.js"></script>
@@ -49,6 +50,14 @@
           <label><img src='arrow.png' class='icon'/> Time Between Posts <p class="what">Wait this long between posts</p>
             </label>
           <input type="number" name="uploadFrequency" min="1" oninput="validity.valid||(value='');" id="uploadFrequency" placeholder="8" />
+        </div>
+        <div class="form-group" id="defaultApprove-form">
+          <label><img src='check.png' class='icon'/> Default Approve <p class="what">Upload any clip unless it has been rejected</p>
+            </label>
+            <label class="switch" >
+              <input type="checkbox"  name="defaultApprove"  id="defaultApprove">
+              <span class="slider round"></span>
+            </label>
         </div>
 
         <div class="right-container">
