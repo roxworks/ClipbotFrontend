@@ -380,6 +380,11 @@ else {
       createClipsWindow();
     });
 
+    ipcMain.on('close_clips', (event) => {
+      console.log("close clips called, close clips window");
+      WINDOWS.clips.close();
+    });
+
     ipcMain.on('settings_updated', (event, data) => {
       console.log("settings updated event");
       WINDOWS.main.webContents.send('settings_updated', data);

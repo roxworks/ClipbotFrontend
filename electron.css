@@ -167,6 +167,14 @@ input::-webkit-inner-spin-button {
   font-size: 1.5em;
 }
 
+.btn:disabled {
+  background-color: grey;
+}
+
+.btn:disabled:after {
+  background-color: grey;
+}
+
 h1 {
   font-size: 3rem;
   list-style: 2.2rem;

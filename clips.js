@@ -12,6 +12,12 @@ const setClip = (newIndex) => {
         document.querySelector('video').src = displayedClip.download_url;
         document.getElementById("cliptitle").placeholder = displayedClip.title;
         changeFrontendStatuses();
+        if(currentIndex == allClips.length - 1) {
+            document.getElementById("next").disabled = true;
+        }
+        else {
+            document.getElementById("next").disabled = false;
+        }
     }
     else {
         document.getElementById("cliptitle").placeholder = "No clips found, load more clips!";
@@ -125,6 +131,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     setupTitleStuff();
     setupLoadButton();
     setupApproveRejectButtons();
+    setupCloseButton();
 });
 
 const setupTitleStuff = async() => {
@@ -224,6 +231,16 @@ const setupApproveRejectButtons = () => {
                 title: 'Error rejecting clip',
             });
         }
+        return false;
+    });
+}
+
+const setupCloseButton = () => {
+    document.getElementById("close").addEventListener('click', async (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log('close button clicked');
+        ipcRenderer.send('close_clips');
         return false;
     });
 }

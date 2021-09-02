@@ -39,10 +39,15 @@ window.addEventListener("load", async function (event) {
     // get current crop settings /settings from backend
     let cropDetails = await fetch("http://localhost:42074/settings").then(res => res.json());
     let state = await fetch("http://localhost:42074/state").then(res => res.json());
-    let currentClipId = state.currentClipId;
-    let clipToDisplayBlob = await fetch("http://localhost:42074/clip?id=" + currentClipId).then(res => res.json());
-    let clipToDisplay = clipToDisplayBlob.clip.download_url;
-    
+    let clipsResult = await fetch('http://localhost:42074/clip/last').then(res => res.json());
+    let lastClip = clipsResult?.clip;
+
+    console.log(JSON.stringify(lastClip));
+    //check if current clip is in allClips
+    let clipToDisplay = "https://share.nyx.xyz/reWKYeJmokM";
+    if(lastClip != null) {
+        clipToDisplay = lastClip.download_url;
+    }
 
     const video = document.querySelector("video");
     video.src = clipToDisplay;

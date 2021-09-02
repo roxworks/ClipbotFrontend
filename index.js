@@ -5,7 +5,7 @@ const addHours = function(date, h) {
 }
 
 let NEXT_UPLOAD_TIMEOUT_ID = undefined;
-const NO_CLIPS_URL = 'https://share.nyx.xyz/0eHFc1hHkzd';
+const NO_CLIPS_URL = 'https://share.nyx.xyz/reWKYeJmokM';
 
 // run this to update main window fields
 let newClipCheckerIntervalID = undefined;
@@ -259,7 +259,9 @@ document.addEventListener("DOMContentLoaded", async function (event) {
             console.log("croppin cam");
             // get state from backend
             let state = await fetch("http://localhost:42074/state").then(result => result.json());
-            if (state.currentClipId != "") {
+            let allClipsRes = await fetch("http://localhost:42074/clip/all").then(result => result.json());
+            let allClips = allClipsRes?.clips;
+            if (state.currentClipId != "" || allClips?.length > 0) {
                 ipcRenderer.send('camvas_open');
             }
             else {
