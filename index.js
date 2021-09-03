@@ -258,11 +258,19 @@ document.addEventListener("DOMContentLoaded", async function (event) {
         document.getElementById("camcrop").addEventListener("click", async function () {
             console.log("croppin cam");
             // get state from backend
+            let settings = await fetch("http://localhost:42074/settings").then(result => result.json());
             let state = await fetch("http://localhost:42074/state").then(result => result.json());
             let allClipsRes = await fetch("http://localhost:42074/clip/all").then(result => result.json());
             let allClips = allClipsRes?.clips;
             if (state.currentClipId != "" || allClips?.length > 0) {
-                ipcRenderer.send('camvas_open');
+                ipcRenderer.send('camvas_open', JSON.stringify(
+                    {
+                        cropDetails: {
+                            camCrop: settings.camCrop,
+                            screenCrop: settings.screenCrop,
+                        }
+                    }
+                ));
             }
             else {
                 Swal.fire({

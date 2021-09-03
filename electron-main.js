@@ -280,7 +280,7 @@ else {
     return tiktokWindow;
   }
 
-  const createCamvasWindow = () => {
+  const createCamvasWindow = (cropData) => {
     let canvasWindow = new BrowserWindow({
       width: 975,
       height: 900,
@@ -305,6 +305,10 @@ else {
         canvasWindow = null;
         WINDOWS.camvas = null;
       }
+    });
+
+    canvasWindow.webContents.on('did-finish-load', function() {
+      canvasWindow.webContents.send('crop_data', cropData);
     });
 
     return canvasWindow;
@@ -340,6 +344,7 @@ else {
     
 
     canvasWindow.webContents.on('did-finish-load', function() {
+      canvasWindow.webContents.send('crop_data', JSON.stringify(camData));
       canvasWindow.webContents.send('screenvas_data', JSON.stringify(camData));
     });
 
@@ -403,7 +408,14 @@ else {
 
     ipcMain.on('screenvas_closed', (event, data) => {
       console.log("caught in main: " + data);
-      WINDOWS.main.webContents.send('screenvas_closed', data);
+      let parsedData = JSON.parse(data);
+      let callback = parsedData.callback;
+      if(callback == 'custom_crop') {
+        WINDOWS.clips.webContents.send('custom_crop', data);
+      }
+      else {
+        WINDOWS.main.webContents.send('screenvas_closed', data);
+      }
     });
 
     ipcMain.on('restart_app', () => {
@@ -424,9 +436,9 @@ else {
       autoUpdater.downloadUpdate();
     });
 
-    ipcMain.on('camvas_open', () => {
+    ipcMain.on('camvas_open', (event, cropData) => {
       console.log("Opening camvas");
-      camvasWindow = createCamvasWindow();
+      camvasWindow = createCamvasWindow(cropData);
     });
 
     ipcMain.on('screenvas_open', (event, camData) => {

@@ -1,5 +1,3 @@
-// const { ipcRenderer } = require("electron");
-
 // load clips from /clip/all on localhost:42074
 let allClips = [];
 let state = {};
@@ -33,17 +31,18 @@ const setClip = (newIndex) => {
     }
 }
 
-const changeClipOnFrontend = (newSettings) => {
+const changeClipOnFrontend = async (newSettings) => {
     let keys = Object.keys(newSettings);
     for(key of keys) {
         allClips[currentIndex][key] = newSettings[key];
         displayedClip[key] = newSettings[key];
     }
     console.log('frontend clipsettings set');
-    changeFrontendStatuses();
+    return changeFrontendStatuses();
 };
 
-const changeFrontendStatuses = (customStatus) => {
+const changeFrontendStatuses = async (customStatus) => {
+    let settings = await fetch('http://localhost:42074/settings').then(res => res.json());
     if(customStatus) {
         document.getElementById("approvalStatus").innerHTML = customStatus;
     }
@@ -63,6 +62,19 @@ const changeFrontendStatuses = (customStatus) => {
     else {
         document.getElementById("uploadedStatus").innerHTML = "Not Uploaded";
     }
+
+    let vertVideoEnabled = await getClipOrientationIsVertical();
+    if(vertVideoEnabled) {
+        document.getElementById("customOrientation").innerText = "Change to Horizontal";
+        document.getElementById("customCrop").disabled = false;
+    }
+    else {
+        document.getElementById("customOrientation").innerText = "Change to Vertical";
+        document.getElementById("customCrop").disabled = true;
+    }
+    return {
+        status: 200
+    };
 };
 
 const updateClipOnBackend = async (clipId, newSettings) => {
@@ -79,8 +91,8 @@ const updateClipOnBackend = async (clipId, newSettings) => {
 }
 
 const updateClipFrontendAndBackend = async (newSettings) => {
-    changeClipOnFrontend(newSettings);
-    return updateClipOnBackend(displayedClip.id, newSettings);
+    await updateClipOnBackend(displayedClip.id, newSettings);
+    return changeClipOnFrontend(newSettings);
 }
 
 const changeTitle = async () => {
@@ -138,6 +150,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     setupLoadButton();
     setupApproveRejectButtons();
     setupCloseButton();
+    setupOrientationButtons();
 });
 
 const setupTitleStuff = async() => {
@@ -249,4 +262,92 @@ const setupCloseButton = () => {
         ipcRenderer.send('close_clips');
         return false;
     });
+}
+
+const getClipOrientationIsVertical = async () => {
+    let settings = await fetch('http://localhost:42074/settings').then(res => res.json());
+    let currentOrientation = undefined;
+    if(displayedClip.verticalVideoEnabled == true || displayedClip.verticalVideoEnabled == 'true') {
+        console.log('Clip vert video enabled');
+        currentOrientation = true;        
+    }
+    else if (displayedClip.verticalVideoEnabled == false || displayedClip.verticalVideoEnabled == 'false') {
+        console.log('Clip vert video disabled');
+        currentOrientation = false;        
+    }
+    else if (settings.verticalVideoEnabled == true || settings.verticalVideoEnabled == 'true') {
+        console.log('default vert video enabled');
+        currentOrientation = true;        
+    }
+    else {
+        console.log('default vert video disabled');
+        currentOrientation = false;
+    }
+    return currentOrientation;
+}
+
+const setupOrientationButtons = () => {
+    document.getElementById("customOrientation").addEventListener('click', async (e) => {
+        //update clip on backend with custom orientation
+        e.preventDefault();
+        e.stopPropagation();
+
+        console.log('custom orientation button clicked');
+        let currentOrientation = await getClipOrientationIsVertical();
+        
+        let newOrientation = !currentOrientation;
+
+        let result = await updateClipFrontendAndBackend({verticalVideoEnabled: newOrientation});
+
+    });
+
+    document.getElementById("customCrop").addEventListener('click', async (e) => {
+        //update clip on backend with custom crop
+        e.preventDefault();
+        e.stopPropagation();
+        let settings = await fetch('http://localhost:42074/settings').then(res => res.json());
+
+        console.log('custom crop button clicked');
+        let currentCrop = displayedClip.customCrop || {
+            camCrop: settings.camCrop,
+            screenCrop: settings.screenCrop,
+        };
+
+        ipcRenderer.once('custom_crop', async (event, cropData) => {
+            console.log('custom crop received');
+            let crop = JSON.parse(cropData);
+            // TODO: Be wary, this might be a little confusing to users, 
+            // there's not a definite right answer but this _feels_ most intuitive
+            let result = await updateClipFrontendAndBackend({customCrop: crop, verticalVideoEnabled: true});
+            if (result.status === 200) {
+                console.log('custom crop updated');
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Custom crop updated',
+                });
+            }
+            else {
+                console.log('error updating custom crop');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Custom crop failed',
+                });
+            }
+        });
+
+        ipcRenderer.send('camvas_open', JSON.stringify(
+            {
+                cropDetails: currentCrop,
+                clip: displayedClip,
+                callback: 'custom_crop'
+            }
+        ));
+
+
+        // let result = await updateClipFrontendAndBackend({cropEnabled: newCrop});
+
+        //TODO: Call cropper somehow idek
+
+    });
+
 }
