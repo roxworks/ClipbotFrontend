@@ -242,9 +242,9 @@ document.addEventListener("DOMContentLoaded", async function (event) {
         console.log('video enabled?: ' + verticalVideoEnabled);
         let cropMenuHTML =
             `
-        <p>Use these settings to make your videos vertical.</p><p id='videoIsOn'>Vertical Video is ${verticalVideoEnabled ? 'ON, so your videos will be cropped.' : 'OFF, so your videos will be uploaded with no changes.'}</p><br>
-      <button type="button" role="button" id="toggleVertical" tabindex="0" style='font-size: 30px;' class="swal2-confirm swal2-styled">Turn vertical video ${verticalVideoEnabled ? 'OFF' : 'ON'}</button>  <br/>
-      <button type="button" role="button" id="camcrop" tabindex="0" style='font-size: 30px;' class="swal2-confirm swal2-styled">Crop Camera/Gameplay</button>
+        <p>Use these settings to make your videos vertical by default.</p><p id='videoIsOn'>Default Vertical Video is ${verticalVideoEnabled ? 'ON, so your videos will be cropped with you default cropped settings unless you customize them individually.' : 'OFF, so your videos will be uploaded as horizontal unless you customize them individually.'}</p><br>
+      <button type="button" role="button" id="toggleVertical" tabindex="0" style='font-size: 29px;' class="swal2-confirm swal2-styled">Turn default vertical video ${verticalVideoEnabled ? 'OFF' : 'ON'}</button>  <br/>
+      <button type="button" role="button" id="camcrop" tabindex="0" style='font-size: 29px;' class="swal2-confirm swal2-styled">Change Default Crop Camera/Gameplay</button>
       `;
 
         Swal.fire({
@@ -283,12 +283,12 @@ document.addEventListener("DOMContentLoaded", async function (event) {
 
         // cam crop
         document.getElementById("toggleVertical").addEventListener("click", async function () {
-            console.log(`Turning Vertical video ${verticalVideoEnabled}: ${verticalVideoEnabled ? 'OFF' : 'ON'}`);
+            console.log(`Turning Default Vertical video ${verticalVideoEnabled}: ${verticalVideoEnabled ? 'OFF' : 'ON'}`);
             verticalVideoEnabled = !verticalVideoEnabled;
             //get /update endpoint with verticalVideoEnabled=true or false
             let result = await fetch(`http://localhost:42074/update?verticalVideoEnabled=${verticalVideoEnabled}`);
-            document.getElementById("toggleVertical").innerHTML = `Turn vertical video ${verticalVideoEnabled ? 'OFF' : 'ON'}`;
-            document.getElementById("videoIsOn").innerText = `${'Vertical Video is ' + (verticalVideoEnabled ? 'ON, so your videos will be cropped.' : 'OFF, so your videos will be uploaded with no changes.')}`;
+            document.getElementById("toggleVertical").innerHTML = `Turn default vertical video ${verticalVideoEnabled ? 'OFF' : 'ON'}`;
+            document.getElementById("videoIsOn").innerText = `${'Default Vertical Video is ' + (verticalVideoEnabled ? 'ON, so your videos will be cropped.' : 'OFF, so your videos will be uploaded with no changes.')}`;
             ipcRenderer.send('settings_updated');
         });
 

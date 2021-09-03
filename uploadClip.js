@@ -218,5 +218,7 @@ let uploadClip = async (force = false) => {
     }
 
     //unconditionally update status to waiting for next upload
-    ipcRenderer.send('status_update', 'Waiting until next upload');
+    if(result?.status != 429) {
+        ipcRenderer.send('status_update', 'Waiting until next upload');
+    }
 }
