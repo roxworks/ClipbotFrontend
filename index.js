@@ -77,14 +77,9 @@ const updateDisplayedSettings = async () => {
             document.getElementById("cliptitle").value = '';
             if(clipToDisplay != '' && clipToDisplay != undefined) {
                 document.getElementById("cliptitle").placeholder = clipToDisplayBlob?.clip?.title;
-                if(newClipCheckerIntervalID != undefined) {
-                    clearInterval(newClipCheckerIntervalID);
-                    newClipCheckerIntervalID = undefined;
-                }
             }
             else {
                 document.getElementById("cliptitle").placeholder = "No clips yet!";
-                newClipCheckerIntervalID = setInterval(uploadClip, 5 * 60 * 1000);
             }
         });
     }
