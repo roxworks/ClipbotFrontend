@@ -33,11 +33,17 @@ const updateDisplayedSettings = async () => {
             let lastUploadedDate = lastUploadedDateInternal.toLocaleString(undefined, dateOptions);
             if (lastUploadedDate == "Invalid Date") {
                 lastUploadedDate = "No uploads yet! <img src='https://static-cdn.jtvnw.net/emoticons/v1/86/1.0' height=15px'/> Trying to upload...";
-                document.querySelector("#lastUploaded").innerHTML = lastUploadedDate;
-                document.querySelector("#nextUpload").innerHTML = lastUploadedDate;
+                if(document.querySelector("#lastUploaded").innerHTML != lastUploadedDate) {
+                    document.querySelector("#lastUploaded").innerHTML = lastUploadedDate;
+                }
+                if(document.querySelector("#nextUpload").innerHTML != lastUploadedDate) {
+                    document.querySelector("#nextUpload").innerHTML = lastUploadedDate;
+                }
             }
             else {
-                document.querySelector("#lastUploaded").innerHTML = lastUploadedDate;
+                if(document.querySelector("#lastUploaded").innerHTML != lastUploadedDate) {
+                    document.querySelector("#lastUploaded").innerHTML = lastUploadedDate;
+                }
                 const nextUploadDate = addHours(lastUploadedDateInternal, settings.uploadFrequency);
                 if(NEXT_UPLOAD_TIMEOUT_ID != undefined) {
                     console.log('clearing previous timeout');
@@ -45,11 +51,15 @@ const updateDisplayedSettings = async () => {
                 }
 
                 if(settings.uploadEnabled == 'false' || settings.uploadEnabled == undefined) {
-                    document.querySelector("#nextUpload").innerHTML = 'Clipbot is off'
+                    if(document.querySelector("#nextUpload").innerHTML != 'Clipbot is off') {
+                        document.querySelector("#nextUpload").innerHTML = 'Clipbot is off';
+                    }
                 }
                 else {
                     if(clipToDisplay != '' && clipToDisplay != undefined) {
-                        document.querySelector("#nextUpload").innerHTML = nextUploadDate.toLocaleString(undefined, dateOptions);
+                        if(document.querySelector("#nextUpload").innerHTML != nextUploadDate.toLocaleString(undefined, dateOptions)) {
+                            document.querySelector("#nextUpload").innerHTML = nextUploadDate.toLocaleString(undefined, dateOptions);
+                        }
                         const MINUTE = (60 * 1000);
                         let msUntilUpload = Math.ceil((nextUploadDate.getTime() - Date.now()) / MINUTE) * MINUTE;
                         if(msUntilUpload > 0) {
@@ -62,19 +72,34 @@ const updateDisplayedSettings = async () => {
                         }
                     }
                     else {
-                        document.querySelector("#nextUpload").innerHTML = 'Need more clips!';
+                        if(document.querySelector("#nextUpload").innerHTML != 'Need more clips!') {
+                            document.querySelector("#nextUpload").innerHTML = 'Need more clips!';
+                        }
                     }
                 }
             }
 
-            document.getElementById("uploadEnabled").innerHTML = `Turn Clipbot ${settings.uploadEnabled == 'true' ? 'OFF' : 'ON'}`;
-            document.querySelector("#videoEnabled").innerHTML = settings.verticalVideoEnabled == 'true' ? 'ON' : 'OFF';
+            if(document.getElementById("uploadEnabled").innerHTML != `Turn Clipbot ${settings.uploadEnabled == 'true' ? 'OFF' : 'ON'}`) {
+                document.getElementById("uploadEnabled").innerHTML = `Turn Clipbot ${settings.uploadEnabled == 'true' ? 'OFF' : 'ON'}`;
+            }
+            if(document.querySelector("#videoEnabled").innerHTML != settings.verticalVideoEnabled == 'true' ? 'ON' : 'OFF') {
+                document.querySelector("#videoEnabled").innerHTML = settings.verticalVideoEnabled == 'true' ? 'ON' : 'OFF';
+            }
             console.log('state we got: ' + JSON.stringify(state)); 
-            document.querySelector("video").src = clipToDisplay || NO_CLIPS_URL;
+            if(document.querySelector("video").src != (clipToDisplay || NO_CLIPS_URL)) {
+                document.querySelector("video").src = clipToDisplay || NO_CLIPS_URL;
+                if(clipToDisplay == null) {
+                    document.querySelector("video").pause();
+                }
+            }
             // updateGlobalShortcut(settings?.hotkey);
-            ipcRenderer.send('hotkey_changed', settings?.hotkey);
-            document.querySelector("#hotkey").innerText = settings?.hotkey;
-            document.getElementById("cliptitle").value = '';
+            if(document.querySelector("#hotkey").innerText != settings?.hotkey) {
+                ipcRenderer.send('hotkey_changed', settings?.hotkey);
+                document.querySelector("#hotkey").innerText = settings?.hotkey;
+            }
+            if(document.getElementById("cliptitle").value != '') {
+                document.getElementById("cliptitle").value = '';
+            }
             if(clipToDisplay != '' && clipToDisplay != undefined) {
                 document.getElementById("cliptitle").placeholder = clipToDisplayBlob?.clip?.title;
             }
