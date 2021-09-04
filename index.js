@@ -101,10 +101,10 @@ const updateDisplayedSettings = async () => {
                 document.getElementById("cliptitle").value = '';
             }
             if(clipToDisplay != '' && clipToDisplay != undefined) {
-                document.getElementById("cliptitle").placeholder = clipToDisplayBlob?.clip?.title;
+                document.getElementById("cliptitle").innerText = clipToDisplayBlob?.clip?.title;
             }
             else {
-                document.getElementById("cliptitle").placeholder = "No clips yet!";
+                document.getElementById("cliptitle").innerText = "No clips yet!";
             }
         });
     }
@@ -411,72 +411,6 @@ document.addEventListener("DOMContentLoaded", async function (event) {
         console.log("restarting send");
         ipcRenderer.send('restart_app');
     }
-});
-
-document.addEventListener("DOMContentLoaded", async function (event) {
-    const changeTitle = async () => {
-        console.log("Change title");
-        // hit setting endpoint with new title
-        let state = await fetch("http://localhost:42074/state").then(res => res.json());
-        console.log('Change title found state: ' + JSON.stringify(state));
-        let newTitle = document.getElementById("cliptitle").value;
-        if(newTitle == '') {
-            return false;
-        }
-        let result = await fetch(
-            "http://localhost:42074/clip",
-        {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                title: newTitle,
-                id: state.currentClipId
-            })
-        });
-        if (result.status === 200) {
-            Swal.fire({
-                icon: 'success',
-                title: 'Title changed to ' + newTitle,
-            });
-        }
-        else {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error changing title',
-            });
-        }
-        return true;
-    }
-
-    //add click listener to #changetitlebutton
-    document.getElementById("changetitlebutton").addEventListener("click", async function () {
-        let titleDidChange = await changeTitle();
-        if(titleDidChange) {
-            await updateDisplayedSettings();
-        }
-        return false;
-    });
-
-    document.getElementById("update").addEventListener('submit', async (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        console.log('update submitted');
-        let titleDidChange = await changeTitle();
-        if(titleDidChange) {
-            await updateDisplayedSettings();
-        }
-        return false;
-    });
-
-    // document.getElementById("cliptitle").addEventListener('submit', (e) => {
-    //     e.preventDefault();
-    //     e.stopPropagation();
-    //     console.log('new title submitted');
-    //     changeTitle().then(updateDisplayedSettings);
-    //     return false;
-    // });
 });
 
 

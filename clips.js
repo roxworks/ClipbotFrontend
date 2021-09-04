@@ -153,6 +153,14 @@ document.addEventListener('DOMContentLoaded', async function() {
     setupOrientationButtons();
 });
 
+const changeTitleFrontend = (titleDidChange) => {
+    if(titleDidChange) {
+        document.getElementById("cliptitle").value = '';
+        document.getElementById("cliptitle").placeholder = displayedClip.title;
+        console.log('placeholders changed');
+    }
+}
+
 const setupTitleStuff = async() => {
     //add click listener to #changetitlebutton
     document.getElementById("changetitlebutton").addEventListener("click", async function () {
@@ -160,11 +168,7 @@ const setupTitleStuff = async() => {
         e.stopPropagation();
         console.log('title changin');
         let titleDidChange = await changeTitle();
-        if(titleDidChange) {
-            document.getElementById("cliptitle").value = '';
-            document.getElementById("cliptitle").placeholder = displayedClip.title;
-            console.log('placeholders changed');
-        }
+        changeTitleFrontend(titleDidChange);
         return false;
     });
 
@@ -217,8 +221,14 @@ const setupApproveRejectButtons = () => {
         e.preventDefault();
         e.stopPropagation();
         console.log('approve button clicked');
-        let result = await updateClipFrontendAndBackend({approved: true});
+        let changedTitle = undefined;
+        let titleDidChange = document.getElementById("cliptitle").value != '';
+        if(titleDidChange) {
+            changedTitle = document.getElementById("cliptitle").value;
+        }
+        let result = await updateClipFrontendAndBackend({approved: true, title: changedTitle});
         if (result.status === 200) {
+            changeTitleFrontend(titleDidChange);
             Swal.fire({
                 icon: 'success',
                 title: 'Clip approved',
@@ -237,8 +247,14 @@ const setupApproveRejectButtons = () => {
         e.preventDefault();
         e.stopPropagation();
         console.log('reject button clicked');
-        let result = await updateClipFrontendAndBackend({approved: false});
+        let changedTitle = undefined;
+        let titleDidChange = document.getElementById("cliptitle").value != '';
+        if(titleDidChange) {
+            changedTitle = document.getElementById("cliptitle").value;
+        }
+        let result = await updateClipFrontendAndBackend({approved: false, title: changedTitle});
         if (result.status === 200) {
+            changeTitleFrontend(titleDidChange);
             Swal.fire({
                 icon: 'success',
                 title: 'Clip rejected',

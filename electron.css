@@ -260,9 +260,16 @@ p.what:hover {
   gap: 5px;
 }
 
-#cliptitle {
-  width: 75%;
+.cliptitlemain {
   padding: 0;
+  overflow: hidden;
+  max-width: 350px;
+  text-overflow: ellipsis;
+}
+
+.cliptitleinput {
+  width: 75% !important;
+  padding: 7px 14px !important;
 }
 
 .btn {
