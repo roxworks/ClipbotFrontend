@@ -93,8 +93,8 @@ const updateDisplayedSettings = async () => {
                 }
             }
             // updateGlobalShortcut(settings?.hotkey);
+            ipcRenderer.send('hotkey_changed', settings?.hotkey);
             if(document.querySelector("#hotkey").innerText != settings?.hotkey) {
-                ipcRenderer.send('hotkey_changed', settings?.hotkey);
                 document.querySelector("#hotkey").innerText = settings?.hotkey;
             }
             if(document.getElementById("cliptitle").value != '') {
