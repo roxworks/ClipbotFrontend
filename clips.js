@@ -54,7 +54,7 @@ const changeFrontendStatuses = async (customStatus) => {
         document.getElementById("approvalStatus").innerHTML = "Rejected";
     }
     else {
-        document.getElementById("approvalStatus").innerHTML = "Not Yet Approved";
+        document.getElementById("approvalStatus").innerHTML = ((settings?.defaultApprove == true || settings?.defaultApprove == 'true') && displayedClip.view_count >= settings?.minViewCount) ? "Approved By Default" : "Not Yet Approved";
     }
     if(displayedClip.uploaded == true) {
         document.getElementById("uploadedStatus").innerHTML = "Uploaded";
@@ -120,6 +120,7 @@ const changeTitle = async () => {
 
 document.addEventListener('DOMContentLoaded', async function() {
     let clipsResult = await fetch('http://localhost:42074/clip/all').then(res => res.json());
+    console.log(`got ${clipsResult?.clips?.length} clips`);
     state = await fetch('http://localhost:42074/state').then(res => res.json());
     allClips = clipsResult.clips;
 
