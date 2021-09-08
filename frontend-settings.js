@@ -21,6 +21,7 @@ document.addEventListener("DOMContentLoaded", async function (event) {
             }
 
             params['defaultApprove'] = document.querySelector("#defaultApprove").checked;
+            params['uploadEnabled'] = document.querySelector("#uploadEnabled").checked;
             settingsWereChanged = true;
 
             let url = new URL("http://localhost:42074/update");

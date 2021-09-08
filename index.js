@@ -79,9 +79,10 @@ const updateDisplayedSettings = async () => {
                 }
             }
 
-            if(document.getElementById("uploadEnabled").innerHTML != `Turn Clipbot ${settings.uploadEnabled == 'true' ? 'OFF' : 'ON'}`) {
-                document.getElementById("uploadEnabled").innerHTML = `Turn Clipbot ${settings.uploadEnabled == 'true' ? 'OFF' : 'ON'}`;
-            }
+            //<button class="btn" id="uploadEnabled" type="reset">Turn Clipbot ON</button>
+            // if(document.getElementById("uploadEnabled").innerHTML != `Turn Clipbot ${settings.uploadEnabled == 'true' ? 'OFF' : 'ON'}`) {
+            //     document.getElementById("uploadEnabled").innerHTML = `Turn Clipbot ${settings.uploadEnabled == 'true' ? 'OFF' : 'ON'}`;
+            // }
             if(document.querySelector("#videoEnabled").innerHTML != settings.verticalVideoEnabled == 'true' ? 'ON' : 'OFF') {
                 document.querySelector("#videoEnabled").innerHTML = settings.verticalVideoEnabled == 'true' ? 'ON' : 'OFF';
             }
@@ -193,19 +194,19 @@ document.addEventListener("DOMContentLoaded", async function (event) {
 });
 
 // on/off
-document.addEventListener("DOMContentLoaded", async function (event) {
-    document.getElementById('uploadEnabled').addEventListener('click', async function (event) {
-        let result = await fetch("http://localhost:42074/settings").then(result => result.json());
-        let uploadEnabled = result?.uploadEnabled == 'true' ? true : false;
+// document.addEventListener("DOMContentLoaded", async function (event) {
+//     document.getElementById('uploadEnabled').addEventListener('click', async function (event) {
+//         let result = await fetch("http://localhost:42074/settings").then(result => result.json());
+//         let uploadEnabled = result?.uploadEnabled == 'true' ? true : false;
 
-        console.log(`Turning Clipbot ${uploadEnabled}: ${uploadEnabled ? 'OFF' : 'ON'}`);
-        uploadEnabled = !uploadEnabled;
-        //get /update endpoint with verticalVideoEnabled=true or false
-        await fetch(`http://localhost:42074/update?uploadEnabled=${uploadEnabled}`);
-        document.getElementById("uploadEnabled").innerHTML = `Turn Clipbot ${uploadEnabled ? 'OFF' : 'ON'}`;
-        ipcRenderer.send('settings_updated');
-    });
-});
+//         console.log(`Turning Clipbot ${uploadEnabled}: ${uploadEnabled ? 'OFF' : 'ON'}`);
+//         uploadEnabled = !uploadEnabled;
+//         //get /update endpoint with verticalVideoEnabled=true or false
+//         await fetch(`http://localhost:42074/update?uploadEnabled=${uploadEnabled}`);
+//         document.getElementById("uploadEnabled").innerHTML = `Turn Clipbot ${uploadEnabled ? 'OFF' : 'ON'}`;
+//         ipcRenderer.send('settings_updated');
+//     });
+// });
 
 let updateStatus = (event, data) => {
     let currStatus = data;
@@ -265,6 +266,7 @@ document.addEventListener("DOMContentLoaded", async function (event) {
         <p>Use these settings to make your videos vertical by default.</p><p id='videoIsOn'>Default Vertical Video is ${verticalVideoEnabled ? 'ON, so your videos will be cropped with you default cropped settings unless you customize them individually.' : 'OFF, so your videos will be uploaded as horizontal unless you customize them individually.'}</p><br>
       <button type="button" role="button" id="toggleVertical" tabindex="0" style='font-size: 29px;' class="swal2-confirm swal2-styled">Turn default vertical video ${verticalVideoEnabled ? 'OFF' : 'ON'}</button>  <br/>
       <button type="button" role="button" id="camcrop" tabindex="0" style='font-size: 29px;' class="swal2-confirm swal2-styled">Change Default Crop Camera/Gameplay</button>
+      <button type="button" role="button" id="youtubeLogin" tabindex="0" style='font-size: 29px;' class="swal2-confirm swal2-styled">Login To Youtube</button>
       `;
 
         Swal.fire({
@@ -310,6 +312,146 @@ document.addEventListener("DOMContentLoaded", async function (event) {
             document.getElementById("toggleVertical").innerHTML = `Turn default vertical video ${verticalVideoEnabled ? 'OFF' : 'ON'}`;
             document.getElementById("videoIsOn").innerText = `${'Default Vertical Video is ' + (verticalVideoEnabled ? 'ON, so your videos will be cropped.' : 'OFF, so your videos will be uploaded with no changes.')}`;
             ipcRenderer.send('settings_updated');
+        });
+
+         // youtube login
+         document.getElementById("youtubeLogin").addEventListener("click", async function () {
+            // call youtube auth endpoint and open the authURL of the body in a new window if not authorized
+            console.log('requesting youtube auth');
+            let result = await fetch("http://localhost:42074/youtubeAuth");
+            console.log('post auth req');
+            if(result.status == 200) {
+                console.log('we are already authed');
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Already Logged In',
+                    text: 'You are already logged in to Youtube'
+                });
+                return;
+            }
+            else {
+                console.log('unauthed');
+                let resJSON = await result.json();
+                let authURL = resJSON.authURL;
+                console.log(JSON.stringify(resJSON));
+                console.log(authURL);
+                // Swal.fire an input textbox for the Youtube auth code
+                Swal.fire({
+                    title: 'Enter Youtube Code',
+                    text: 'Please login on the other window, and copy your Youtube Code into this box to enable Youtube uploads!',
+                    input: 'text',
+                    inputAttributes: {
+                        autocapitalize: 'off'
+                    },
+                    confirmButtonText: 'Submit',
+                    showLoaderOnConfirm: true
+                }).then(async (codeInput) => {
+                    let code = codeInput?.value;
+                    console.log(`code: ${code}`);
+                    let result = await fetch(`http://localhost:42074/youtubeAuth?code=${code}`);
+                    console.log(`result: ${result}`);
+                    if (result.status == 200) {
+                        console.log('we are now authed');
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Successfully logged in to Youtube!',
+                            text: 'You can now upload clips to Youtube.'
+                        });
+                    }
+                    else {
+                        console.log('failed to auth');
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Failed to log in to Youtube!',
+                            text: 'Please try again.'
+                        });
+                    }
+                });
+
+                window.open(authURL, '_blank');
+            }
+        });
+
+    });
+});
+
+document.addEventListener("DOMContentLoaded", async function (event) {
+    document.getElementById("logins").addEventListener("click", async function () {
+        let result = await fetch("http://localhost:42074/settings").then(result => result.json());
+
+        let verticalVideoEnabled = result?.verticalVideoEnabled == 'true' ? true : false;
+        console.log('video enabled?: ' + verticalVideoEnabled);
+        let cropMenuHTML =
+            `
+        <p>Manage your logins here.</p><br>
+      <button type="button" role="button" id="twitchLogin" tabindex="0" style='font-size: 29px;' class="swal2-confirm swal2-styled">Change Twitch Account</button><br/>
+      <button type="button" role="button" id="tiktokLogin" tabindex="0" style='font-size: 29px;' class="swal2-confirm swal2-styled">Login to Tiktok</button>
+      <button type="button" role="button" id="youtubeLogin" tabindex="0" style='font-size: 29px;' class="swal2-confirm swal2-styled">Login To Youtube</button>
+      `;
+
+        Swal.fire({
+            icon: 'info',
+            html: cropMenuHTML,
+            title: 'Logins',
+            confirmButtonText: 'Close'
+        });
+
+         // youtube login
+         document.getElementById("youtubeLogin").addEventListener("click", async function () {
+            // call youtube auth endpoint and open the authURL of the body in a new window if not authorized
+            console.log('requesting youtube auth');
+            let result = await fetch("http://localhost:42074/youtubeAuth");
+            console.log('post auth req');
+            if(result.status == 200) {
+                console.log('we are already authed');
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Already Logged In',
+                    text: 'You are already logged in to Youtube'
+                });
+                return;
+            }
+            else {
+                console.log('unauthed');
+                let resJSON = await result.json();
+                let authURL = resJSON.authURL;
+                console.log(JSON.stringify(resJSON));
+                console.log(authURL);
+                // Swal.fire an input textbox for the Youtube auth code
+                Swal.fire({
+                    title: 'Enter Youtube Code',
+                    text: 'Please login on the other window, and copy your Youtube Code into this box to enable Youtube uploads!',
+                    input: 'text',
+                    inputAttributes: {
+                        autocapitalize: 'off'
+                    },
+                    confirmButtonText: 'Submit',
+                    showLoaderOnConfirm: true
+                }).then(async (codeInput) => {
+                    let code = codeInput?.value;
+                    console.log(`code: ${code}`);
+                    let result = await fetch(`http://localhost:42074/youtubeAuth?code=${code}`);
+                    console.log(`result: ${result}`);
+                    if (result.status == 200) {
+                        console.log('we are now authed');
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Successfully logged in to Youtube!',
+                            text: 'You can now upload clips to Youtube.'
+                        });
+                    }
+                    else {
+                        console.log('failed to auth');
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Failed to log in to Youtube!',
+                            text: 'Please try again.'
+                        });
+                    }
+                });
+
+                window.open(authURL, '_blank');
+            }
         });
 
     });
