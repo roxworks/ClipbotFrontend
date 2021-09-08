@@ -26,7 +26,8 @@ const awaitAllFileCompilations = async () => {
     createBytecodeFile('downloadvideo'),
     createBytecodeFile('settings'),
     createBytecodeFile('editVideo'),
-    createBytecodeFile('clipqueue')
+    createBytecodeFile('clipqueue'),
+    createBytecodeFile('youtubeUpload')
   ]
   );
 }
