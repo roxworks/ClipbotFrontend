@@ -3,6 +3,7 @@ let allClips = [];
 let state = {};
 let displayedClip = undefined;
 let currentIndex = 0;
+let settingsDidLoad = undefined;
 
 const setClip = (newIndex) => {
     if(newIndex > -1 && newIndex < allClips.length) {
@@ -42,7 +43,7 @@ const changeClipOnFrontend = async (newSettings) => {
 };
 
 const changeFrontendStatuses = async (customStatus) => {
-    let settings = await fetch('http://localhost:42074/settings').then(res => res.json());
+    let settings = await settingsDidLoad;
     if(customStatus) {
         document.getElementById("approvalStatus").innerHTML = customStatus;
     }
@@ -281,8 +282,12 @@ const setupCloseButton = () => {
     });
 }
 
+document.addEventListener('DOMContentLoaded', async () => {
+    settingsDidLoad = fetch('http://localhost:42074/settings').then(res => res.json());
+});
+
 const getClipOrientationIsVertical = async () => {
-    let settings = await fetch('http://localhost:42074/settings').then(res => res.json());
+    let settings = await settingsDidLoad;
     let currentOrientation = undefined;
     if(displayedClip.verticalVideoEnabled == true || displayedClip.verticalVideoEnabled == 'true') {
         console.log('Clip vert video enabled');
@@ -322,7 +327,7 @@ const setupOrientationButtons = () => {
         //update clip on backend with custom crop
         e.preventDefault();
         e.stopPropagation();
-        let settings = await fetch('http://localhost:42074/settings').then(res => res.json());
+        let settings = await settingsDidLoad;
 
         console.log('custom crop button clicked');
         let currentCrop = displayedClip.customCrop || {

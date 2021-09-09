@@ -19,14 +19,16 @@ const updateDisplayedSettings = async () => {
         minute: "numeric",
     };
 
-    if(settings.broadcasterId == '' || settings.license == '' || settings.sessionId == '') {
+    if(settings.broadcasterId == '' || settings.license == '') {
         return;
     }
 
     if (result.status == 200) {
         result.json().then(async (state) => {
             let currentClipId = state.currentClipId;
+            console.log(currentClipId);
             let clipToDisplayBlob = await fetch("http://localhost:42074/clip?id=" + currentClipId).then(res => res.json());
+            console.log('got clip: ' + JSON.stringify(clipToDisplayBlob))
             let clipToDisplay = clipToDisplayBlob?.clip?.download_url;
             console.log("Last uploaded: " + state.lastUploadToTikTokTime);
             let lastUploadedDateInternal = new Date(state.lastUploadToTikTokTime);
@@ -182,7 +184,10 @@ document.addEventListener("DOMContentLoaded", async function (event) {
 
 // Update fields on settings change
 document.addEventListener("DOMContentLoaded", async function (event) {
-    ipcRenderer.on('settings_updated', updateDisplayedSettings);
+    ipcRenderer.on('settings_updated', async () => {
+        await updateDisplayedSettings()
+        uploadClip();
+    });
 });
 
 // skip clip
@@ -266,7 +271,6 @@ document.addEventListener("DOMContentLoaded", async function (event) {
         <p>Use these settings to make your videos vertical by default.</p><p id='videoIsOn'>Default Vertical Video is ${verticalVideoEnabled ? 'ON, so your videos will be cropped with you default cropped settings unless you customize them individually.' : 'OFF, so your videos will be uploaded as horizontal unless you customize them individually.'}</p><br>
       <button type="button" role="button" id="toggleVertical" tabindex="0" style='font-size: 29px;' class="swal2-confirm swal2-styled">Turn default vertical video ${verticalVideoEnabled ? 'OFF' : 'ON'}</button>  <br/>
       <button type="button" role="button" id="camcrop" tabindex="0" style='font-size: 29px;' class="swal2-confirm swal2-styled">Change Default Crop Camera/Gameplay</button>
-      <button type="button" role="button" id="youtubeLogin" tabindex="0" style='font-size: 29px;' class="swal2-confirm swal2-styled">Login To Youtube</button>
       `;
 
         Swal.fire({
@@ -314,79 +318,27 @@ document.addEventListener("DOMContentLoaded", async function (event) {
             ipcRenderer.send('settings_updated');
         });
 
-         // youtube login
-         document.getElementById("youtubeLogin").addEventListener("click", async function () {
-            // call youtube auth endpoint and open the authURL of the body in a new window if not authorized
-            console.log('requesting youtube auth');
-            let result = await fetch("http://localhost:42074/youtubeAuth");
-            console.log('post auth req');
-            if(result.status == 200) {
-                console.log('we are already authed');
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Already Logged In',
-                    text: 'You are already logged in to Youtube'
-                });
-                return;
-            }
-            else {
-                console.log('unauthed');
-                let resJSON = await result.json();
-                let authURL = resJSON.authURL;
-                console.log(JSON.stringify(resJSON));
-                console.log(authURL);
-                // Swal.fire an input textbox for the Youtube auth code
-                Swal.fire({
-                    title: 'Enter Youtube Code',
-                    text: 'Please login on the other window, and copy your Youtube Code into this box to enable Youtube uploads!',
-                    input: 'text',
-                    inputAttributes: {
-                        autocapitalize: 'off'
-                    },
-                    confirmButtonText: 'Submit',
-                    showLoaderOnConfirm: true
-                }).then(async (codeInput) => {
-                    let code = codeInput?.value;
-                    console.log(`code: ${code}`);
-                    let result = await fetch(`http://localhost:42074/youtubeAuth?code=${code}`);
-                    console.log(`result: ${result}`);
-                    if (result.status == 200) {
-                        console.log('we are now authed');
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Successfully logged in to Youtube!',
-                            text: 'You can now upload clips to Youtube.'
-                        });
-                    }
-                    else {
-                        console.log('failed to auth');
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Failed to log in to Youtube!',
-                            text: 'Please try again.'
-                        });
-                    }
-                });
-
-                window.open(authURL, '_blank');
-            }
-        });
 
     });
 });
 
+const clearSettings = async (fields) => {
+    return fetch(`http://localhost:42074/clear?fields=${JSON.stringify(fields)}`);
+}
+
 document.addEventListener("DOMContentLoaded", async function (event) {
     document.getElementById("logins").addEventListener("click", async function () {
-        let result = await fetch("http://localhost:42074/settings").then(result => result.json());
+        let settings = await fetch("http://localhost:42074/settings").then(result => result.json());
 
-        let verticalVideoEnabled = result?.verticalVideoEnabled == 'true' ? true : false;
-        console.log('video enabled?: ' + verticalVideoEnabled);
+        let youtubeLoggedIn = settings?.youtubeToken != '';
+        let tiktokLoggedIn = settings?.sessionId != '';
+        let twitchLoggedIn = settings?.broadcasterId != '';
         let cropMenuHTML =
             `
         <p>Manage your logins here.</p><br>
-      <button type="button" role="button" id="twitchLogin" tabindex="0" style='font-size: 29px;' class="swal2-confirm swal2-styled">Change Twitch Account</button><br/>
-      <button type="button" role="button" id="tiktokLogin" tabindex="0" style='font-size: 29px;' class="swal2-confirm swal2-styled">Login to Tiktok</button>
-      <button type="button" role="button" id="youtubeLogin" tabindex="0" style='font-size: 29px;' class="swal2-confirm swal2-styled">Login To Youtube</button>
+      <button type="button" role="button" id="twitchLogin" tabindex="0" style='font-size: 29px;' class="swal2-confirm swal2-styled">${twitchLoggedIn ? 'Logout of' : 'Login to'} Twitch</button><br/>
+      <button type="button" role="button" id="tiktokLogin" tabindex="0" style='font-size: 29px;' class="swal2-confirm swal2-styled">${tiktokLoggedIn ? 'Logout of' : 'Login to'} Tiktok</button>
+      <button type="button" role="button" id="youtubeLogin" tabindex="0" style='font-size: 29px;' class="swal2-confirm swal2-styled">${youtubeLoggedIn ? 'Logout of' : 'Login to'} Youtube</button>
       `;
 
         Swal.fire({
@@ -396,61 +348,83 @@ document.addEventListener("DOMContentLoaded", async function (event) {
             confirmButtonText: 'Close'
         });
 
-         // youtube login
-         document.getElementById("youtubeLogin").addEventListener("click", async function () {
-            // call youtube auth endpoint and open the authURL of the body in a new window if not authorized
-            console.log('requesting youtube auth');
-            let result = await fetch("http://localhost:42074/youtubeAuth");
-            console.log('post auth req');
-            if(result.status == 200) {
-                console.log('we are already authed');
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Already Logged In',
-                    text: 'You are already logged in to Youtube'
-                });
-                return;
+        // twitch
+        document.getElementById("twitchLogin").addEventListener("click", async function () {
+            if(twitchLoggedIn) {
+                await clearSettings(['broadcasterId']).then(() => {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Logged Out of Twitch',
+                        text: 'You will need to login again later to access twitch clips'
+                    })
+                })
+                if(twitchLoggedIn != (settings?.broadcasterId != '')) {
+                    document.getElementById("twitchLoggedIn").innerHTML = 'Login to Twitch';
+                    twitchLoggedIn = !twitchLoggedIn;
+                }
             }
             else {
-                console.log('unauthed');
-                let resJSON = await result.json();
-                let authURL = resJSON.authURL;
-                console.log(JSON.stringify(resJSON));
-                console.log(authURL);
-                // Swal.fire an input textbox for the Youtube auth code
-                Swal.fire({
-                    title: 'Enter Youtube Code',
-                    text: 'Please login on the other window, and copy your Youtube Code into this box to enable Youtube uploads!',
-                    input: 'text',
-                    inputAttributes: {
-                        autocapitalize: 'off'
-                    },
-                    confirmButtonText: 'Submit',
-                    showLoaderOnConfirm: true
-                }).then(async (codeInput) => {
-                    let code = codeInput?.value;
-                    console.log(`code: ${code}`);
-                    let result = await fetch(`http://localhost:42074/youtubeAuth?code=${code}`);
-                    console.log(`result: ${result}`);
-                    if (result.status == 200) {
-                        console.log('we are now authed');
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Successfully logged in to Youtube!',
-                            text: 'You can now upload clips to Youtube.'
-                        });
-                    }
-                    else {
-                        console.log('failed to auth');
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Failed to log in to Youtube!',
-                            text: 'Please try again.'
-                        });
+                doTwitchAuth().then(async (result) => {
+                    settings = await fetch("http://localhost:42074/settings").then(result => result.json());
+                    // check if youtube login changed
+                    if(twitchLoggedIn != (settings?.broadcasterId != '')) {
+                        document.getElementById("twitchLoggedIn").innerHTML = 'Logout of Twitch';
+                        twitchLoggedIn = !twitchLoggedIn;
                     }
                 });
+            }
+        });
 
-                window.open(authURL, '_blank');
+         // youtube login
+        document.getElementById("youtubeLogin").addEventListener("click", async function () {
+            if(youtubeLoggedIn) {
+                await clearSettings(['youtubeToken']).then(() => {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Logged Out of Youtube',
+                        text: 'You will need to login again later to upload to Youtube'
+                    })
+                })
+                if(youtubeLoggedIn != (settings?.youtubeToken != '')) {
+                    document.getElementById("youtubeLogin").innerHTML = 'Login to Youtube';
+                    youtubeLoggedIn = !youtubeLoggedIn;
+                }
+            }
+            else {
+                doYoutubeAuth().then(async (result) => {
+                    settings = await fetch("http://localhost:42074/settings").then(result => result.json());
+                    // check if youtube login changed
+                    if(youtubeLoggedIn != (settings?.youtubeToken != '')) {
+                        document.getElementById("youtubeLogin").innerHTML = 'Logout of Youtube';
+                        youtubeLoggedIn = !youtubeLoggedIn;
+                    }
+                });
+            }
+        });
+
+        document.getElementById("tiktokLogin").addEventListener("click", async function () {
+            if(tiktokLoggedIn) {
+                await clearSettings(['sessionId']).then(() => {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Logged Out of Tiktok',
+                        text: 'You will need to login again later to upload to TikTok'
+                    })
+                })
+                if(tiktokLoggedIn != (settings?.sessionId != '')) {
+                    document.getElementById("tiktokLogin").innerHTML = 'Login to TikTok';
+                    tiktokLoggedIn = !tiktokLoggedIn;
+                }
+            }
+            else {
+                doTiktokAuth().then(async (result) => {
+                    settings = await fetch("http://localhost:42074/settings").then(result => result.json());
+                    // check if youtube login changed
+                    if(tiktokLoggedIn != (settings?.sessionId != '')) {
+                        document.getElementById("tiktokLogin").innerHTML = 'Logout of TikTok';
+                        tiktokLoggedIn = !tiktokLoggedIn;
+                    }
+                });
             }
         });
 
@@ -493,7 +467,7 @@ document.addEventListener("DOMContentLoaded", async function (event) {
 
     // retry tiktok upload
     ipcRenderer.on('retry', async (event, data) => {
-        console.log("Retrying tiktok upload");
+        console.log("Retrying upload clip ()");
         uploadClip();
     });
 

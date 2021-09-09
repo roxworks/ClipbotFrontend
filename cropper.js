@@ -47,14 +47,15 @@ ipcRenderer.on('crop_data', async (event, arg) => {
     let cropDetails = cropDetailsAndClip.cropDetails;
     let clip = cropDetailsAndClip.clip;
     let callback = cropDetailsAndClip.callback;
-    console.log(cropDetails + " " + cropDetailsAndClip);
+    console.log("clip crop details" + JSON.stringify(cropDetails) + " " + JSON.stringify(cropDetailsAndClip));
 
 
     console.log('loaded');
     // get current crop settings /settings from backend
-    if(cropDetails == null) {
+    if(cropDetails == null || Object.keys(cropDetails).length == 0) {
         console.log('no crop details found');
         cropDetails = await fetch("http://localhost:42074/settings").then(res => res.json());
+        console.log('got crop details from settings:' + JSON.stringify(cropDetails?.camCrop) + JSON.stringify(cropDetails?.screenCrop));
     }
     if(clip == null) {
         console.log('no clip found');
@@ -131,8 +132,8 @@ ipcRenderer.on('crop_data', async (event, arg) => {
 let doAllCropperStuff = (baseCamCrop, baseScreenCrop, video, isScreenvas, callback, canvas, image, clip) => {
     console.log("video height" + video.videoHeight);
     console.log("video width" + video.videoWidth);
-    let camCrop = baseCamCrop.width ? scaleDownCrop(baseCamCrop, video) : {};
-    let screenCrop = baseScreenCrop.width ? scaleDownCrop(baseScreenCrop, video) : {};
+    let camCrop = baseCamCrop?.width ? scaleDownCrop(baseCamCrop, video) : {};
+    let screenCrop = baseScreenCrop?.width ? scaleDownCrop(baseScreenCrop, video) : {};
     canvas.width = video.clientWidth;
     canvas.height = video.clientHeight;
 

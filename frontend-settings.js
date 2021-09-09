@@ -22,6 +22,8 @@ document.addEventListener("DOMContentLoaded", async function (event) {
 
             params['defaultApprove'] = document.querySelector("#defaultApprove").checked;
             params['uploadEnabled'] = document.querySelector("#uploadEnabled").checked;
+            params['tiktokUploadEnabled'] = document.querySelector("#tiktokUploadEnabled").checked;
+            params['youtubeUploadEnabled'] = document.querySelector("#youtubeUploadEnabled").checked;
             settingsWereChanged = true;
 
             let url = new URL("http://localhost:42074/update");
@@ -66,8 +68,8 @@ let updateFields = (fields) => {
         console.log("val:" + fields[fieldName]);
 
         if (fields[fieldName] !== "" && fields[fieldName] !== undefined && fieldSpan) {
-            if(fieldName == 'defaultApprove') {
-                defaultApprove.checked = JSON.parse(fields[fieldName]);
+            if(fieldName == 'defaultApprove' || fieldName.toLowerCase().includes('upload')) {
+                fieldSpan.checked = JSON.parse(fields[fieldName]);
             }
             
             fieldSpan.value = "";

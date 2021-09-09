@@ -210,7 +210,7 @@ else {
   const createSettingsWindow = () => {
     let settingsWindow = new BrowserWindow({
       width: 550,
-      height: 900,
+      height: 1200,
       webPreferences: {
         nodeIntegration: true,
         contextIsolation: false,
@@ -394,6 +394,11 @@ else {
     ipcMain.on('settings_updated', (event, data) => {
       console.log("settings updated event");
       WINDOWS.main.webContents.send('settings_updated', data);
+    });
+
+    ipcMain.on('youtube-auth-success', (event, data) => {
+      console.log("youtube auth successful");
+      WINDOWS.main.webContents.send('retry', data);
     });
 
     ipcMain.on('status_update', (event, data) => {
