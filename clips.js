@@ -8,8 +8,10 @@ const querystring = require('querystring');
 
 const setClip = (newIndex) => {
     if (newIndex > -1 && newIndex < allClips.length) {
+        let vid = document.getElementsByTagName('video')[0];
+        vid.controls = true;
         displayedClip = allClips[newIndex];
-        document.querySelector('video').src = displayedClip.download_url;
+        vid.src = displayedClip.download_url;
         document.getElementById("cliptitle").placeholder = displayedClip.title;
         changeFrontendStatuses();
         if (currentIndex == allClips.length - 1 && allClips.length > 1) {
@@ -29,8 +31,9 @@ const setClip = (newIndex) => {
     } else {
         document.getElementById("cliptitle").placeholder = "No clips found, load more clips!";
         let vid = document.getElementsByTagName('video')[0];
-        vid.src = 'https://share.nyx.xyz/0eHFc1hHkzd';
+        vid.src = 'https://share.nyx.xyz/4XnZYjhZk2a';
         vid.pause();
+        vid.controls = false;
         displayedClip = {};
         document.getElementById("next").disabled = true;
         document.getElementById("prev").disabled = true;

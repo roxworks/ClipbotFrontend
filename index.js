@@ -93,7 +93,16 @@ const updateDisplayedSettings = async () => {
                 document.querySelector("video").src = clipToDisplay || NO_CLIPS_URL;
                 if(clipToDisplay == null) {
                     document.querySelector("video").pause();
+                    document.querySelector("video").controls = false;
                 }
+                else {
+                    document.querySelector("video").controls = true;
+                }
+            }
+
+
+            if(document.querySelector('video').src == NO_CLIPS_URL) {
+                document.querySelector('video').controls = false;
             }
             // updateGlobalShortcut(settings?.hotkey);
             ipcRenderer.send('hotkey_changed', settings?.hotkey);
