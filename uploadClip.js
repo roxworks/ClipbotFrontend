@@ -33,7 +33,8 @@ let uploadClip = async (force = false) => {
             title: 'Not logged in to Youtube',
             text: 'Looks like you need to login to Youtube. Please click Login below to login.',
             icon: 'error',
-            confirmButtonText: 'Login'
+            confirmButtonText: 'Login',
+            showCancelButton: true,
         }).then((result) => {
             if(result.isConfirmed) {
                 doYoutubeAuth();

@@ -38,7 +38,7 @@ let doTiktokAuth = () => {
         icon: 'info',
         text: "Looks like you're not logged in to TikTok, please click 'Login' to open a login window",
         confirmButtonText: 'Login',
-        denyButtonText: 'Later',
+        showCancelButton: true,
     }).then((result) => {
         if (result.isConfirmed) {
             console.log("User selected to open tiktok");

@@ -246,9 +246,12 @@ document.addEventListener("DOMContentLoaded", () => {
             Swal.fire({
                 icon: 'error',
                 html: "TikTok login failed.<br/>Click Retry below to try again.",
-                confirmButtonText: 'Retry'
-            }).then(() => {
-                ipcRenderer.send('tiktok_open');
+                confirmButtonText: 'Retry',
+                showCancelButton: true,
+            }).then((result) => {
+                if(result.isConfirmed) {
+                    ipcRenderer.send('tiktok_open');
+                }
             });
             return;
         }
