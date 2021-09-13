@@ -12,19 +12,28 @@ const setClip = (newIndex) => {
         document.querySelector('video').src = displayedClip.download_url;
         document.getElementById("cliptitle").placeholder = displayedClip.title;
         changeFrontendStatuses();
-        if (currentIndex == allClips.length - 1) {
+        if (currentIndex == allClips.length - 1 && allClips.length > 1) {
             document.getElementById("next").disabled = true;
             document.getElementById("prev").disabled = false;
-        } else if (currentIndex == 0) {
+        } else if (currentIndex == 0 && allClips.length > 1) {
             document.getElementById("next").disabled = false;
             document.getElementById("prev").disabled = true;
-        } else {
+        } else if (allClips.length == 0 || allClips.length == 1) {
+            document.getElementById("next").disabled = true;
+            document.getElementById("prev").disabled = true;
+        }
+        else {
             document.getElementById("next").disabled = false;
             document.getElementById("prev").disabled = false;
         }
     } else {
         document.getElementById("cliptitle").placeholder = "No clips found, load more clips!";
+        let vid = document.getElementsByTagName('video')[0];
+        vid.src = 'https://share.nyx.xyz/0eHFc1hHkzd';
+        vid.pause();
         displayedClip = {};
+        document.getElementById("next").disabled = true;
+        document.getElementById("prev").disabled = true;
         changeFrontendStatuses("Press Load Clips To Get More clips!");
 
     }
