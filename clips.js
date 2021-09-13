@@ -4,27 +4,25 @@ let state = {};
 let displayedClip = undefined;
 let currentIndex = 0;
 let settingsDidLoad = undefined;
+const querystring = require('querystring');
 
 const setClip = (newIndex) => {
-    if(newIndex > -1 && newIndex < allClips.length) {
+    if (newIndex > -1 && newIndex < allClips.length) {
         displayedClip = allClips[newIndex];
         document.querySelector('video').src = displayedClip.download_url;
         document.getElementById("cliptitle").placeholder = displayedClip.title;
         changeFrontendStatuses();
-        if(currentIndex == allClips.length - 1) {
+        if (currentIndex == allClips.length - 1) {
             document.getElementById("next").disabled = true;
             document.getElementById("prev").disabled = false;
-        }
-        else if (currentIndex == 0) {
+        } else if (currentIndex == 0) {
             document.getElementById("next").disabled = false;
             document.getElementById("prev").disabled = true;
-        }
-        else {
+        } else {
             document.getElementById("next").disabled = false;
             document.getElementById("prev").disabled = false;
         }
-    }
-    else {
+    } else {
         document.getElementById("cliptitle").placeholder = "No clips found, load more clips!";
         displayedClip = {};
         changeFrontendStatuses("Press Load Clips To Get More clips!");
@@ -32,9 +30,9 @@ const setClip = (newIndex) => {
     }
 }
 
-const changeClipOnFrontend = async (newSettings) => {
+const changeClipOnFrontend = async(newSettings) => {
     let keys = Object.keys(newSettings);
-    for(key of keys) {
+    for (key of keys) {
         allClips[currentIndex][key] = newSettings[key];
         displayedClip[key] = newSettings[key];
     }
@@ -42,34 +40,30 @@ const changeClipOnFrontend = async (newSettings) => {
     return changeFrontendStatuses();
 };
 
-const changeFrontendStatuses = async (customStatus) => {
+const changeFrontendStatuses = async(customStatus) => {
     let settings = await settingsDidLoad;
-    if(customStatus) {
+    if (customStatus) {
         document.getElementById("approvalStatus").innerHTML = customStatus;
     }
     //Change approvalStatus and uploadedStatus text based on displayedClip fields
-    if(displayedClip.approved == true) {
+    if (displayedClip.approved == true) {
         document.getElementById("approvalStatus").innerHTML = "Approved";
-    }
-    else if(displayedClip.approved == false) {
+    } else if (displayedClip.approved == false) {
         document.getElementById("approvalStatus").innerHTML = "Rejected";
-    }
-    else {
+    } else {
         document.getElementById("approvalStatus").innerHTML = ((settings?.defaultApprove == true || settings?.defaultApprove == 'true') && displayedClip.view_count >= settings?.minViewCount) ? "Approved By Default" : "Not Yet Approved";
     }
-    if(displayedClip.uploaded == true) {
+    if (displayedClip.uploaded == true) {
         document.getElementById("uploadedStatus").innerHTML = "Uploaded";
-    }
-    else {
+    } else {
         document.getElementById("uploadedStatus").innerHTML = "Not Uploaded";
     }
 
     let vertVideoEnabled = await getClipOrientationIsVertical();
-    if(vertVideoEnabled) {
+    if (vertVideoEnabled) {
         document.getElementById("customOrientation").innerText = "Change to Horizontal";
         document.getElementById("customCrop").disabled = false;
-    }
-    else {
+    } else {
         document.getElementById("customOrientation").innerText = "Change to Vertical";
         document.getElementById("customCrop").disabled = true;
     }
@@ -78,39 +72,38 @@ const changeFrontendStatuses = async (customStatus) => {
     };
 };
 
-const updateClipOnBackend = async (clipId, newSettings) => {
+const updateClipOnBackend = async(clipId, newSettings) => {
     //PUT to /clip with id and new settings
     let res = await fetch('http://localhost:42074/clip/', {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({...newSettings, id: clipId})
+        body: JSON.stringify({...newSettings, id: clipId })
     });
     ipcRenderer.send('settings_updated');
     return res;
 }
 
-const updateClipFrontendAndBackend = async (newSettings) => {
+const updateClipFrontendAndBackend = async(newSettings) => {
     await updateClipOnBackend(displayedClip.id, newSettings);
     return changeClipOnFrontend(newSettings);
 }
 
-const changeTitle = async () => {
+const changeTitle = async() => {
     console.log("Change title");
     // hit setting endpoint with new title
     let newTitle = document.getElementById("cliptitle").value;
-    if(newTitle == '') {
+    if (newTitle == '') {
         return false;
     }
-    let result = await updateClipFrontendAndBackend({title: newTitle});
+    let result = await updateClipFrontendAndBackend({ title: newTitle });
     if (result.status === 200) {
         Swal.fire({
             icon: 'success',
             title: 'Title changed to ' + newTitle,
         });
-    }
-    else {
+    } else {
         Swal.fire({
             icon: 'error',
             title: 'Error changing title',
@@ -119,30 +112,41 @@ const changeTitle = async () => {
     return true;
 }
 
-document.addEventListener('DOMContentLoaded', async function() {
-    let clipsResult = await fetch('http://localhost:42074/clip/all').then(res => res.json());
-    console.log(`got ${clipsResult?.clips?.length} clips`);
-    state = await fetch('http://localhost:42074/state').then(res => res.json());
-    allClips = clipsResult.clips;
+const setFrontendClips = async (clips) => {
+    if(!clips) {
+        let clipsResult = await fetch('http://localhost:42074/clip/all').then(res => res.json());
+        console.log(`got ${clipsResult?.clips?.length} clips`);
+        allClips = clipsResult.clips;
+        state = await fetch('http://localhost:42074/state').then(res => res.json());
+        console.log(JSON.stringify(allClips));
+        //check if current clip is in allClips
+        let possibleCurrentClipIndex = allClips.findIndex(clip => clip.id === state.currentClipId);
+        currentIndex = possibleCurrentClipIndex >= 0 ? possibleCurrentClipIndex : 0;
+        if (allClips.length == 0) {
+            currentIndex = -1;
+        }
+    }
+    else {
+        allClips = clips;
+        currentIndex = 0;
+    }
 
-    console.log(JSON.stringify(allClips));
-    //check if current clip is in allClips
-    let possibleCurrentClipIndex = allClips.findIndex(clip => clip.id === state.currentClipId);
-    currentIndex = possibleCurrentClipIndex >= 0 ? possibleCurrentClipIndex : 0;
-    if(allClips.length == 0) {
-        currentIndex = -1;
-    }    
     setClip(currentIndex);
+    return allClips;
+}
+
+document.addEventListener('DOMContentLoaded', async function() {
+    let allClips = await setFrontendClips();
 
     document.getElementById('prev').addEventListener('click', function() {
-        if(currentIndex > 0) {
+        if (currentIndex > 0) {
             currentIndex--;
             setClip(currentIndex);
         }
     });
 
     document.getElementById('next').addEventListener('click', function() {
-        if(currentIndex < allClips.length - 1) {
+        if (currentIndex < allClips.length - 1) {
             currentIndex++;
             setClip(currentIndex);
         }
@@ -153,10 +157,11 @@ document.addEventListener('DOMContentLoaded', async function() {
     setupApproveRejectButtons();
     setupCloseButton();
     setupOrientationButtons();
+    setupFilterFunctionality();
 });
 
 const changeTitleFrontend = (titleDidChange) => {
-    if(titleDidChange) {
+    if (titleDidChange) {
         document.getElementById("cliptitle").value = '';
         document.getElementById("cliptitle").placeholder = displayedClip.title;
         console.log('placeholders changed');
@@ -165,7 +170,7 @@ const changeTitleFrontend = (titleDidChange) => {
 
 const setupTitleStuff = async() => {
     //add click listener to #changetitlebutton
-    document.getElementById("changetitlebutton").addEventListener("click", async function () {
+    document.getElementById("changetitlebutton").addEventListener("click", async function() {
         e.preventDefault();
         e.stopPropagation();
         console.log('title changin');
@@ -174,12 +179,12 @@ const setupTitleStuff = async() => {
         return false;
     });
 
-    document.getElementById("title-form").addEventListener('submit', async (e) => {
+    document.getElementById("title-form").addEventListener('submit', async(e) => {
         e.preventDefault();
         e.stopPropagation();
         console.log('update submitted');
         let titleDidChange = await changeTitle();
-        if(titleDidChange) {
+        if (titleDidChange) {
             document.getElementById("cliptitle").value = '';
             document.getElementById("cliptitle").placeholder = displayedClip?.title;
             console.log('placeholders changed');
@@ -197,13 +202,13 @@ const setupTitleStuff = async() => {
 };
 
 const setupLoadButton = () => {
-    document.getElementById("loadClips").addEventListener('click', async (e) => {
+    document.getElementById("loadClips").addEventListener('click', async(e) => {
         e.preventDefault();
         e.stopPropagation();
         console.log('load button clicked');
         let clipsResult = await fetch('http://localhost:42074/clip/load').then(res => res.json());
-        if(clipsResult.status == 200) {
-            if(allClips?.length === clipsResult?.allClips?.length) {
+        if (clipsResult.status == 200) {
+            if (allClips?.length === clipsResult?.allClips?.length) {
                 console.log('no new clips');
                 Swal.fire({
                     icon: 'info',
@@ -219,24 +224,23 @@ const setupLoadButton = () => {
 
 const setupApproveRejectButtons = () => {
     // add click listeners to approve button and reject button that update the clip on the backend
-    document.getElementById("approve").addEventListener('click', async (e) => {
+    document.getElementById("approve").addEventListener('click', async(e) => {
         e.preventDefault();
         e.stopPropagation();
         console.log('approve button clicked');
         let changedTitle = undefined;
         let titleDidChange = document.getElementById("cliptitle").value != '';
-        if(titleDidChange) {
+        if (titleDidChange) {
             changedTitle = document.getElementById("cliptitle").value;
         }
-        let result = await updateClipFrontendAndBackend({approved: true, title: changedTitle});
+        let result = await updateClipFrontendAndBackend({ approved: true, title: changedTitle });
         if (result.status === 200) {
             changeTitleFrontend(titleDidChange);
             Swal.fire({
                 icon: 'success',
                 title: 'Clip approved',
             });
-        }
-        else {
+        } else {
             Swal.fire({
                 icon: 'error',
                 title: 'Error approving clip',
@@ -245,24 +249,23 @@ const setupApproveRejectButtons = () => {
         return false;
     });
 
-    document.getElementById("reject").addEventListener('click', async (e) => {
+    document.getElementById("reject").addEventListener('click', async(e) => {
         e.preventDefault();
         e.stopPropagation();
         console.log('reject button clicked');
         let changedTitle = undefined;
         let titleDidChange = document.getElementById("cliptitle").value != '';
-        if(titleDidChange) {
+        if (titleDidChange) {
             changedTitle = document.getElementById("cliptitle").value;
         }
-        let result = await updateClipFrontendAndBackend({approved: false, title: changedTitle});
+        let result = await updateClipFrontendAndBackend({ approved: false, title: changedTitle });
         if (result.status === 200) {
             changeTitleFrontend(titleDidChange);
             Swal.fire({
                 icon: 'success',
                 title: 'Clip rejected',
             });
-        }
-        else {
+        } else {
             Swal.fire({
                 icon: 'error',
                 title: 'Error rejecting clip',
@@ -273,7 +276,7 @@ const setupApproveRejectButtons = () => {
 }
 
 const setupCloseButton = () => {
-    document.getElementById("close").addEventListener('click', async (e) => {
+    document.getElementById("close").addEventListener('click', async(e) => {
         e.preventDefault();
         e.stopPropagation();
         console.log('close button clicked');
@@ -282,26 +285,23 @@ const setupCloseButton = () => {
     });
 }
 
-document.addEventListener('DOMContentLoaded', async () => {
+document.addEventListener('DOMContentLoaded', async() => {
     settingsDidLoad = fetch('http://localhost:42074/settings').then(res => res.json());
 });
 
-const getClipOrientationIsVertical = async () => {
+const getClipOrientationIsVertical = async() => {
     let settings = await settingsDidLoad;
     let currentOrientation = undefined;
-    if(displayedClip.verticalVideoEnabled == true || displayedClip.verticalVideoEnabled == 'true') {
+    if (displayedClip.verticalVideoEnabled == true || displayedClip.verticalVideoEnabled == 'true') {
         console.log('Clip vert video enabled');
-        currentOrientation = true;        
-    }
-    else if (displayedClip.verticalVideoEnabled == false || displayedClip.verticalVideoEnabled == 'false') {
+        currentOrientation = true;
+    } else if (displayedClip.verticalVideoEnabled == false || displayedClip.verticalVideoEnabled == 'false') {
         console.log('Clip vert video disabled');
-        currentOrientation = false;        
-    }
-    else if (settings.verticalVideoEnabled == true || settings.verticalVideoEnabled == 'true') {
+        currentOrientation = false;
+    } else if (settings.verticalVideoEnabled == true || settings.verticalVideoEnabled == 'true') {
         console.log('default vert video enabled');
-        currentOrientation = true;        
-    }
-    else {
+        currentOrientation = true;
+    } else {
         console.log('default vert video disabled');
         currentOrientation = false;
     }
@@ -309,21 +309,21 @@ const getClipOrientationIsVertical = async () => {
 }
 
 const setupOrientationButtons = () => {
-    document.getElementById("customOrientation").addEventListener('click', async (e) => {
+    document.getElementById("customOrientation").addEventListener('click', async(e) => {
         //update clip on backend with custom orientation
         e.preventDefault();
         e.stopPropagation();
 
         console.log('custom orientation button clicked');
         let currentOrientation = await getClipOrientationIsVertical();
-        
+
         let newOrientation = !currentOrientation;
 
-        let result = await updateClipFrontendAndBackend({verticalVideoEnabled: newOrientation});
+        let result = await updateClipFrontendAndBackend({ verticalVideoEnabled: newOrientation });
 
     });
 
-    document.getElementById("customCrop").addEventListener('click', async (e) => {
+    document.getElementById("customCrop").addEventListener('click', async(e) => {
         //update clip on backend with custom crop
         e.preventDefault();
         e.stopPropagation();
@@ -335,20 +335,19 @@ const setupOrientationButtons = () => {
             screenCrop: settings.screenCrop,
         };
 
-        ipcRenderer.once('custom_crop', async (event, cropData) => {
+        ipcRenderer.once('custom_crop', async(event, cropData) => {
             console.log('custom crop received');
             let crop = JSON.parse(cropData);
             // TODO: Be wary, this might be a little confusing to users, 
             // there's not a definite right answer but this _feels_ most intuitive
-            let result = await updateClipFrontendAndBackend({customCrop: crop, verticalVideoEnabled: true});
+            let result = await updateClipFrontendAndBackend({ customCrop: crop, verticalVideoEnabled: true });
             if (result.status === 200) {
                 console.log('custom crop updated');
                 Swal.fire({
                     icon: 'success',
                     title: 'Custom crop updated',
                 });
-            }
-            else {
+            } else {
                 console.log('error updating custom crop');
                 Swal.fire({
                     icon: 'error',
@@ -357,13 +356,11 @@ const setupOrientationButtons = () => {
             }
         });
 
-        ipcRenderer.send('camvas_open', JSON.stringify(
-            {
-                cropDetails: currentCrop,
-                clip: displayedClip,
-                callback: 'custom_crop'
-            }
-        ));
+        ipcRenderer.send('camvas_open', JSON.stringify({
+            cropDetails: currentCrop,
+            clip: displayedClip,
+            callback: 'custom_crop'
+        }));
 
 
         // let result = await updateClipFrontendAndBackend({cropEnabled: newCrop});
@@ -373,3 +370,36 @@ const setupOrientationButtons = () => {
     });
 
 }
+
+const setupFilterFunctionality = () => {
+    // grab all data from filter inputs, then call /clip/filter with all inputs as a query string
+    document.getElementById("filterform").addEventListener('submit', async(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log('filter form submitted');
+        // create JSON object from form data and post to /clip/filtered
+        let formData = new FormData(document.getElementById("filterform"));
+        let filterData = {};
+        for (let [key, value] of formData.entries()) {
+            filterData[key] = value;
+        }
+        let result = await fetch('http://localhost:42074/clip/filtered', {
+            method: 'POST',
+            body: JSON.stringify(filterData),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (result.status === 200) {
+            console.log('filter success');
+            let json = await result.json();
+            console.log(json);
+            // ipcRenderer.send('filter_clips', JSON.stringify(json));
+            setFrontendClips(json.clips);
+        } else {
+            console.log('filter error');
+        }
+        return false;
+    });
+};

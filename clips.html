@@ -28,15 +28,16 @@
             <form type="submit" id="filterform">
                 <div id='filtersDiv'>
                     <label for="approvalStatusFilter">Approval Status:</label>
-                    <select name="approvalStatusFilter" id="approvalStatusFilter">
+                    <select name="approved" id="approvalStatusFilter">
+                      <option value="">Any</option>
                       <option value="true">Approved</option>
                       <option value="false">Rejected</option>
-                      <option value="auto">Auto-approved</option>
+                      <option value="null">Auto-approved</option>
                       <option value="all">All Approved</option>
                     </select>
                     <br>
                     <label for="viewCount">Minimum View count:</label>
-                    <input name="viewCount" id="viewCount" type="number" min="0" oninput="validity.valid||(value='');" placeholder="View Count" />
+                    <input name="minViewCount" id="viewCount" type="number" min="0" oninput="validity.valid||(value='');" placeholder="View Count" />
                     <br>
                     <label for="startDate">Start Date:</label>
                     <input name="startDate" id="startDate" type="date" placeholder="Start Date" />
