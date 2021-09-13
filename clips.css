@@ -1,0 +1,29 @@
+#filterform {
+    display: flex;
+    align-items: center;
+}
+
+#viewCount {
+    width: 30%;
+}
+
+.roundboi {
+    border-top: 8px solid #bbb;
+    border-radius: 5px;
+    width: 100%;
+    margin-top: 5px;
+    /* margin-bottom: 15px; */
+}
+
+#clipsbuttons {
+    justify-content: center;
+}
+
+#applyFiltersButton {
+    max-height: 50px;
+}
+
+.cliptitleinput {
+    width: 350px !important;
+    padding: 7px 14px !important;
+}

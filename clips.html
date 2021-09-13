@@ -2,65 +2,80 @@
 <html lang="en">
 
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Clipbot</title>
-  <meta name="description" content="Automatically upload your twitch clips to TikTok!" />
-  <meta name="author" content="Roxkstar74" />
-  <meta property="og:title" content="Clipbot" />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://www.Clipbot.tv/" />
-  <meta property="og:description" content="Automatically upload your twitch clips to TikTok!" />
-  <meta property="og:image" content="image.png" />
-  <!-- <link rel="icon" href="/favicon.ico">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Clipbot</title>
+    <meta name="description" content="Automatically upload your twitch clips to TikTok!" />
+    <meta name="author" content="Roxkstar74" />
+    <meta property="og:title" content="Clipbot" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://www.Clipbot.tv/" />
+    <meta property="og:description" content="Automatically upload your twitch clips to TikTok!" />
+    <meta property="og:image" content="image.png" />
+    <!-- <link rel="icon" href="/favicon.ico">
       <link rel="icon" href="/favicon.svg" type="image/svg+xml">
       <link rel="apple-touch-icon" href="/apple-touch-icon.png"> -->
-  <link rel="stylesheet" href="electron.css" />
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script src="uploadClip.js"></script>
-  <script src="clips.js"></script>
+    <link rel="stylesheet" href="electron.css" />
+    <link rel="stylesheet" href="clips.css" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="uploadClip.js"></script>
+    <script src="clips.js"></script>
 </head>
 
 <body class='mid-body'>
-  <div class="container">
-    <div class="centered">
-      <form class="form-signin" id="clipform" type='submit'>
-        <h1 class="form-signin-heading" id="title">Clip Queue</h1> 
-          <video
-            src="https://share.nyx.xyz/0eHFc1hHkzd"
-            autoplay
-            loop
-            muted
-            controls
-            width="450px" height="255px"
-          ></video>
-          <div class="form-group" id="title-form">
-            <input type="text" name="cliptitle" oninput="validity.valid||(value='');" id="cliptitle" class='cliptitleinput' placeholder="Your clip title" />
-            <button class="btn" id="changetitlebutton" style="
+    <div class="container">
+        <div class="centered">
+            <form type="submit" id="filterform">
+                <div id='filtersDiv'>
+                    <label for="approvalStatusFilter">Approval Status:</label>
+                    <select name="approvalStatusFilter" id="approvalStatusFilter">
+                      <option value="true">Approved</option>
+                      <option value="false">Rejected</option>
+                      <option value="auto">Auto-approved</option>
+                      <option value="all">All Approved</option>
+                    </select>
+                    <br>
+                    <label for="viewCount">Minimum View count:</label>
+                    <input name="viewCount" id="viewCount" type="number" min="0" oninput="validity.valid||(value='');" placeholder="View Count" />
+                    <br>
+                    <label for="startDate">Start Date:</label>
+                    <input name="startDate" id="startDate" type="date" placeholder="Start Date" />
+                    <br>
+                    <label for="endDate">End Date:</label>
+                    <input name="endDate" id="endDate" type="date" placeholder="End Date" />
+                </div>
+                <input type="submit" value="Apply Filters" id='applyFiltersButton' class="btn">
+            </form>
+            <hr class='roundboi'>
+            <h1 class="form-signin-heading" id="title">Manage Clips</h1>
+            <video src="https://share.nyx.xyz/0eHFc1hHkzd" autoplay loop muted controls width="450px" height="255px"></video>
+            <form class="form-group" id="title-form">
+                <input type="text" name="cliptitle" oninput="validity.valid||(value='');" id="cliptitle" class='cliptitleinput' placeholder="Your clip title" />
+                <button class="btn" id="changetitlebutton" style="
             margin: 5px 0 0 0;
-            ">Save</button>   
-          </div>
-          <div id="clipDetails">
-            <p style="margin-bottom: 10px;" class='bigboi'>
-            <span id="approvalStatus"></span>, 
-            <span id="uploadedStatus"></span>
-            </p>
-          </div>
-        <div class="morebuttons">
-          <button class="btn" id="prev" type="reset">&lt;&lt;</button>
-          <button class="btn" id="next" type="reset">&gt;&gt;</button>
-          <button class="btn" id="approve" type="reset">Approve</button>
-          <button class="btn" id="reject" type="reset">Reject</button>
-          <button class="btn" id="loadClips" type="reset">Load more</button>
-          <button class="btn" id="close" type="reset">
-            <img src='https://static-cdn.jtvnw.net/emoticons/v1/86/1.0' width=20px
-              height=100% style='margin-right: 5px;'/>Close</button>
-          <button class="btn" id="customCrop" type="reset">Set Custom Crop</button>
-          <button class="btn" id="customOrientation" type="reset">Change Orientation</button>
+            ">Save</button>
+            </form>
+            <div id="clipDetails">
+                <p style="margin-bottom: 10px;" class='bigboi'>
+                    <span id="approvalStatus"></span>,
+                    <span id="uploadedStatus"></span>
+                </p>
+            </div>
+            <div class="morebuttons" id='clipsbuttons'>
+                <button class="btn" id="prev" type="reset">&lt;&lt;</button>
+                <button class="btn" id="next" type="reset">&gt;&gt;</button>
+                <button class="btn" id="approve" type="reset">Approve</button>
+                <button class="btn" id="reject" type="reset">Reject</button>
+                <button class="btn" id="loadClips" type="reset">Load more</button>
+                <button class="btn" id="close" type="reset">
+          <img src='https://static-cdn.jtvnw.net/emoticons/v1/86/1.0' width=20px height=100%
+            style='margin-right: 5px;' />Close</button>
+                <button class="btn" id="customCrop" type="reset">Set Custom Crop</button>
+                <button class="btn" id="customOrientation" type="reset">Change Orientation</button>
+            </div>
+            <!-- <button id="push-to-talk">Push to Talk</button> -->
         </div>
-      </form>
-      <!-- <button id="push-to-talk">Push to Talk</button> -->
     </div>
-  </div>
 </body>
+
 </html>

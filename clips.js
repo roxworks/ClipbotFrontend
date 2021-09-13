@@ -174,7 +174,7 @@ const setupTitleStuff = async() => {
         return false;
     });
 
-    document.getElementById("clipform").addEventListener('submit', async (e) => {
+    document.getElementById("title-form").addEventListener('submit', async (e) => {
         e.preventDefault();
         e.stopPropagation();
         console.log('update submitted');

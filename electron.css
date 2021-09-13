@@ -1,39 +1,43 @@
 @import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap");
 :root {
-  --c-primary: #5471f1;
-  --c-secondary: #fafafa;
-  --c-alt: #db22c2;
-  --border-radius: 5px;
+    --c-primary: #5471f1;
+    --c-secondary: #fafafa;
+    --c-alt: #db22c2;
+    --border-radius: 5px;
 }
 
 * {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 ::-webkit-scrollbar {
-  width: 10px;
+    width: 10px;
 }
+
 
 /* Track */
 
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
+    background: #f1f1f1;
 }
+
 
 /* Handle */
 
 ::-webkit-scrollbar-thumb {
-  background: var(--c-primary);
-  border-radius: var(--border-radius);
+    background: var(--c-primary);
+    border-radius: var(--border-radius);
 }
+
 
 /* Handle on hover */
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #8698ec;
+    background: #8698ec;
 }
+
 
 /* #settings {
     padding-left: 50px;
@@ -41,296 +45,293 @@
 
 html,
 body {
-  width: 100%;
-  height: 100%;
-  font-size: 16px;
-  /* background-color: var(--c-secondary); */
-  background-color: rgb(27, 27, 27);
-  color: white;
-  margin: 0;
-  font-family: "Open Sans", sans-serif;
+    width: 100%;
+    height: 100%;
+    font-size: 16px;
+    /* background-color: var(--c-secondary); */
+    background-color: rgb(27, 27, 27);
+    color: white;
+    margin: 0;
+    font-family: "Open Sans", sans-serif;
 }
 
 .mid-body {
-  padding: .5rem 1rem 0 1rem;
+    padding: .5rem 1rem 0 1rem;
 }
 
 .right-container {
-  display: flex;
-  justify-content: flex-end;
+    display: flex;
+    justify-content: flex-end;
 }
 
 #cropper-body-guy {
-  overflow-x: hidden;
+    overflow-x: hidden;
 }
 
-/* Ensure the size of the image fit the container perfectly */
-#cropthing {
-  display: block;
 
-  /* This rule is very important, please don't ignore this */
-  max-width: 100%;
+/* Ensure the size of the image fit the container perfectly */
+
+#cropthing {
+    display: block;
+    /* This rule is very important, please don't ignore this */
+    max-width: 100%;
 }
 
 .container {
-  max-width: 1100px;
-  margin: 0 auto;
-  height: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    height: 100%;
 }
 
 #crop-container {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 960px;
-  height: 540px;
-  /* overflow: hidden; */
-  margin: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 960px;
+    height: 540px;
+    /* overflow: hidden; */
+    margin: 0;
 }
 
 #cropCanvas {
-  display: block;
-  top: 0;
-  left: 0;
-  position: absolute;
-  width: 960px;
-  height: 540px;
-  margin: 0;
+    display: block;
+    top: 0;
+    left: 0;
+    position: absolute;
+    width: 960px;
+    height: 540px;
+    margin: 0;
 }
 
 #video-container {
-  /* overflow: hidden; */
-  position: relative;
-  top: 0;
-  left: 0;
-  width: 960px;
-  height: 540px;
+    /* overflow: hidden; */
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 960px;
+    height: 540px;
 }
 
 .cropper-video {
-  position: absolute;
-  width: 960px;
-  height: 540px;
-  opacity: 75%;
+    position: absolute;
+    width: 960px;
+    height: 540px;
+    opacity: 75%;
 }
 
 .cropper-face {
-  background-color: transparent;
+    background-color: transparent;
 }
 
 .cropper-crop {
-  box-shadow: 0 0 0 550px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 0 550px rgba(0, 0, 0, 0.5);
 }
 
 .container .centered {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: start;
-  height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
+    height: 100%;
 }
 
 .morebuttons {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  justify-content: flex-start;
-  flex-wrap: wrap;
-  gap: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+    -webkit-appearance: none;
+    margin: 0;
 }
-
 
 #nextcliptext {
-  margin-bottom: 5px;
+    margin-bottom: 5px;
 }
+
 
 /* #skip, #uploadEnabled {
   margin: 10px 0px;
 } */
 
 .tutorial {
-  min-width: 45%;
-  font-size: 26px !important;
+    min-width: 45%;
+    font-size: 26px !important;
 }
 
-.morebuttons > .btn {
-  width: 47%;
+.morebuttons>.btn {
+    width: 47%;
 }
 
 .bigboi {
-  font-size: 1.5em;
+    font-size: 1.5em;
 }
 
 .btn:disabled {
-  background-color: grey;
-  cursor: unset;
+    background-color: grey;
+    cursor: unset;
 }
 
 .btn:disabled:after {
-  background-color: grey;
-  cursor: unset;
+    background-color: grey;
+    cursor: unset;
 }
 
 h1 {
-  font-size: 3rem;
-  list-style: 2.2rem;
+    font-size: 3rem;
+    list-style: 2.2rem;
 }
 
 .form-group {
-  margin: 2rem 0;
-  display: flex;
-  justify-content: space-between;
+    margin: 2rem 0;
+    display: flex;
+    justify-content: space-between;
 }
 
-.form-group > label > p.what {
-  font-size: 15px; 
-  display: block;
+.form-group>label>p.what {
+    font-size: 15px;
+    display: block;
 }
 
 .icon {
-  width: 16px;
-  height: 16px;
+    width: 16px;
+    height: 16px;
 }
+
 
 /* .what {
   visibility:
 } */
 
 p.what:hover {
-  cursor: pointer;
+    cursor: pointer;
 }
 
 .form-group input {
-  border: 0;
-  border-radius: var(--border-radius);
-  padding: 15px 30px;
-  margin: 5px 0;
-  display: block;
-  font-size: 1.2rem;
-  box-shadow: 0px 0px 7px 4px rgb(212 212 212 / 19%);
-  width: 30%;
-  outline: none;
+    border: 0;
+    border-radius: var(--border-radius);
+    padding: 15px 30px;
+    margin: 5px 0;
+    display: block;
+    font-size: 1.2rem;
+    box-shadow: 0px 0px 7px 4px rgb(212 212 212 / 19%);
+    width: 30%;
+    outline: none;
 }
 
 #hashtags {
-  width: 70%
+    width: 70%
 }
 
 #hotkey {
-  width: 70%
+    width: 70%
 }
 
 .form-group label {
-  font-size: 1.3rem;
+    font-size: 1.3rem;
 }
 
 .form-group p {
-  font-size: 1.3rem;
-  margin: 0;
+    font-size: 1.3rem;
+    margin: 0;
 }
 
 .swal2-textarea {
-  resize: none;
+    resize: none;
 }
 
-.customSwalBtn{
-  background-color: rgba(214,130,47,1.00);
-  border-left-color: rgba(214,130,47,1.00);
-  border-right-color: rgba(214,130,47,1.00);
-  border: 0;
-  border-radius: 3px;
-  box-shadow: none;
-  color: #fff;
-  cursor: pointer;
-  font-size: 17px;
-  font-weight: 500;
-  margin: 30px 5px 0px 5px;
-  padding: 10px 32px;
+.customSwalBtn {
+    background-color: rgba(214, 130, 47, 1.00);
+    border-left-color: rgba(214, 130, 47, 1.00);
+    border-right-color: rgba(214, 130, 47, 1.00);
+    border: 0;
+    border-radius: 3px;
+    box-shadow: none;
+    color: #fff;
+    cursor: pointer;
+    font-size: 17px;
+    font-weight: 500;
+    margin: 30px 5px 0px 5px;
+    padding: 10px 32px;
 }
 
 #title-form {
-  margin: 0;
-  justify-content: start;
-  gap: 5px;
+    margin: 0;
+    justify-content: start;
+    gap: 5px;
 }
 
 .cliptitlemain {
-  padding: 0;
-  overflow: hidden;
-  max-width: 350px;
-  text-overflow: ellipsis;
-}
-
-.cliptitleinput {
-  width: 75% !important;
-  padding: 7px 14px !important;
+    padding: 0;
+    overflow: hidden;
+    max-width: 350px;
+    text-overflow: ellipsis;
 }
 
 .btn {
-  border: 0;
-  background-color: var(--c-primary);
-  border-radius: var(--border-radius);
-  padding: 1rem 2rem;
-  color: #fff;
-  text-transform: uppercase;
-  font-size: 1.2rem;
-  font-weight: bold;
-  cursor: pointer;
-  position: relative;
+    border: 0;
+    background-color: var(--c-primary);
+    border-radius: var(--border-radius);
+    padding: 1rem 2rem;
+    color: #fff;
+    text-transform: uppercase;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    position: relative;
 }
 
 .btn::after {
-  position: absolute;
-  content: "";
-  background: #45559c;
-  width: 100%;
-  height: 8px;
-  bottom: 0;
-  left: 0;
-  border-radius: var(--border-radius);
+    position: absolute;
+    content: "";
+    background: #45559c;
+    width: 100%;
+    height: 8px;
+    bottom: 0;
+    left: 0;
+    border-radius: var(--border-radius);
 }
 
 .btn:active:after {
-  visibility: hidden;
+    visibility: hidden;
 }
 
 .hash-tags {
-  margin: 2rem 0;
-  max-width: 650px;
-  max-height: 140px;
-  overflow-y: auto;
-  position: relative;
+    margin: 2rem 0;
+    max-width: 650px;
+    max-height: 140px;
+    overflow-y: auto;
+    position: relative;
 }
 
 .swal2-popup {
-  font-size: 1.2em !important;
+    font-size: 1.2em !important;
 }
 
 .hash-tags li {
-  background: var(--c-primary);
-  display: inline;
-  padding: 5px 10px;
-  border-radius: var(--border-radius);
-  color: #fff;
-  margin: 2px 5px;
-  line-height: 3rem;
+    background: var(--c-primary);
+    display: inline;
+    padding: 5px 10px;
+    border-radius: var(--border-radius);
+    color: #fff;
+    margin: 2px 5px;
+    line-height: 3rem;
 }
 
 .hash-tags li:nth-child(even) {
-  background: var(--c-alt);
+    background: var(--c-alt);
 }
 
 #title {
-  display: inline-block;
+    display: inline-block;
 }
 
 #version {
-  display: inline-block;
-  font-size: 10px;
+    display: inline-block;
+    font-size: 10px;
 }
