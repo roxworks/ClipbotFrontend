@@ -23,6 +23,19 @@ const updateDisplayedSettings = async () => {
         return;
     }
 
+    if(settings.sessionId == '' && (settings.tiktokUploadEnabled == true || settings.tiktokUploadEnabled == 'true')) {
+        return;
+    }
+
+    if(settings.youtubeToken == '' && (settings.youtubeUploadEnabled == true || settings.youtubeUploadEnabled == 'true')) {
+        return;
+    }
+
+    if((settings.youtubeUploadEnabled == false || settings.youtubeUploadEnabled == 'false') && 
+    (settings.tiktokUploadEnabled == false || settings.tiktokUploadEnabled == 'false')) {
+        return;
+    }
+ 
     if (result.status == 200) {
         result.json().then(async (state) => {
             let currentClipId = state.currentClipId;
