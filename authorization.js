@@ -116,10 +116,19 @@ let doTwitchAuth = () => {
     });
 };
 
+const openClipbotMainSite = () => {
+    console.log('why'); 
+    window.shell.openExternal("https://clipbot.tv/#pricing");
+    return false;
+}
+
 let doLicenseAuth = () => {
     Swal.fire({
         icon: 'info',
-        text: "Looks like you don't have a license yet. Please enter your license key below.",
+        html: `Looks like you have more than 2000 followers<br>
+        To use Clipbot, you'll need a license key. 
+        Please head to <a href='#' id='mainsite' onClick='openClipbotMainSite()'>Clipbot.tv</a> 
+        to sign up for the free trial.`,
         input: 'text',
         inputPlaceholder: 'Enter your license key here',
         confirmButtonText: 'Submit',
@@ -168,6 +177,7 @@ let doLicenseAuth = () => {
             });
         }
     });
+    // document.querySelector('#mainsite').addEventListener('click', openClipbotMainSite);
 }
 
 let doYoutubeAuth = async () => {

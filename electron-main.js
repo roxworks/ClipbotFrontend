@@ -342,8 +342,6 @@ else {
       }
     });
 
-    
-
     canvasWindow.webContents.on('did-finish-load', function() {
       canvasWindow.webContents.send('crop_data', JSON.stringify(camData));
       canvasWindow.webContents.send('screenvas_data', JSON.stringify(camData));

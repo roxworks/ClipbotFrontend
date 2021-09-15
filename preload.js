@@ -7,3 +7,6 @@ if(!(window.ipcRenderer)) {
 }
 
 console.log("preload renderer: " + window.ipcRenderer.send);
+
+const { shell } = require('electron');
+window.shell = shell;
