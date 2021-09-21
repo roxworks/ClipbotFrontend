@@ -1,37 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>  
-    <link rel="stylesheet" href="../node_modules/cropperjs/dist/cropper.min.css" />
+  <head>
+    <link
+      rel="stylesheet"
+      href="./node_modules/cropperjs/dist/cropper.min.css"
+    />
     <script src="./cropper.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="electron.css" />
-</head>
-<body id="cropper-body-guy">
-
+    <link rel="stylesheet" href="crop.css" />
+  </head>
+  <body id="cropper-body-guy">
     <div id="video-container" width="960px" height="540px">
-        <video
-          src="https://share.nyx.xyz/reWKYeJmokM"
-          autoplay
-          loop
-          muted
-          width="960px" height="540px"
-          class='cropper-video'
-        ></video>
+      <video
+        src="https://share.nyx.xyz/reWKYeJmokM"
+        autoplay
+        loop
+        muted
+        width="960px"
+        height="540px"
+        class="cropper-video"
+      ></video>
+    </div>
+
+    <div id="crop-container" width="960px" height="540px">
+      <canvas
+        id="cropCanvas"
+        ref="cropCanvas"
+        width="960px"
+        height="540px"
+      ></canvas>
+    </div>
+
+    <!-- <div class="preview" style="overflow: hidden;"> </div> -->
+    <div class="crop-section">
+
+      <h1 >Select Your Camera</h1>
+      <div class="crop-buttons">
+        <button
+          type="button"
+          role="button"
+          id="ratio"
+          tabindex="0"
+          style="font-size: 30px"
+          class="btn"
+        >
+          Change Aspect Ratio
+        </button>
+        <button
+          type="button"
+          role="button"
+          id="done"
+          tabindex="0"
+          style="font-size: 30px"
+          class="btn"
+        >
+          Done
+        </button>
       </div>
-  
-      <div id="crop-container" width="960px" height="540px">
-        <canvas id="cropCanvas" ref="cropCanvas" width="960px" height="540px"></canvas>
-      </div>
 
-
-        <!-- <div class="preview" style="overflow: hidden;"> </div> -->
-    <h1 style="text-align: center;">Select Your Camera</h1>
-
-    <button type="button" role="button" id="ratio" tabindex="0" style='font-size: 30px;' class="swal2-confirm swal2-styled">
-        Change Aspect Ratio
-    </button>
-    <button type="button" role="button" id="done" tabindex="0" style='font-size: 30px;' class="swal2-confirm swal2-styled">
-        Done
-    </button>
-</body>
+    </div>
+    </div>
+  </body>
+</html>
