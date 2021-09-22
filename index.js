@@ -451,8 +451,9 @@ document.addEventListener('DOMContentLoaded', async function (event) {
           tiktokLoggedIn ? 'Logout of' : 'Login to'
         } Tiktok</button>
         ${
-          youtubeLoggedIn ? '<button type="button" role="button" id="youtubeLogin" tabindex="0" style="font-size: 26px;"><i class="fab fa-youtube"></i> Logout of Youtube</button>' : 
-          `<img id='youtubeLogin' class='googimg' 
+          youtubeLoggedIn
+            ? '<button type="button" role="button" id="youtubeLogin" tabindex="0" style="font-size: 26px;"><i class="fab fa-youtube"></i> Logout of Youtube</button>'
+            : `<img id='youtubeLogin' class='googimg' 
           src='./google_signin_buttons/web/2x/btn_google_signin_dark_normal_web@2x.png'
           onmouseover="this.src='./google_signin_buttons/web/2x/btn_google_signin_dark_focus_web@2x.png'"
           onmouseout="this.src='./google_signin_buttons/web/2x/btn_google_signin_dark_normal_web@2x.png'"
@@ -675,174 +676,265 @@ document.addEventListener('DOMContentLoaded', async function (event) {
   }
 });
 
+// document.addEventListener('DOMContentLoaded', async function (event) {
+//   // when the #helpmenu button is clicked open a Swal.fire with helpMenuHTML as the html
+//   //<button type="button" role="button" id="format" tabindex="0" style='font-size: 30px;' class="swal2-confirm swal2-styled"><img src='https://static-cdn.jtvnw.net/emoticons/v1/30259/1.0' height='30px' style='margin-right: 5px;'/> Format</button>
+
+//   let helpMenuHTML = `
+//       <button type="button" role="button" id="discord" tabindex="0" style='font-size: 30px;' class="swal2-confirm swal2-styled"><img src='./images/WutFace.png' height='30px' style='margin-right: 5px;'/>Join Discord</button> <br/>
+//       <button type="button" role="button" id="bugreport" tabindex="0" style='font-size: 30px;' class="swal2-confirm swal2-styled"><img src='./images/WutFace.png' height='30px' style='margin-right: 5px;'/>Bug Report</button> <br/>
+//       <button type="button" role="button" id="forceupload" tabindex="0" style='font-size: 30px;' class="swal2-confirm swal2-styled"><img src='https://static-cdn.jtvnw.net/emoticons/v1/30259/1.0' height='30px' style='margin-right: 5px;'/> Force Upload Now</button>
+//       `;
+//   document.getElementById('helpmenu').addEventListener('click', function () {
+//     Swal.fire({
+//       icon: 'info',
+//       html: helpMenuHTML,
+//       title: 'Help Menu',
+//       confirmButtonText: 'Close',
+//     });
+
+//     // add click listener to bugreport button that calls backend /bug endpoint
+//     document
+//       .getElementById('discord')
+//       .addEventListener('click', async function () {
+//         console.log('Join Discord');
+//         Swal.fire({
+//           icon: 'info',
+//           title: 'Join our Discord server!',
+//           text: 'Want to submit feedback? Got cool ideas? Come join the discord and give yourself the "Clipbot User" role :)',
+//           confirmButtonText: 'Join Discord',
+//         }).then((result) => {
+//           if (result.isConfirmed) {
+//             window.open('https://clipbot.tv/discord', '_blank');
+//           }
+//         });
+//       });
+
+//     // add click listener to bugreport button that calls backend /bug endpoint
+//     document
+//       .getElementById('forceupload')
+//       .addEventListener('click', async function () {
+//         console.log('Force uploading');
+//         Swal.fire({
+//           icon: 'success',
+//           title: 'Force Upload Started',
+//         });
+//         // get state from backend
+//         uploadClip(true);
+//       });
+
+//     // add click listener to bugreport button that calls backend /bug endpoint
+//     document
+//       .getElementById('bugreport')
+//       .addEventListener('click', async function (event) {
+//         event.preventDefault();
+
+//         Swal.fire({
+//           icon: 'info',
+//           html: `What's going on? <br/> Write as much as possible, and we'll attach the internal bug logs to let Rox know`,
+//           input: 'textarea',
+//           inputPlaceholder: `Nothing is happening and I am confused`,
+//           confirmButtonText: 'Submit',
+//         }).then(async (result) => {
+//           console.log(`Bug report entered: ${result?.value}`);
+//           if (result.value) {
+//             Swal.fire({
+//               icon: 'info',
+//               html: `Sending your bug report... Please wait`,
+//               didOpen: () => {
+//                 Swal.showLoading();
+//               },
+//             });
+//             let bug = result.value;
+//             var bugreportResponse;
+//             try {
+//               bugreportResponse = await fetch(
+//                 `http://localhost:42074/bug?bug=${bug}`
+//               );
+//               console.log(bugreportResponse);
+//               if (bugreportResponse.status == 200) {
+//                 Swal.fire(
+//                   'Success!',
+//                   'Your bug report has been sent!',
+//                   'success'
+//                 );
+//               } else {
+//                 Swal.fire(
+//                   'Error!',
+//                   'There was an error sending your bug report!',
+//                   'error'
+//                 );
+//               }
+//             } catch (e) {
+//               console.log(e);
+//               Swal.fire({
+//                 title: 'Error',
+//                 text: 'There was an error sending your bug report!',
+//                 type: 'error',
+//                 confirmButtonText: 'Ok',
+//               });
+//             }
+//           }
+//         });
+//       });
+
+//     // document
+//     //   .getElementById('logout')
+//     //   .addEventListener('click', async function (event) {
+//     //     event.preventDefault();
+
+//     //     // Call settings endpoint with a blank sessionId and broadcasterId to clear the settings
+//     //     // Then call uploadClip() again
+//     //     let clearResponse;
+//     //     try {
+//     //       // confirm that user wants to log out and then clear settings
+//     //       Swal.fire({
+//     //         icon: 'info',
+//     //         title: 'Logout Confirmation',
+//     //         text: 'Are you sure you want to log out? We only recommend doing this if you accidentally logged in to the wrong channel/account.',
+//     //         type: 'warning',
+//     //         showCancelButton: true,
+//     //         confirmButtonText: 'Yes, log out!',
+//     //         cancelButtonText: 'No, stay logged in',
+//     //       }).then(async (result) => {
+//     //         if (result.isConfirmed) {
+//     //           let fieldsToClear = ['sessionId', 'broadcasterId'];
+//     //           clearResponse = await fetch(
+//     //             `http://localhost:42074/clear?fields=${JSON.stringify(
+//     //               fieldsToClear
+//     //             )}`
+//     //           );
+//     //           console.log(clearResponse);
+
+//     //           if (clearResponse.status == 200) {
+//     //             Swal.fire(
+//     //               'Success!',
+//     //               'You have been logged out of TikTok and Twitch! Click Ok to try logging in again',
+//     //               'success'
+//     //             ).then(async (result) => {
+//     //               // when they click confirm button call uploadClip() again
+//     //               if (result.isConfirmed) {
+//     //                 uploadClip();
+//     //               }
+//     //             });
+//     //           } else {
+//     //             Swal.fire(
+//     //               'Error!',
+//     //               'There was an error clearing your settings!',
+//     //               'error'
+//     //             );
+//     //           }
+//     //         }
+//     //       });
+//     //     } catch (e) {
+//     //       console.log(e);
+//     //       Swal.fire({
+//     //         title: 'Error',
+//     //         text: 'There was an error clearing your settings!',
+//     //         type: 'error',
+//     //         confirmButtonText: 'Ok',
+//     //       });
+//     //     }
+//     //   });
+
+//     // document.getElementById("format").addEventListener("click", async function (event) {
+//     //     //Call format endpoint on backend
+//     //     event.preventDefault();
+//     //     await fetch(`http://localhost:42074/format`);
+
+//     // });
+
+//     // End of help menu
+//   });
+// });
+
+// add click event listen to discord button that opens a Swal menu with discord button
 document.addEventListener('DOMContentLoaded', async function (event) {
-  // when the #helpmenu button is clicked open a Swal.fire with helpMenuHTML as the html
-  //<button type="button" role="button" id="format" tabindex="0" style='font-size: 30px;' class="swal2-confirm swal2-styled"><img src='https://static-cdn.jtvnw.net/emoticons/v1/30259/1.0' height='30px' style='margin-right: 5px;'/> Format</button>
-
-  let helpMenuHTML = `
-      <button type="button" role="button" id="discord" tabindex="0" style='font-size: 30px;' class="swal2-confirm swal2-styled"><img src='./images/WutFace.png' height='30px' style='margin-right: 5px;'/>Join Discord</button> <br/>
-      <button type="button" role="button" id="bugreport" tabindex="0" style='font-size: 30px;' class="swal2-confirm swal2-styled"><img src='./images/WutFace.png' height='30px' style='margin-right: 5px;'/>Bug Report</button> <br/>
-      <button type="button" role="button" id="forceupload" tabindex="0" style='font-size: 30px;' class="swal2-confirm swal2-styled"><img src='https://static-cdn.jtvnw.net/emoticons/v1/30259/1.0' height='30px' style='margin-right: 5px;'/> Force Upload Now</button>
-      `;
-  document.getElementById('helpmenu').addEventListener('click', function () {
-    Swal.fire({
-      icon: 'info',
-      html: helpMenuHTML,
-      title: 'Help Menu',
-      confirmButtonText: 'Close',
+  document
+    .getElementById('discord')
+    .addEventListener('click', async function () {
+      console.log('Join Discord');
+      Swal.fire({
+        icon: 'info',
+        title: 'Join our Discord server!',
+        text: 'Want to submit feedback? Got cool ideas? Come join the discord and give yourself the "Clipbot User" role :)',
+        confirmButtonText: 'Join Discord',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          window.open('https://clipbot.tv/discord', '_blank');
+        }
+      });
     });
+});
 
-    // add click listener to bugreport button that calls backend /bug endpoint
-    document
-      .getElementById('discord')
-      .addEventListener('click', async function () {
-        console.log('Join Discord');
-        Swal.fire({
-          icon: 'info',
-          title: 'Join our Discord server!',
-          text: 'Want to submit feedback? Got cool ideas? Come join the discord and give yourself the "Clipbot User" role :)',
-          confirmButtonText: 'Join Discord',
-        }).then((result) => {
-          if (result.isConfirmed) {
-            window.open('https://clipbot.tv/discord', '_blank');
-          }
-        });
+// add click event listen to force upload button
+document.addEventListener('DOMContentLoaded', async function (event) {
+  document
+    .getElementById('forceupload')
+    .addEventListener('click', async function () {
+      console.log('Force uploading');
+      Swal.fire({
+        icon: 'success',
+        title: 'Force Upload Started',
       });
+      // get state from backend
+      uploadClip(true);
+    });
+});
+// add click event listen to Report bug button
+document.addEventListener('DOMContentLoaded', async function (event) {
+  // add click listener to bugreport button that calls backend /bug endpoint
+  document
+    .getElementById('bugreport')
+    .addEventListener('click', async function (event) {
+      event.preventDefault();
 
-    // add click listener to bugreport button that calls backend /bug endpoint
-    document
-      .getElementById('forceupload')
-      .addEventListener('click', async function () {
-        console.log('Force uploading');
-        Swal.fire({
-          icon: 'success',
-          title: 'Force Upload Started',
-        });
-        // get state from backend
-        uploadClip(true);
-      });
-
-    // add click listener to bugreport button that calls backend /bug endpoint
-    document
-      .getElementById('bugreport')
-      .addEventListener('click', async function (event) {
-        event.preventDefault();
-
-        Swal.fire({
-          icon: 'info',
-          html: `What's going on? <br/> Write as much as possible, and we'll attach the internal bug logs to let Rox know`,
-          input: 'textarea',
-          inputPlaceholder: `Nothing is happening and I am confused`,
-          confirmButtonText: 'Submit',
-        }).then(async (result) => {
-          console.log(`Bug report entered: ${result?.value}`);
-          if (result.value) {
-            Swal.fire({
-              icon: 'info',
-              html: `Sending your bug report... Please wait`,
-              didOpen: () => {
-                Swal.showLoading();
-              },
-            });
-            let bug = result.value;
-            var bugreportResponse;
-            try {
-              bugreportResponse = await fetch(
-                `http://localhost:42074/bug?bug=${bug}`
+      Swal.fire({
+        icon: 'info',
+        html: `What's going on? <br/> Write as much as possible, and we'll attach the internal bug logs to let Rox know`,
+        input: 'textarea',
+        inputPlaceholder: `Nothing is happening and I am confused`,
+        confirmButtonText: 'Submit',
+      }).then(async (result) => {
+        console.log(`Bug report entered: ${result?.value}`);
+        if (result.value) {
+          Swal.fire({
+            icon: 'info',
+            html: `Sending your bug report... Please wait`,
+            didOpen: () => {
+              Swal.showLoading();
+            },
+          });
+          let bug = result.value;
+          var bugreportResponse;
+          try {
+            bugreportResponse = await fetch(
+              `http://localhost:42074/bug?bug=${bug}`
+            );
+            console.log(bugreportResponse);
+            if (bugreportResponse.status == 200) {
+              Swal.fire(
+                'Success!',
+                'Your bug report has been sent!',
+                'success'
               );
-              console.log(bugreportResponse);
-              if (bugreportResponse.status == 200) {
-                Swal.fire(
-                  'Success!',
-                  'Your bug report has been sent!',
-                  'success'
-                );
-              } else {
-                Swal.fire(
-                  'Error!',
-                  'There was an error sending your bug report!',
-                  'error'
-                );
-              }
-            } catch (e) {
-              console.log(e);
-              Swal.fire({
-                title: 'Error',
-                text: 'There was an error sending your bug report!',
-                type: 'error',
-                confirmButtonText: 'Ok',
-              });
+            } else {
+              Swal.fire(
+                'Error!',
+                'There was an error sending your bug report!',
+                'error'
+              );
             }
+          } catch (e) {
+            console.log(e);
+            Swal.fire({
+              title: 'Error',
+              text: 'There was an error sending your bug report!',
+              type: 'error',
+              confirmButtonText: 'Ok',
+            });
           }
-        });
+        }
       });
-
-    // document
-    //   .getElementById('logout')
-    //   .addEventListener('click', async function (event) {
-    //     event.preventDefault();
-
-    //     // Call settings endpoint with a blank sessionId and broadcasterId to clear the settings
-    //     // Then call uploadClip() again
-    //     let clearResponse;
-    //     try {
-    //       // confirm that user wants to log out and then clear settings
-    //       Swal.fire({
-    //         icon: 'info',
-    //         title: 'Logout Confirmation',
-    //         text: 'Are you sure you want to log out? We only recommend doing this if you accidentally logged in to the wrong channel/account.',
-    //         type: 'warning',
-    //         showCancelButton: true,
-    //         confirmButtonText: 'Yes, log out!',
-    //         cancelButtonText: 'No, stay logged in',
-    //       }).then(async (result) => {
-    //         if (result.isConfirmed) {
-    //           let fieldsToClear = ['sessionId', 'broadcasterId'];
-    //           clearResponse = await fetch(
-    //             `http://localhost:42074/clear?fields=${JSON.stringify(
-    //               fieldsToClear
-    //             )}`
-    //           );
-    //           console.log(clearResponse);
-
-    //           if (clearResponse.status == 200) {
-    //             Swal.fire(
-    //               'Success!',
-    //               'You have been logged out of TikTok and Twitch! Click Ok to try logging in again',
-    //               'success'
-    //             ).then(async (result) => {
-    //               // when they click confirm button call uploadClip() again
-    //               if (result.isConfirmed) {
-    //                 uploadClip();
-    //               }
-    //             });
-    //           } else {
-    //             Swal.fire(
-    //               'Error!',
-    //               'There was an error clearing your settings!',
-    //               'error'
-    //             );
-    //           }
-    //         }
-    //       });
-    //     } catch (e) {
-    //       console.log(e);
-    //       Swal.fire({
-    //         title: 'Error',
-    //         text: 'There was an error clearing your settings!',
-    //         type: 'error',
-    //         confirmButtonText: 'Ok',
-    //       });
-    //     }
-    //   });
-
-    // document.getElementById("format").addEventListener("click", async function (event) {
-    //     //Call format endpoint on backend
-    //     event.preventDefault();
-    //     await fetch(`http://localhost:42074/format`);
-
-    // });
-
-    // End of help menu
-  });
+    });
 });
