@@ -272,7 +272,7 @@ let doAllCropperStuff = (
   // set aspect ratio based on the ratio of the cam data detected in the event
   let screenvasDataProcessor = (event, arg) => {
     console.log("OH NO IT'S NOT THE CAMERA");
-    document.getElementById('ratio').style.visibility = 'hidden';
+    document.getElementById('ratio').style.display = 'none';
     document.querySelector('h1').innerHTML = 'Select Your Gameplay Area';
 
     const cropData = JSON.parse(arg);

@@ -280,7 +280,7 @@ document.addEventListener('DOMContentLoaded', async function (event) {
 
 let updateStatus = (event, data) => {
   let currStatus = data;
-  document.getElementById('status').innerText = currStatus;
+  document.getElementById('status').value = currStatus;
   if (currStatus.includes('Waiting')) {
     updateDisplayedSettings();
   }
@@ -675,7 +675,6 @@ document.addEventListener('DOMContentLoaded', async function (event) {
   let helpMenuHTML = `
       <button type="button" role="button" id="discord" tabindex="0" style='font-size: 30px;' class="swal2-confirm swal2-styled"><img src='./images/WutFace.png' height='30px' style='margin-right: 5px;'/>Join Discord</button> <br/>
       <button type="button" role="button" id="bugreport" tabindex="0" style='font-size: 30px;' class="swal2-confirm swal2-styled"><img src='./images/WutFace.png' height='30px' style='margin-right: 5px;'/>Bug Report</button> <br/>
-      <button type="button" role="button" id="logout" tabindex="0" style='font-size: 30px;' class="swal2-confirm swal2-styled"><img src='https://static-cdn.jtvnw.net/emoticons/v1/30259/1.0' height='30px' style='margin-right: 5px;'/> Logout</button>
       <button type="button" role="button" id="forceupload" tabindex="0" style='font-size: 30px;' class="swal2-confirm swal2-styled"><img src='https://static-cdn.jtvnw.net/emoticons/v1/30259/1.0' height='30px' style='margin-right: 5px;'/> Force Upload Now</button>
       `;
   document.getElementById('helpmenu').addEventListener('click', function () {
@@ -771,64 +770,64 @@ document.addEventListener('DOMContentLoaded', async function (event) {
         });
       });
 
-    document
-      .getElementById('logout')
-      .addEventListener('click', async function (event) {
-        event.preventDefault();
+    // document
+    //   .getElementById('logout')
+    //   .addEventListener('click', async function (event) {
+    //     event.preventDefault();
 
-        // Call settings endpoint with a blank sessionId and broadcasterId to clear the settings
-        // Then call uploadClip() again
-        let clearResponse;
-        try {
-          // confirm that user wants to log out and then clear settings
-          Swal.fire({
-            icon: 'info',
-            title: 'Logout Confirmation',
-            text: 'Are you sure you want to log out? We only recommend doing this if you accidentally logged in to the wrong channel/account.',
-            type: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Yes, log out!',
-            cancelButtonText: 'No, stay logged in',
-          }).then(async (result) => {
-            if (result.isConfirmed) {
-              let fieldsToClear = ['sessionId', 'broadcasterId'];
-              clearResponse = await fetch(
-                `http://localhost:42074/clear?fields=${JSON.stringify(
-                  fieldsToClear
-                )}`
-              );
-              console.log(clearResponse);
+    //     // Call settings endpoint with a blank sessionId and broadcasterId to clear the settings
+    //     // Then call uploadClip() again
+    //     let clearResponse;
+    //     try {
+    //       // confirm that user wants to log out and then clear settings
+    //       Swal.fire({
+    //         icon: 'info',
+    //         title: 'Logout Confirmation',
+    //         text: 'Are you sure you want to log out? We only recommend doing this if you accidentally logged in to the wrong channel/account.',
+    //         type: 'warning',
+    //         showCancelButton: true,
+    //         confirmButtonText: 'Yes, log out!',
+    //         cancelButtonText: 'No, stay logged in',
+    //       }).then(async (result) => {
+    //         if (result.isConfirmed) {
+    //           let fieldsToClear = ['sessionId', 'broadcasterId'];
+    //           clearResponse = await fetch(
+    //             `http://localhost:42074/clear?fields=${JSON.stringify(
+    //               fieldsToClear
+    //             )}`
+    //           );
+    //           console.log(clearResponse);
 
-              if (clearResponse.status == 200) {
-                Swal.fire(
-                  'Success!',
-                  'You have been logged out of TikTok and Twitch! Click Ok to try logging in again',
-                  'success'
-                ).then(async (result) => {
-                  // when they click confirm button call uploadClip() again
-                  if (result.isConfirmed) {
-                    uploadClip();
-                  }
-                });
-              } else {
-                Swal.fire(
-                  'Error!',
-                  'There was an error clearing your settings!',
-                  'error'
-                );
-              }
-            }
-          });
-        } catch (e) {
-          console.log(e);
-          Swal.fire({
-            title: 'Error',
-            text: 'There was an error clearing your settings!',
-            type: 'error',
-            confirmButtonText: 'Ok',
-          });
-        }
-      });
+    //           if (clearResponse.status == 200) {
+    //             Swal.fire(
+    //               'Success!',
+    //               'You have been logged out of TikTok and Twitch! Click Ok to try logging in again',
+    //               'success'
+    //             ).then(async (result) => {
+    //               // when they click confirm button call uploadClip() again
+    //               if (result.isConfirmed) {
+    //                 uploadClip();
+    //               }
+    //             });
+    //           } else {
+    //             Swal.fire(
+    //               'Error!',
+    //               'There was an error clearing your settings!',
+    //               'error'
+    //             );
+    //           }
+    //         }
+    //       });
+    //     } catch (e) {
+    //       console.log(e);
+    //       Swal.fire({
+    //         title: 'Error',
+    //         text: 'There was an error clearing your settings!',
+    //         type: 'error',
+    //         confirmButtonText: 'Ok',
+    //       });
+    //     }
+    //   });
 
     // document.getElementById("format").addEventListener("click", async function (event) {
     //     //Call format endpoint on backend
