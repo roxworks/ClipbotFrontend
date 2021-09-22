@@ -1,0 +1,66 @@
+#cropper-body-guy {
+  overflow-x: hidden;
+}
+
+/* Ensure the size of the image fit the container perfectly */
+
+#cropthing {
+  display: block;
+  /* This rule is very important, please don't ignore this */
+  max-width: 100%;
+}
+#crop-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 960px;
+  height: 540px;
+  /* overflow: hidden; */
+  margin: 0;
+}
+
+#video-container {
+  /* overflow: hidden; */
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 960px;
+  height: 540px;
+}
+#cropCanvas {
+  display: block;
+  top: 0;
+  left: 0;
+  position: absolute;
+  width: 960px;
+  height: 540px;
+  margin: 0;
+}
+
+.cropper-video {
+  position: absolute;
+  width: 960px;
+  height: 540px;
+  opacity: 75%;
+}
+
+.cropper-face {
+  background-color: transparent;
+}
+
+.cropper-crop {
+  box-shadow: 0 0 0 550px rgba(0, 0, 0, 0.5);
+}
+
+.crop-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+}
+
+.crop-buttons {
+  display: flex;
+  gap: 12px;
+}

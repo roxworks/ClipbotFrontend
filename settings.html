@@ -1,96 +1,182 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Clipbot</title>
-  <meta name="description" content="Automatically upload your twitch clips to TikTok!" />
-  <meta name="author" content="Roxkstar74" />
-  <meta property="og:title" content="Clipbot" />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://www.Clipbot.tv/" />
-  <meta property="og:description" content="Automatically upload your twitch clips to TikTok!" />
-  <meta property="og:image" content="image.png" />
-  <!-- <link rel="icon" href="/favicon.ico">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Clipbot - Settings</title>
+    <meta
+      name="description"
+      content="Automatically upload your twitch clips to TikTok!"
+    />
+    <meta name="author" content="Roxkstar74" />
+    <meta property="og:title" content="Clipbot" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://www.Clipbot.tv/" />
+    <meta
+      property="og:description"
+      content="Automatically upload your twitch clips to TikTok!"
+    />
+    <meta property="og:image" content="image.png" />
+    <!-- <link rel="icon" href="/favicon.ico">
       <link rel="icon" href="/favicon.svg" type="image/svg+xml">
       <link rel="apple-touch-icon" href="/apple-touch-icon.png"> -->
-  <link rel="stylesheet" href="electron.css" />
-  <link rel="stylesheet" href="settings.css" />
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script src="uploadClip.js"></script>
-  <script src="frontend-settings.js"></script>
-</head>
+    <link rel="stylesheet" href="settings.css" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="electron.css" />
+    <script src="uploadClip.js"></script>
+    <script src="frontend-settings.js"></script>
+  </head>
 
-<body id="settings" class='mid-body'>
-  <div class="container">
-    <div class="centered">
-      <form class="form-signin" id="update" method="GET" action="http://localhost:42074/update">
-        <h1 class="form-signin-heading" id="title">Settings</h1>
-        <div class="form-group" id="hashtags-form">
-          <label><img src='hashtag.png' class='icon' /> Hashtags <p class="what">(What's this?)</p></label>
-          <input type="text" name="hashtags" id="hashtags" placeholder="#smallstreamer #twitch" />
-        </div>
-        
-        <div class="form-group" id="hotkey-form">
-          <label><img src='arrow.png' class='icon'/> Clip Button <p class="what">Press this to make a clip!</p>
-            </label>
-          <input id="hotkey" onkeyup="keyUp(event)" placeholder="F10" />
-        </div>
-        <div class="form-group" id="delay-form">
-          <label><img src='clock.png'  class='icon'/> Clip Age <p class="what">Clips must be this old to get posted</p></label>
-          <input type="number" name="delay" id="delay" min="0" oninput="validity.valid||(value='');" placeholder="24" />
+  <body id="settings" class="app">
+    <div class="container settings">
+      <header id="pageHeader">
+        <h3 class="page__heading" id="title">Settings</h3>
+      </header>
+      <form
+        class="form-group settings"
+        id="update"
+        method="GET"
+        action="http://localhost:42074/update"
+      >
+        <div class="form__group" id="hashtags-form">
+          <label class="settings hashtags">
+            <div>
+              <img src="./images/hashtag.png" class="icon" /> Hashtags
+              <span class="what">(What's this?)</span>
+            </div>
+          </label>
+          <input
+            type="text"
+            name="hashtags"
+            id="hashtags"
+            placeholder="#smallstreamer #twitch"
+            class="form__input hashtag"
+          />
         </div>
 
-        <div class="form-group" id="minViewCount-form">
-          <label><img src='eye.png' class='icon'/> Minimum views <p class="what">Clips must have this many views to get posted</p></label>
-          <input type="number" name="minViewCount" id="minViewCount" min="0" oninput="validity.valid||(value='');" placeholder="0" />
+        <div class="form__group settings" id="hotkey-form">
+          <label class="settings">
+            <div><img src="./images/arrow.png" class="icon" /> Clip Hotkey</div>
+            <p class="what">Press this to make a clip!</p>
+          </label>
+          <input
+            id="hotkey"
+            onkeyup="keyUp(event)"
+            placeholder="F10"
+            class="form__input settings"
+          />
         </div>
-        <div class="form-group" id="uploadFrequency-form">
-          <label><img src='arrow.png' class='icon'/> Time Between Posts <p class="what">Wait this long between posts</p>
-            </label>
-          <input type="number" name="uploadFrequency" min="1" oninput="validity.valid||(value='');" id="uploadFrequency" placeholder="8" />
+        <div class="form__group settings" id="delay-form">
+          <label class="settings">
+            <div><img src="./images/clock.png" class="icon" /> Clip Age</div>
+            <p class="what">Clips must be this old to get posted</p></label
+          >
+          <input
+            type="number"
+            name="delay"
+            id="delay"
+            min="0"
+            oninput="validity.valid||(value='');"
+            placeholder="24"
+            class="form__input settings"
+          />
         </div>
-        <div class="form-group" id="defaultApprove-form">
-          <label><img src='check.png' class='icon'/> Default Approve <p class="what">Upload any clip unless it has been rejected</p>
-            </label>
-            <label class="switch" >
-              <input type="checkbox"  name="defaultApprove"  id="defaultApprove">
-              <span class="slider round"></span>
-            </label>
+
+        <div class="form__group settings" id="minViewCount-form">
+          <label class="settings">
+            <div><img src="./images/eye.png" class="icon" /> Minimum views</div>
+            <p class="what">
+              Clips must have this many views to get posted
+            </p></label
+          >
+          <input
+            type="number"
+            name="minViewCount"
+            id="minViewCount"
+            min="0"
+            oninput="validity.valid||(value='');"
+            placeholder="0"
+            class="form__input settings"
+          />
         </div>
-        <div class="form-group" id="uploadEnabled-form">
-          <label><img src='check.png' class='icon'/> Clipbot <p class="what">Turn clipbot On/off to start/pause uploads</p>
-            </label>
-            <label class="switch" >
-              <input type="checkbox"  name="uploadEnabled"  id="uploadEnabled">
-              <span class="slider round"></span>
-            </label>
+        <div class="form__group settings" id="uploadFrequency-form">
+          <label class="settings">
+            <div>
+              <img src="./images/arrow.png" class="icon" /> Time Between Posts
+            </div>
+            <p class="what">Wait this long between posts</p>
+          </label>
+          <input
+            type="number"
+            name="uploadFrequency"
+            min="1"
+            oninput="validity.valid||(value='');"
+            id="uploadFrequency"
+            placeholder="8"
+            class="form__input settings"
+          />
         </div>
-        <div class="form-group" id="tiktokUploadEnabled-form">
-          <label><img src='check.png' class='icon'/> Tiktok Uploads <p class="what">Turn Tiktok Uploads On/off</p>
-            </label>
-            <label class="switch" >
-              <input type="checkbox"  name="tiktokUploadEnabled"  id="tiktokUploadEnabled">
-              <span class="slider round"></span>
-            </label>
+        <div class="form__group settings" id="defaultApprove-form">
+          <label class="settings">
+            <div>
+              <img src="./images/check.png" class="icon" /> Default Approve
+            </div>
+            <p class="what">Upload any clip unless it has been rejected</p>
+          </label>
+          <label class="switch">
+            <input type="checkbox" name="defaultApprove" id="defaultApprove" />
+            <span class="slider round"></span>
+          </label>
         </div>
-        <div class="form-group" id="youtubeUploadEnabled-form">
-          <label><img src='check.png' class='icon'/> Youtube Uploads <p class="what">Turn Youtube Uploads On/off </p>
-            </label>
-            <label class="switch" >
-              <input type="checkbox"  name="youtubeUploadEnabled"  id="youtubeUploadEnabled">
-              <span class="slider round"></span>
-            </label>
+        <div class="form__group settings" id="uploadEnabled-form">
+          <label class="settings">
+            <div><img src="./images/check.png" class="icon" /> Clipbot</div>
+            <p class="what">Turn clipbot On/off to start/pause uploads</p>
+          </label>
+          <label class="switch">
+            <input type="checkbox" name="uploadEnabled" id="uploadEnabled" />
+            <span class="slider round"></span>
+          </label>
         </div>
-        
+        <div class="form__group settings" id="tiktokUploadEnabled-form">
+          <label class="settings">
+            <div>
+              <img src="./images/check.png" class="icon" /> Tiktok Uploads
+            </div>
+            <p class="what">Turn Tiktok Uploads On/off</p>
+          </label>
+          <label class="switch">
+            <input
+              type="checkbox"
+              name="tiktokUploadEnabled"
+              id="tiktokUploadEnabled"
+            />
+            <span class="slider round"></span>
+          </label>
+        </div>
+        <div class="form__group settings" id="youtubeUploadEnabled-form">
+          <label class="settings">
+            <div>
+              <img src="./images/check.png" class="icon" /> Youtube Uploads
+            </div>
+            <p class="what">Turn Youtube Uploads On/off</p>
+          </label>
+          <label class="switch">
+            <input
+              type="checkbox"
+              name="youtubeUploadEnabled"
+              id="youtubeUploadEnabled"
+            />
+            <span class="slider round"></span>
+          </label>
+        </div>
 
         <div class="right-container">
-          <button class="btn" type="submit" id="savesettings">Save settings</button><br/>
+          <button class="btn" type="submit" id="savesettings">
+            Save settings
+          </button>
         </div>
-        
       </form>
     </div>
-  </div>
-</body>
+  </body>
 </html>

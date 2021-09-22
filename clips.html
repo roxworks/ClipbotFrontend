@@ -1,82 +1,239 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
+  <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Clipbot</title>
-    <meta name="description" content="Automatically upload your twitch clips to TikTok!" />
+    <title>Clipbot - Manage Clips</title>
+    <meta
+      name="description"
+      content="Automatically upload your twitch clips to TikTok!"
+    />
     <meta name="author" content="Roxkstar74" />
     <meta property="og:title" content="Clipbot" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://www.Clipbot.tv/" />
-    <meta property="og:description" content="Automatically upload your twitch clips to TikTok!" />
+    <meta
+      property="og:description"
+      content="Automatically upload your twitch clips to TikTok!"
+    />
     <meta property="og:image" content="image.png" />
     <!-- <link rel="icon" href="/favicon.ico">
       <link rel="icon" href="/favicon.svg" type="image/svg+xml">
       <link rel="apple-touch-icon" href="/apple-touch-icon.png"> -->
-    <link rel="stylesheet" href="electron.css" />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
     <link rel="stylesheet" href="clips.css" />
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="electron.css" />
     <script src="uploadClip.js"></script>
     <script src="clips.js"></script>
-</head>
+  </head>
 
-<body class='mid-body'>
+  <body class="app">
+    <aside class="sidebar">
+      <img
+        src="images/logo-large.png"
+        class="sidebar__logo"
+        onclick="toggleNav()"
+      />
+      <img
+        src="images/logo.png"
+        class="sidebar__logo hide"
+        onclick="toggleNav()"
+      />
+      <nav class="sidebar__menu">
+        <form type="submit" id="filterform" class="sidebar__form">
+          <div id="filtersDiv" class="filters">
+            <div class="form__group">
+              <label for="approvalStatusFilter">Approval Status:</label>
+              <div class="form__svg">
+                <svg
+                  class="form__select-svg"
+                  xmlns="http://www.w3.org/2000/svg"
+                  xmlns:xlink="http://www.w3.org/1999/xlink"
+                  width="20px"
+                  height="20px"
+                  viewBox="0 0 38 22"
+                  version="1.1"
+                >
+                  <g
+                    stroke="none"
+                    stroke-width="1"
+                    fill="none"
+                    fill-rule="evenodd"
+                  >
+                    <g
+                      transform="translate(-539.000000, -199.000000)"
+                      fill="#ffffff"
+                      fill-rule="nonzero"
+                    >
+                      <g transform="translate(538.000000, 183.521208)">
+                        <polygon
+                          id="Path-Copy"
+                          transform="translate(20.000000, 18.384776) rotate(135.000000) translate(-20.000000, -18.384776) "
+                          points="33 5.38477631 33 31.3847763 29 31.3847763 28.999 9.38379168 7 9.38477631 7 5.38477631"
+                        />
+                      </g>
+                    </g>
+                  </g>
+                </svg>
+                <select
+                  name="approved"
+                  id="approvalStatusFilter"
+                  class="form__select"
+                >
+                  <option value="">Any</option>
+                  <option value="true">Approved</option>
+                  <option value="false">Rejected</option>
+                  <option value="null">Auto-approved</option>
+                  <option value="all">All Approved</option>
+                </select>
+              </div>
+            </div>
+            <div class="form__group">
+              <label for="viewCount">Minimum View count:</label>
+              <input
+                name="minViewCount"
+                id="viewCount"
+                type="number"
+                min="0"
+                oninput="validity.valid||(value='');"
+                placeholder="View Count"
+                class="form__input"
+              />
+            </div>
+            <div class="form__group">
+              <label for="startDate">Start Date:</label>
+              <input
+                name="startDate"
+                id="startDate"
+                type="date"
+                placeholder="Start Date"
+                class="form__input"
+              />
+            </div>
+            <div class="form__group">
+              <label for="endDate">End Date:</label>
+              <input
+                name="endDate"
+                id="endDate"
+                type="date"
+                placeholder="End Date"
+                class="form__input"
+              />
+            </div>
+          </div>
+          <button
+            class="sidebar__button"
+            type="submit"
+            id="applyFiltersButton"
+            type="reset"
+          >
+            <i class="fas fa-filter"></i>
+            <span class="btn-text">Apply Filters</span>
+          </button>
+        </form>
+
+        <button class="sidebar__button" id="loadClips" type="reset">
+          <i class="fas fa-spinner"></i>
+          <span class="btn-text">Load More</span>
+        </button>
+        <button class="sidebar__button" id="close" type="reset">
+          <i class="fas fa-times-circle"></i>
+          <span class="btn-text">Close</span>
+        </button>
+      </nav>
+
+      <section class="sidebar__version">
+        <span class="sidebar__version-text">Version</span> 1.0.77
+      </section>
+    </aside>
     <div class="container">
-        <div class="centered">
-            <form type="submit" id="filterform">
-                <div id='filtersDiv'>
-                    <label for="approvalStatusFilter">Approval Status:</label>
-                    <select name="approved" id="approvalStatusFilter">
-                      <option value="">Any</option>
-                      <option value="true">Approved</option>
-                      <option value="false">Rejected</option>
-                      <option value="null">Auto-approved</option>
-                      <option value="all">All Approved</option>
-                    </select>
-                    <br>
-                    <label for="viewCount">Minimum View count:</label>
-                    <input name="minViewCount" id="viewCount" type="number" min="0" oninput="validity.valid||(value='');" placeholder="View Count" />
-                    <br>
-                    <label for="startDate">Start Date:</label>
-                    <input name="startDate" id="startDate" type="date" placeholder="Start Date" />
-                    <br>
-                    <label for="endDate">End Date:</label>
-                    <input name="endDate" id="endDate" type="date" placeholder="End Date" />
-                </div>
-                <input type="submit" value="Apply Filters" id='applyFiltersButton' class="btn">
-            </form>
-            <hr class='roundboi'>
-            <h1 class="form-signin-heading" id="title">Manage Clips</h1>
-            <video src="https://share.nyx.xyz/4XnZYjhZk2a" autoplay loop muted controls width="450px" height="255px"></video>
-            <form class="form-group" id="title-form">
-                <input type="text" name="cliptitle" oninput="validity.valid||(value='');" id="cliptitle" class='cliptitleinput' placeholder="Your clip title" />
-                <button class="btn" id="changetitlebutton" style="
-            margin: 5px 0 0 0;
-            ">Save</button>
-            </form>
-            <div id="clipDetails">
-                <p style="margin-bottom: 10px;" class='bigboi'>
-                    <span id="approvalStatus"></span>,
-                    <span id="uploadedStatus"></span>
-                </p>
+      <header id="pageHeader">
+        <h3 class="page__heading" id="title">
+          Manage Clips - <span class="clip-amount" id="clip-amount"> 0 </span>
+        </h3>
+      </header>
+      <div>
+        <video
+          src="https://share.nyx.xyz/4XnZYjhZk2a"
+          autoplay
+          loop
+          muted
+          controls
+          width="550px"
+          height="312px"
+        ></video>
+        <form class="form-group" id="title-form">
+          <div class="form__group cliptitle">
+            <input
+              type="text"
+              name="cliptitle"
+              oninput="validity.valid||(value='');"
+              id="cliptitle"
+              placeholder="Your clip title"
+              class="form__input"
+            />
+            <button class="btn save" id="changetitlebutton">Save</button>
+          </div>
+        </form>
+        <div id="clipDetails" class="clipDetails">
+          <div class="clip-status">
+            <div class="clip-status-label">
+              <span class="status-text">Status</span>
             </div>
-            <div class="morebuttons" id='clipsbuttons'>
-                <button class="btn" id="prev" type="reset">&lt;&lt;</button>
-                <button class="btn" id="next" type="reset">&gt;&gt;</button>
-                <button class="btn" id="approve" type="reset">Approve</button>
-                <button class="btn" id="reject" type="reset">Reject</button>
-                <button class="btn" id="loadClips" type="reset">Load more</button>
-                <button class="btn" id="close" type="reset">
-          <img src='https://static-cdn.jtvnw.net/emoticons/v1/86/1.0' width=20px height=100%
-            style='margin-right: 5px;' />Close</button>
-                <button class="btn" id="customCrop" type="reset">Set Custom Crop</button>
-                <button class="btn" id="customOrientation" type="reset">Change Orientation</button>
+            <input
+              id="approvalStatus"
+              type="text"
+              class="clip-status-input"
+              disabled
+              value="Clip status"
+            />
+          </div>
+          <div class="clip-status">
+            <div class="clip-status-label">
+              <span class="status-text">Uploaded</span>
             </div>
-            <!-- <button id="push-to-talk">Push to Talk</button> -->
+            <input
+              id="uploadedStatus"
+              type="text"
+              class="clip-status-input"
+              disabled
+              value="Not uploaded"
+            />
+          </div>
         </div>
-    </div>
-</body>
+        <div class="morebuttons" id="clipsbuttons">
+          <div class="video-buttons">
+            <button class="btn video-button" id="prev" type="reset">
+              &lt;&lt;
+            </button>
+            <button class="btn video-button status" id="approve" type="reset">
+              Approve
+            </button>
 
+            <button class="btn video-button status" id="reject" type="reset">
+              Reject
+            </button>
+            <button class="btn video-button" id="next" type="reset">
+              &gt;&gt;
+            </button>
+          </div>
+
+          <div class="crop-buttons">
+            <button class="btn" id="customCrop" type="reset">
+              Set Custom Crop
+            </button>
+            <button class="btn" id="customOrientation" type="reset">
+              Change Orientation
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="script.js"></script>
+  </body>
 </html>

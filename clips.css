@@ -1,29 +1,106 @@
-#filterform {
-    display: flex;
-    align-items: center;
+.form__svg {
+  position: relative;
+  display: flex;
+  align-self: center;
+}
+.form__select-svg {
+  color: #fff;
+  background-color: #2d1d49;
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 0.5rem;
+  pointer-events: none;
+  padding: 4px;
+  border-radius: 4px;
+}
+#title-form {
+  margin: 0;
+}
+#title-form input {
+  margin: 0;
+  padding: 1rem 2rem;
+}
+.clipDetails {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
 }
 
-#viewCount {
-    width: 30%;
+.clip-status {
+  margin: 8px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-items: stretch;
+  width: 100%;
+  position: relative;
 }
 
-.roundboi {
-    border-top: 8px solid #bbb;
-    border-radius: 5px;
-    width: 100%;
-    margin-top: 5px;
-    /* margin-bottom: 15px; */
+.clip-status-label {
+  display: flex;
+  background: rgb(228, 228, 228);
+  background: linear-gradient(
+    176deg,
+    rgba(228, 228, 228, 1) 0%,
+    rgba(21, 21, 22, 1) 100%
+  );
+  padding: 4px;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+  border: 2px solid #2d1d49;
+  border-right: none;
+  border-bottom: 2px solid #2d1d49;
+  white-space: nowrap;
 }
 
-#clipsbuttons {
-    justify-content: center;
+.status-text {
+  display: flex;
+  align-items: center;
+  border-radius: 4px;
+  padding: 4px;
+}
+.clip-status-input {
+  flex-shrink: 1;
+  flex-grow: 1;
+  flex: 1 1 auto;
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+  padding: 8px;
+}
+*/ .btn.save {
+  margin-left: 8px;
 }
 
-#applyFiltersButton {
-    max-height: 50px;
+.morebuttons {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 80px;
+  justify-items: center;
 }
 
-.cliptitleinput {
-    width: 350px !important;
-    padding: 7px 14px !important;
+.video-buttons {
+  display: flex;
+  gap: 12px;
+}
+
+.crop-buttons {
+  justify-content: flex-end;
+  gap: 12px;
+  display: flex;
+}
+
+.video-button {
+  width: 100%;
+  font-size: 1.5rem;
+}
+.clip-status-input:disabled {
+  background: #fff;
+  border: 2px solid #2d1d49;
+  border-left: none;
+  border-bottom: 2px solid #2d1d49;
+
+  color: #4b5563;
 }
