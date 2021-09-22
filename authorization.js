@@ -200,7 +200,7 @@ let doYoutubeAuth = async () => {
         console.log(JSON.stringify(resJSON));
         console.log(authURL);
         // Swal.fire an input textbox for the Youtube auth code
-        window.open(authURL, '_blank');
+        window.shell.openExternal(authURL);
         return Swal.fire({
             title: 'Enter Youtube Code',
             text: 'Please login on the other window, and copy your Youtube Code into this box to enable Youtube uploads!',

@@ -444,15 +444,22 @@ document.addEventListener('DOMContentLoaded', async function (event) {
       let cropMenuHTML = `
       <p>Manage your logins here.</p>
       <div class="modal-buttons"> 
-        <button type="button" role="button" id="twitchLogin" tabindex="0" style='font-size: 26px;' class="btn"><i class="fab fa-twitch"></i> ${
+        <button type="button" role="button" id="twitchLogin" tabindex="0" style='font-size: 26px;' class="btn loginbtn"><i class="fab fa-twitch"></i> ${
           twitchLoggedIn ? 'Logout of' : 'Login to'
         } Twitch</button>
-        <button type="button" role="button" id="tiktokLogin" tabindex="0" style='font-size: 26px;' class="btn"><i class="fab fa-tiktok"></i> ${
+        <button type="button" role="button" id="tiktokLogin" tabindex="0" style='font-size: 26px;' class="btn loginbtn"><i class="fab fa-tiktok"></i> ${
           tiktokLoggedIn ? 'Logout of' : 'Login to'
         } Tiktok</button>
-        <button type="button" role="button" id="youtubeLogin" tabindex="0" style='font-size: 26px;' class="btn"><i class="fab fa-youtube"></i> ${
-          youtubeLoggedIn ? 'Logout of' : 'Login to'
-        } Youtube</button>
+        ${
+          youtubeLoggedIn ? '<button type="button" role="button" id="youtubeLogin" tabindex="0" style="font-size: 26px;"><i class="fab fa-youtube"></i> Logout of Youtube</button>' : 
+          `<img id='youtubeLogin' class='googimg' 
+          src='./google_signin_buttons/web/2x/btn_google_signin_dark_normal_web@2x.png'
+          onmouseover="this.src='./google_signin_buttons/web/2x/btn_google_signin_dark_focus_web@2x.png'"
+          onmouseout="this.src='./google_signin_buttons/web/2x/btn_google_signin_dark_normal_web@2x.png'"
+          onmousedown="this.src='./google_signin_buttons/web/2x/btn_google_signin_dark_pressed_web@2x.png'"
+          />
+          `
+        }
       </div>
       `;
 
@@ -509,7 +516,7 @@ document.addEventListener('DOMContentLoaded', async function (event) {
             });
             if (youtubeLoggedIn != (settings?.youtubeToken != '')) {
               document.getElementById('youtubeLogin').innerHTML =
-                'Login to Youtube';
+                "<img src='google_signin_buttons/web/2x/btn_google_signin_dark_normal_web@2x.png' />";
               youtubeLoggedIn = !youtubeLoggedIn;
             }
           } else {
