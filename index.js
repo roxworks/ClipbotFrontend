@@ -451,7 +451,7 @@ document.addEventListener('DOMContentLoaded', async function (event) {
           tiktokLoggedIn ? 'Logout of' : 'Login to'
         } Tiktok</button>
         ${
-          youtubeLoggedIn ? '<button type="button" role="button" id="youtubeLogin" tabindex="0" style="font-size: 26px;"><i class="fab fa-youtube"></i> Logout of Youtube</button>' : 
+          youtubeLoggedIn ? '<button type="button" role="button" class="btn loginbtn" id="youtubeLogin" tabindex="0" style="font-size: 26px;"><i class="fab fa-youtube"></i> Logout of Youtube</button>' : 
           `<img id='youtubeLogin' class='googimg' 
           src='./google_signin_buttons/web/2x/btn_google_signin_dark_normal_web@2x.png'
           onmouseover="this.src='./google_signin_buttons/web/2x/btn_google_signin_dark_focus_web@2x.png'"
