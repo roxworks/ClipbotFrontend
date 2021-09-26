@@ -39,7 +39,7 @@ const setClip = (newIndex) => {
     displayedClip = {};
     document.getElementById('next').disabled = true;
     document.getElementById('prev').disabled = true;
-    changeFrontendStatuses('Press Load Clips To Get More clips!');
+    changeFrontendStatuses('Change your filters or make new clips!');
   }
 };
 
@@ -93,7 +93,7 @@ const changeFrontendStatuses = async (customStatus) => {
 };
 
 const updateClipOnBackend = async (clipId, newSettings) => {
-  //PUT to /clip with id and new settings
+  //PUT to /clip with   ngs
   let res = await fetch('http://localhost:42074/clip/', {
     method: 'PUT',
     headers: {
@@ -178,7 +178,7 @@ document.addEventListener('DOMContentLoaded', async function () {
   });
 
   setupTitleStuff();
-  setupLoadButton();
+  // setupLoadButton();
   setupApproveRejectButtons();
   setupCloseButton();
   setupOrientationButtons();

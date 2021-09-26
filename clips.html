@@ -88,12 +88,57 @@
                   <option value="">Any</option>
                   <option value="true">Approved</option>
                   <option value="false">Rejected</option>
-                  <option value="null">Auto-approved</option>
+                  <option value="default">Auto-Approved</option>
+                  <option value="null">Not Reviewed</option>
                   <option value="all">All Approved</option>
                 </select>
               </div>
             </div>
             <div class="form__group">
+              <label for="uploaded">Upload Status:</label>
+              <div class="form__svg">
+                <svg
+                  class="form__select-svg"
+                  xmlns="http://www.w3.org/2000/svg"
+                  xmlns:xlink="http://www.w3.org/1999/xlink"
+                  width="20px"
+                  height="20px"
+                  viewBox="0 0 38 22"
+                  version="1.1"
+                >
+                  <g
+                    stroke="none"
+                    stroke-width="1"
+                    fill="none"
+                    fill-rule="evenodd"
+                  >
+                    <g
+                      transform="translate(-539.000000, -199.000000)"
+                      fill="#ffffff"
+                      fill-rule="nonzero"
+                    >
+                      <g transform="translate(538.000000, 183.521208)">
+                        <polygon
+                          id="Path-Copy"
+                          transform="translate(20.000000, 18.384776) rotate(135.000000) translate(-20.000000, -18.384776) "
+                          points="33 5.38477631 33 31.3847763 29 31.3847763 28.999 9.38379168 7 9.38477631 7 5.38477631"
+                        />
+                      </g>
+                    </g>
+                  </g>
+                </svg>
+              <select
+                name="uploaded"
+                id="uploadedFilter"
+                class="form__select"
+              >
+                <option value="">Any</option>
+                <option value="null">Not Uploaded</option>
+                <option value="true">Uploaded</option>
+              </select>
+            </div>
+          </div>
+          <div class="form__group">
               <label for="viewCount">Minimum View count:</label>
               <input
                 name="minViewCount"
@@ -137,10 +182,6 @@
           </button>
         </form>
 
-        <button class="sidebar__button" id="loadClips" type="reset">
-          <i class="fas fa-spinner"></i>
-          <span class="btn-text">Load More</span>
-        </button>
         <button class="sidebar__button" id="close" type="reset">
           <i class="fas fa-times-circle"></i>
           <span class="btn-text">Close</span>
