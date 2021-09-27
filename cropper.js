@@ -36,6 +36,10 @@ let scaleDownCrop = (crop, video) => {
   return crop;
 };
 
+
+const roundTo4Digits = (currAspectRatioNumber) => {
+  return Math.round(currAspectRatioNumber * 10000) / 10000;
+}
 // window.addEventListener("load", async function (event) {
 //     //   console.log(video.readyState);
 //     //TODO: Disable like 90% of the weird double click and drag functionality holy crap
@@ -48,6 +52,7 @@ ipcRenderer.on('crop_data', async (event, arg) => {
   let cropDetails = cropDetailsAndClip.cropDetails;
   let clip = cropDetailsAndClip.clip;
   let callback = cropDetailsAndClip.callback;
+  let cropType = cropDetailsAndClip.cropType;
   console.log(
     'clip crop details' +
       JSON.stringify(cropDetails) +
@@ -119,7 +124,8 @@ ipcRenderer.on('crop_data', async (event, arg) => {
         isScreenvas,
         callback,
         canvas,
-        clip
+        clip,
+        cropType
       );
       console.log('did stuff');
     }
@@ -137,7 +143,8 @@ ipcRenderer.on('crop_data', async (event, arg) => {
         callback,
         canvas,
         image,
-        clip
+        clip,
+        cropType
       );
     }
   });
@@ -152,7 +159,8 @@ ipcRenderer.on('crop_data', async (event, arg) => {
         callback,
         canvas,
         image,
-        clip
+        clip,
+        cropType
       );
     }
     console.log('loaded metadata ' + video.readyState);
@@ -169,7 +177,8 @@ ipcRenderer.on('crop_data', async (event, arg) => {
       callback,
       canvas,
       image,
-      clip
+      clip,
+      cropType
     );
     console.log('did stuff');
   }
@@ -183,7 +192,8 @@ let doAllCropperStuff = (
   callback,
   canvas,
   image,
-  clip
+  clip,
+  cropType
 ) => {
   console.log('video height' + video.videoHeight);
   console.log('video width' + video.videoWidth);
@@ -219,6 +229,9 @@ let doAllCropperStuff = (
   window.cropper = cropper;
 
   console.log(cropper);
+  let currAspectRatioNumber = 16 / 9;
+  let currRatio = roundTo4Digits(16/9);
+  cropper.setAspectRatio(16 / 9);
 
   if (!camCrop?.width) {
     console.log('setting aspect ratio');
@@ -227,6 +240,8 @@ let doAllCropperStuff = (
     if (!isScreenvas) {
       console.log('is not screenvas');
       cropper.setAspectRatio(camCrop.width / camCrop.height);
+      currAspectRatioNumber = camCrop.width / camCrop.height;
+      currRatio = roundTo4Digits(currAspectRatioNumber);
     }
   }
 
@@ -239,10 +254,12 @@ let doAllCropperStuff = (
         cropDetails: {
           camCrop: scaleUpCrop(camCrop, video),
           screenCrop: scaleUpCrop(screenCrop, video),
+          cropType: cropType,
         },
-        camData: currCropDetails,
+        camData: cropType == 'no-cam' ? scaleUpCrop(currCropDetails, video) : currCropDetails,
         callback: callback,
         clip: clip,
+        cropType: cropType,
       })
     );
     window.close();
@@ -250,20 +267,36 @@ let doAllCropperStuff = (
   doneButton.addEventListener('click', doneFunc);
 
   //setAspectRatio
-  let currAspectRatioNumber = 16 / 9;
-  let currRatio = '16/9';
+
   const ratioButton = document.getElementById('ratio');
+  if(cropType == 'no-cam') {
+    ratioButton.style.display = 'none';
+    currAspectRatioNumber = 9 / 16;
+    currRatio = roundTo4Digits(currAspectRatioNumber);
+    cropper.setAspectRatio(currAspectRatioNumber);
+    console.log('no-cam activated');
+  }
+  else if(currRatio == roundTo4Digits(9/16)) {
+    console.log('Changing ratio back');
+    currAspectRatioNumber = 16 / 9;
+    currRatio = roundTo4Digits(currAspectRatioNumber);
+    cropper.setAspectRatio(currAspectRatioNumber);
+    console.log('Ratio fixed');
+  }
+  else {
+    console.log('aspect ratio: ' + cropper.aspectRatio);
+  }
   ratioButton.addEventListener('click', () => {
     console.log('ratio clicked');
     // let ipcRenderer = window.ipcRenderer;
     // ipcRenderer.send('canvas_closed', JSON.stringify(currCropDetails));
     // window.close();
-    if (currRatio == '16/9') {
+    if (currRatio = roundTo4Digits(16/9)) {
       currAspectRatioNumber = 4 / 3;
-      currRatio = '4/3';
+      currRatio = roundTo4Digits(currAspectRatioNumber);
     } else {
       currAspectRatioNumber = 16 / 9;
-      currRatio = '16/9';
+      currRatio = roundTo4Digits(currAspectRatioNumber);
     }
 
     cropper.setAspectRatio(currAspectRatioNumber);
@@ -287,6 +320,9 @@ let doAllCropperStuff = (
       }
       // calculate aspect ratio based on camdata width and height
       cropper.setAspectRatio(aspectRatio);
+    }
+    else {
+
     }
     // log camData camCrop and screenCrop
     console.log(
@@ -324,6 +360,7 @@ let doAllCropperStuff = (
           camCrop: scaleUpCrop(camData, video),
           screenCrop: scaleUpCrop(currCropDetails, video),
           callback: callback,
+          cropType: cropType,
         })
       );
       window.close();

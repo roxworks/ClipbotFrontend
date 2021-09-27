@@ -378,15 +378,18 @@ document.addEventListener('DOMContentLoaded', async function (event) {
           );
           let allClips = allClipsRes?.clips;
           if (state.currentClipId != '' || allClips?.length > 0) {
-            ipcRenderer.send(
-              'camvas_open',
-              JSON.stringify({
-                cropDetails: {
-                  camCrop: settings.camCrop,
-                  screenCrop: settings.screenCrop,
-                },
-              })
-            );
+            selectCropType().then((cropType) => {
+              ipcRenderer.send(
+                'camvas_open',
+                JSON.stringify({
+                  cropDetails: {
+                    camCrop: settings.camCrop,
+                    screenCrop: settings.screenCrop,
+                  },
+                  cropType: cropType,
+                })
+              );
+            });
           } else {
             Swal.fire({
               icon: 'warning',
@@ -577,7 +580,18 @@ document.addEventListener('DOMContentLoaded', async function (event) {
     // TODO: Update this as well
     // let result = await fetch("http://localhost:42074/update?camCrop=" + encodeURIComponent(JSON.stringify(camCropDetails)));
     // alert if the update succeeded or failed
-    ipcRenderer.send('screenvas_open', camCropDetails);
+    if(camCropDetails.cropType != 'no-cam' ) {
+      console.log('opening screenvas');
+      ipcRenderer.send('screenvas_open', camCropDetails);
+    }
+    else {
+      console.log('no cam crop selected, trying to close screenvas');
+      ipcRenderer.send('screenvas_closed', JSON.stringify({
+        camCrop: camCropDetails.camData,
+        cropType: camCropDetails.cropType,
+        callback: camCropDetails.callback
+      }));
+    }
   });
 
   // when screenvas is closed, update camCrop and screenCrop on backend with data provided
@@ -594,8 +608,8 @@ document.addEventListener('DOMContentLoaded', async function (event) {
     let result = await fetch(
       'http://localhost:42074/update?camCrop=' +
         encodeURIComponent(JSON.stringify(crop)) +
-        '&screenCrop=' +
-        encodeURIComponent(JSON.stringify(screenCrop))
+        (screenCrop ? '&screenCrop=' + encodeURIComponent(JSON.stringify(screenCrop)) : '') +
+        `&cropType=${cropDetails.cropType}`
     );
     console.log('Adding camCrop successful?: ' + result);
     // if 200 then update successful

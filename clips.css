@@ -104,3 +104,39 @@
 
   color: #4b5563;
 }
+
+.input-hidden {
+  position: absolute;
+  left: -9999px;
+}
+
+input[type=radio]:checked + label>img {
+  /* border: 3px solid #090; */
+  box-shadow: 0px 0px 3px 6px #090;
+}
+
+/* Stuff after this is only to make things more pretty */
+input[type=radio] + label>img {
+  border: 1px dashed #444;
+  /* width: 150px; */
+  height: 400px;
+  transition: 500ms all;
+}
+
+.radio-label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+#cropTypeDiv {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  margin-bottom: 10px;
+}
+/* input[type=radio]:checked + label>img {
+  transform: 
+    rotateZ(-10deg) 
+    rotateX(10deg);
+} */

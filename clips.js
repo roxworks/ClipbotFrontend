@@ -388,41 +388,42 @@ const setupOrientationButtons = () => {
       screenCrop: settings.screenCrop,
     };
 
-    ipcRenderer.once('custom_crop', async (event, cropData) => {
-      console.log('custom crop received');
-      let crop = JSON.parse(cropData);
-      // TODO: Be wary, this might be a little confusing to users,
-      // there's not a definite right answer but this _feels_ most intuitive
-      let result = await updateClipFrontendAndBackend({
-        customCrop: crop,
-        verticalVideoEnabled: true,
+    selectCropType().then((cropType) => {
+      ipcRenderer.once('custom_crop', async (event, cropData) => {
+        console.log('custom crop received');
+        let crop = JSON.parse(cropData);
+        // TODO: Be wary, this might be a little confusing to users,
+        // there's not a definite right answer but this _feels_ most intuitive
+        let result = await updateClipFrontendAndBackend({
+          customCrop: crop,
+          verticalVideoEnabled: true,
+        });
+        if (result.status === 200) {
+          console.log('custom crop updated');
+          Swal.fire({
+            icon: 'success',
+            title: 'Custom crop updated',
+          });
+        } else {
+          console.log('error updating custom crop');
+          Swal.fire({
+            icon: 'error',
+            title: 'Custom crop failed',
+          });
+        }
       });
-      if (result.status === 200) {
-        console.log('custom crop updated');
-        Swal.fire({
-          icon: 'success',
-          title: 'Custom crop updated',
-        });
-      } else {
-        console.log('error updating custom crop');
-        Swal.fire({
-          icon: 'error',
-          title: 'Custom crop failed',
-        });
-      }
-    });
-
-    ipcRenderer.send(
-      'camvas_open',
-      JSON.stringify({
-        cropDetails: currentCrop,
-        clip: displayedClip,
-        callback: 'custom_crop',
-      })
-    );
-
+  
+        ipcRenderer.send(
+          'camvas_open',
+          JSON.stringify({
+            cropDetails: currentCrop,
+            clip: displayedClip,
+            callback: 'custom_crop',
+            cropType: cropType,
+          })
+        );  
+    })
     // let result = await updateClipFrontendAndBackend({cropEnabled: newCrop});
-
     //TODO: Call cropper somehow idek
   });
 };

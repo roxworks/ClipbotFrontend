@@ -433,6 +433,7 @@ if (process.argv[2] == 'test') {
       console.log('caught in main: ' + data);
       let parsedData = JSON.parse(data);
       let callback = parsedData.callback;
+      console.log('found callback: ' + callback);
       if (callback == 'custom_crop') {
         WINDOWS.clips.webContents.send('custom_crop', data);
       } else {
