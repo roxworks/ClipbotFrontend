@@ -1,5 +1,5 @@
 const selectCropType = async () => {
-    let selection = '';
+    let selection = 'cam-top';
     changeSelection = (val) => {
         selection = val;
     }
@@ -8,7 +8,7 @@ const selectCropType = async () => {
         html: /*html*/`
         <div style='margin-top: 10px' id="cropTypeDiv">
             <input 
-                type="radio" name="cropType" 
+                type="radio" name="cropType" checked
                 id="cam-top" class="input-hidden" onclick="changeSelection('cam-top')" />
             <label for="cam-top" class='radio-label'>
                 <p>Cam Top</p>
