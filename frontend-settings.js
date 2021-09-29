@@ -31,6 +31,9 @@ document.addEventListener('DOMContentLoaded', async function (event) {
     params['youtubeUploadEnabled'] = document.querySelector(
       '#youtubeUploadEnabled'
     ).checked;
+    params['fastUploadEnabled'] = document.querySelector(
+      '#fastUploadEnabled'
+    ).checked;
     settingsWereChanged = true;
 
     let url = new URL('http://localhost:42074/update');
