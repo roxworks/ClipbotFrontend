@@ -910,45 +910,65 @@ document.addEventListener('DOMContentLoaded', async function (event) {
         inputPlaceholder: `Nothing is happening and I am confused`,
         confirmButtonText: 'Submit',
       }).then(async (result) => {
-        console.log(`Bug report entered: ${result?.value}`);
-        if (result.value) {
-          Swal.fire({
-            icon: 'info',
-            html: `Sending your bug report... Please wait`,
-            didOpen: () => {
-              Swal.showLoading();
-            },
-          });
-          let bug = result.value;
-          var bugreportResponse;
-          try {
-            bugreportResponse = await fetch(
-              `http://localhost:42074/bug?bug=${bug}`
-            );
-            console.log(bugreportResponse);
-            if (bugreportResponse.status == 200) {
-              Swal.fire(
-                'Success!',
-                'Your bug report has been sent!',
-                'success'
-              );
-            } else {
-              Swal.fire(
-                'Error!',
-                'There was an error sending your bug report!',
-                'error'
-              );
-            }
-          } catch (e) {
-            console.log(e);
-            Swal.fire({
-              title: 'Error',
-              text: 'There was an error sending your bug report!',
-              type: 'error',
-              confirmButtonText: 'Ok',
-            });
-          }
-        }
+        sendEmail(result);
+      });
+    });
+
+    document
+    .getElementById('feedback')
+    .addEventListener('click', async function (event) {
+      event.preventDefault();
+
+      Swal.fire({
+        icon: 'info',
+        html: `Enter your feedback or ideas here!`,
+        input: 'textarea',
+        inputPlaceholder: `Nothing is happening and I am confused`,
+        confirmButtonText: 'Submit',
+      }).then(async (result) => {
+        sendEmail(result, true);
       });
     });
 });
+
+const sendEmail = async (result, isFeedback) => {
+  console.log(`Bug report entered: ${result?.value}`);
+  if (result.value) {
+    Swal.fire({
+      icon: 'info',
+      html: `Sending your ${isFeedback ? 'feedback' : 'bug report'}... Please wait`,
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    });
+    let bug = result.value;
+    var bugreportResponse;
+    try {
+      bugreportResponse = await fetch(
+        `http://localhost:42074/bug?bug=${bug}&isFeedback=${isFeedback}`
+      );
+      console.log(bugreportResponse);
+      if (bugreportResponse.status == 200) {
+        Swal.fire(
+          'Success!',
+          `Your ${isFeedback ? 'feedback' : 'bug report'} has been sent!`,
+          'success'
+        );
+      } else {
+        Swal.fire(
+          'Error!',
+          `There was an error sending your ${isFeedback ? 'feedback' : 'bug report'}!`,
+          'error'
+        );
+      }
+    } catch (e) {
+      console.log(e);
+      Swal.fire({
+        title: 'Error',
+        text: 'There was an error sending your bug report!',
+        type: 'error',
+        confirmButtonText: 'Ok',
+      });
+    }
+  }
+}

@@ -147,7 +147,7 @@ if (process.argv[2] == 'test') {
   async function createWindow() {
     mainWindow = new BrowserWindow({
       width: 900,
-      height: 800,
+      height: 850,
       webPreferences: {
         nodeIntegration: true,
         contextIsolation: false,
