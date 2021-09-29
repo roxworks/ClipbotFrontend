@@ -145,6 +145,13 @@ if (process.argv[2] == 'test') {
   let mainWindow;
 
   async function createWindow() {
+
+    if(WINDOWS.main) {
+      console.log('redirecting to existing window');
+      WINDOWS.main.focus();
+      return;
+    }
+
     mainWindow = new BrowserWindow({
       width: 900,
       height: 850,
@@ -191,6 +198,12 @@ if (process.argv[2] == 'test') {
   }
 
   const createClipsWindow = () => {
+    if(WINDOWS.clips) {
+      console.log('redirecting to existing window');
+      WINDOWS.clips.focus();
+      return;
+    }
+
     let clipsWindow = new BrowserWindow({
       width: 900,
       height: 800,
@@ -222,6 +235,13 @@ if (process.argv[2] == 'test') {
   };
 
   const createSettingsWindow = () => {
+
+    if(WINDOWS.settings) {
+      console.log('redirecting to existing window');
+      WINDOWS.settings.focus();
+      return;
+    }
+
     let settingsWindow = new BrowserWindow({
       width: 550,
       height: 800,
@@ -253,6 +273,13 @@ if (process.argv[2] == 'test') {
   };
 
   const createTikTokWindow = async () => {
+
+    if(WINDOWS.tiktok) {
+      console.log('redirecting to existing window');
+      WINDOWS.tiktok.focus();
+      return;
+    }
+
     let tiktokWindow = new BrowserWindow({
       width: 550,
       height: 900,
@@ -302,6 +329,13 @@ if (process.argv[2] == 'test') {
   };
 
   const createCamvasWindow = (cropData) => {
+
+    if(WINDOWS.camvas) {
+      console.log('redirecting to existing window');
+      WINDOWS.camvas.focus();
+      return;
+    }
+
     let canvasWindow = new BrowserWindow({
       width: 975,
       height: 900,
@@ -336,6 +370,13 @@ if (process.argv[2] == 'test') {
   };
 
   const createScreenvasWindow = (camData) => {
+
+    if(WINDOWS.screenvas) {
+      console.log('redirecting to existing window');
+      WINDOWS.screenvas.focus();
+      return;
+    }
+
     let canvasWindow = new BrowserWindow({
       width: 1920 / 2,
       height: 900,
