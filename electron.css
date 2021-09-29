@@ -535,3 +535,8 @@ label.settings {
     background: linear-gradient( 176deg, rgba(140, 109, 197, 1) 0%, rgba(45, 29, 73, 1) 100%);
     color: #fff;
 }
+
+.clip-status-label.grad-purple.small {
+    justify-content: center;
+    min-width: 106px;
+  }
