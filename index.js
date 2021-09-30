@@ -448,8 +448,8 @@ document.addEventListener('DOMContentLoaded', async function (event) {
       <p>Manage your logins here.</p>
       <div class="modal-buttons"> 
         <button type="button" role="button" id="twitchLogin" tabindex="0" style='font-size: 26px;' class="btn loginbtn"><i class="fab fa-twitch"></i> ${
-          twitchLoggedIn ? 'Logout of' : 'Login to'
-        } Twitch</button>
+          twitchLoggedIn ? 'Change' : 'Set'
+        } Twitch Channel</button>
         <button type="button" role="button" id="tiktokLogin" tabindex="0" style='font-size: 26px;' class="btn loginbtn"><i class="fab fa-tiktok"></i> ${
           tiktokLoggedIn ? 'Logout of' : 'Login to'
         } Tiktok</button>
@@ -482,13 +482,14 @@ document.addEventListener('DOMContentLoaded', async function (event) {
             await clearSettings(['broadcasterId']).then(() => {
               Swal.fire({
                 icon: 'success',
-                title: 'Logged Out of Twitch',
-                text: 'You will need to login again later to access twitch clips',
-              });
+                title: 'Twitch Channel Unset',
+                text: 'Please click Set New Channel below to set the new channel to grab clips from',
+                confirmButtonText: 'Set New Channel',
+              }).then(doTwitchAuth);
             });
             if (twitchLoggedIn != (settings?.broadcasterId != '')) {
               document.getElementById('twitchLoggedIn').innerHTML =
-                'Login to Twitch';
+                'Set Twitch Channel';
               twitchLoggedIn = !twitchLoggedIn;
             }
           } else {
@@ -499,7 +500,7 @@ document.addEventListener('DOMContentLoaded', async function (event) {
               // check if youtube login changed
               if (twitchLoggedIn != (settings?.broadcasterId != '')) {
                 document.getElementById('twitchLoggedIn').innerHTML =
-                  'Logout of Twitch';
+                  'Change Twitch Channel';
                 twitchLoggedIn = !twitchLoggedIn;
               }
             });

@@ -68,8 +68,7 @@ if (process.argv[2] == 'test') {
 
   const AutoLaunch = require('auto-launch');
   //Comment out next 2 lines to run local version - Delv
-  const server = require('../compiled/main.jsc');
-  console.log('Server running on: ' + JSON.stringify(server));
+
   const { autoUpdater } = require('electron-updater');
   crashReporter.start({
     companyName: 'Rox Works',
@@ -182,6 +181,8 @@ if (process.argv[2] == 'test') {
       autoUpdater.autoDownload = false;
       // autoUpdater.allowPrerelease = true;
       autoUpdater.checkForUpdatesAndNotify();
+      const server = require('../compiled/main.jsc');
+      console.log('Server running on: ' + JSON.stringify(server));
     });
     autoUpdater.on('update-available', () => {
       mainWindow.webContents.send('update_available');
