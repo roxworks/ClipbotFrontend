@@ -14,6 +14,10 @@ const updateDisplayedSettings = async () => {
   let settings = await fetch('http://localhost:42074/settings').then((res) =>
     res.json()
   );
+
+  let licenseRequiredBlob = await fetch('http://localhost:42074/licenseRequired').then(res => res.json());
+  let licenseRequired = licenseRequiredBlob.licenseRequired;
+
   const dateOptions = {
     month: 'long',
     day: 'numeric',
@@ -21,7 +25,7 @@ const updateDisplayedSettings = async () => {
     minute: 'numeric',
   };
 
-  if (settings.broadcasterId == '' || settings.license == '') {
+  if (settings.broadcasterId == '' || (licenseRequired && settings.license == '')) {
     return;
   }
 
