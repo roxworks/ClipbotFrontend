@@ -30,6 +30,7 @@ const awaitAllFileCompilations = async () => {
     createBytecodeFile('editVideo'),
     createBytecodeFile('clipqueue'),
     createBytecodeFile('youtubeUpload'),
+    createBytecodeFile('helpers'),
   ]);
 };
 

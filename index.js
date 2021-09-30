@@ -282,11 +282,57 @@ document.addEventListener('DOMContentLoaded', async function (event) {
 //     });
 // });
 
+let numDots = 0;
+const getDotsString = () => {
+  numDots++;
+  numDots %= 4;
+  if(numDots == 0) {
+    return '';
+  }
+  else if(numDots == 1) {
+    return '.';
+  }
+  else if(numDots == 2) {
+    return '..'
+  }
+  else if (numDots == 3) {
+    return '...';
+  }
+}
+
+let clipsLoadingPopup = undefined;
 let updateStatus = (event, data) => {
   let currStatus = data;
   document.getElementById('status').value = currStatus;
   if (currStatus.includes('Waiting')) {
     updateDisplayedSettings();
+    if(clipsLoadingPopup) {
+      clipsLoadingPopup.close();
+
+    }
+  }
+  else if (currStatus.includes('TWITCH')) {
+    let currClipsLoaded = currStatus.trim().substring(currStatus.indexOf(':') + 1);
+    let clipsLoadedNum = parseInt(currClipsLoaded);
+    if(clipsLoadedNum === 0) {
+      return;
+    }
+
+    if(!clipsLoadingPopup) {
+      clipsLoadingPopup = SafeSwal.fire({
+        title: 'Loading Your Twitch Clips',
+        html: 'Please wait while we load your clips from Twitch.<br/>This may take a few minutes.<br/><br/>0 Clips Loaded',
+        showConfirmButton: false
+      });
+    }
+    else {
+      // get clips number which is located after the : in currStatus
+      clipsLoadingPopup.update({
+        html: `Please wait while we load your clips from Twitch.<br/>This may take a few minutes${getDotsString()}<br/><br/>${currClipsLoaded} Clips Loaded`,
+      });
+      // clipsLoadingPopup.showLoading();
+    }
+
   }
 };
 
