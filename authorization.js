@@ -55,7 +55,7 @@ let doTiktokAuth = () => {
             console.log("User selected not to open tiktok");
             return Swal.fire({
                 icon: 'info',
-                text: "Ok, we'll ask again in a while :) Please note, TTTT will not upload while not logged in. You can still change settings."
+                text: "Ok, we'll ask again in a while :) Please note, Clipbot will not upload while not logged in. You can still change settings."
             });
         }
     });
@@ -80,7 +80,7 @@ let doTwitchAuth = () => {
                 console.log(idSetResult);
             }
             catch (e) {
-                console.log("Channel entered is invalid, please restart TTTT and try again");
+                console.log("Channel entered is invalid, please restart Clipbot and try again");
                 return Swal.fire({
                     icon: 'error',
                     text: e?.message || e?.error || e
@@ -110,7 +110,7 @@ let doTwitchAuth = () => {
             console.log("User did not enter a channel");
             return Swal.fire({
                 icon: 'error',
-                text: "You did not enter a channel name. Please restart TTTT and enter a key."
+                text: "You did not enter a channel name. Please restart Clipbot and enter a channel name."
             });
         }
     });
@@ -173,7 +173,7 @@ let doLicenseAuth = () => {
             console.log("User did not enter a license key");
             Swal.fire({
                 icon: 'error',
-                text: "You did not enter a license key. Please restart TTTT and enter a key."
+                text: "You did not enter a license key. Please restart Clipbot and enter a key."
             });
         }
     });

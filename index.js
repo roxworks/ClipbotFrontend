@@ -653,7 +653,7 @@ document.addEventListener('DOMContentLoaded', async function (event) {
       /* Read more about isConfirmed, isDenied below */
       if (result.isConfirmed) {
         Swal.fire(
-          'Download started! You will get another notification when the download is done. TTTT must be restarted to install the update!',
+          'Download started! You will get another notification when the download is done. Clipbot must be restarted to install the update!',
           '',
           'success'
         );
