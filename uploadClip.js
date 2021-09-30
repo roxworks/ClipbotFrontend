@@ -21,7 +21,7 @@ let uploadClip = async (force = false) => {
     console.log('Clip upload finished successfully, updating frontend');
     ipcRenderer.send('settings_updated');
   } else if (result?.status == 302 && result?.type == 'all') {
-    Swal.fire({
+    SafeSwal.fire({
       title: 'No uploads enabled',
       text: 'You have Tiktok Uploads off and Youtube Uploads off, please enable at least one in Main Settings',
       icon: 'error',
@@ -30,7 +30,7 @@ let uploadClip = async (force = false) => {
   } else if (result?.status == 302 && result?.type == 'tiktok') {
     doTiktokAuth();
   } else if (result?.status == 302 && result?.type == 'youtube') {
-    Swal.fire({
+    SafeSwal.fire({
       title: 'Not logged in to Youtube',
       text: 'Looks like you need to login to Youtube. Please click Login below to login.',
       icon: 'error',
@@ -49,7 +49,7 @@ let uploadClip = async (force = false) => {
     let errorMessage = result?.error;
     if (result.force == 'true') {
       console.log('Upload too fast WE YELLING');
-      Swal.fire({
+      SafeSwal.fire({
         icon: 'info',
         text: 'There is an upload currently running, please wait then try again :)',
         confirmButtonText: 'OK',
@@ -60,7 +60,7 @@ let uploadClip = async (force = false) => {
   } else if (result?.status == 500) {
     let errorMessage = result?.error;
     console.log('regular error');
-    Swal.fire({
+    SafeSwal.fire({
       icon: 'error',
       text: errorMessage,
     });

@@ -7,7 +7,7 @@ let activateLicense = async (key) => {
             console.log(result);
             if (result.status == 200) {
                 console.log("it werked");
-                Swal.fire({
+                SafeSwal.fire({
                     icon: 'success',
                     text: "License key activated!"
                 });
@@ -20,7 +20,7 @@ let activateLicense = async (key) => {
         }).catch(
             error => {
                 console.log("error: " + error);
-                Swal.fire({
+                SafeSwal.fire({
                     icon: 'error',
                     text: error || "Bad news bears"
                 });
@@ -34,7 +34,7 @@ let activateLicense = async (key) => {
 };
 
 let doTiktokAuth = () => {
-    return Swal.fire({
+    return SafeSwal.fire({
         icon: 'info',
         text: "Looks like you're not logged in to TikTok, please click 'Login' to open a login window",
         confirmButtonText: 'Login',
@@ -42,7 +42,7 @@ let doTiktokAuth = () => {
     }).then((result) => {
         if (result.isConfirmed) {
             console.log("User selected to open tiktok");
-            return Swal.fire({
+            return SafeSwal.fire({
                 icon: 'success',
                 text: "Opening Tiktok... To avoid issues, please use the QR Code Login option",
                 didOpen: () => {
@@ -53,7 +53,7 @@ let doTiktokAuth = () => {
         }
         else if (result.isDenied) {
             console.log("User selected not to open tiktok");
-            return Swal.fire({
+            return SafeSwal.fire({
                 icon: 'info',
                 text: "Ok, we'll ask again in a while :) Please note, Clipbot will not upload while not logged in. You can still change settings."
             });
@@ -62,7 +62,7 @@ let doTiktokAuth = () => {
 };
 
 let doTwitchAuth = () => {
-    return Swal.fire({
+    return SafeSwal.fire({
         icon: 'info',
         text: "Looks like we don't have your channel name yet. Please enter your channel name (your twitch username) below.",
         input: 'text',
@@ -81,21 +81,21 @@ let doTwitchAuth = () => {
             }
             catch (e) {
                 console.log("Channel entered is invalid, please restart Clipbot and try again");
-                return Swal.fire({
+                return SafeSwal.fire({
                     icon: 'error',
                     text: e?.message || e?.error || e
                 });
             }
 
             if (idSetResult?.status == 200) {
-                return Swal.fire({
+                return SafeSwal.fire({
                     icon: 'success',
                     text: "Channel Set! We'll start grabbing your clips right away!"
                 }).then(uploadClip);
             }
             else {
                 console.log(`Setting channel failed: ${JSON.stringify(idSetResult)}`);
-                return Swal.fire({
+                return SafeSwal.fire({
                     icon: 'error',
                     html: idSetResult?.error + "<br/>" + "Click OK below and we will ask for your username again :)"
                 }).then((result) => {
@@ -108,7 +108,7 @@ let doTwitchAuth = () => {
         }
         else {
             console.log("User did not enter a channel");
-            return Swal.fire({
+            return SafeSwal.fire({
                 icon: 'error',
                 text: "You did not enter a channel name. Please restart Clipbot and enter a channel name."
             });
@@ -123,7 +123,7 @@ const openClipbotMainSite = () => {
 }
 
 let doLicenseAuth = () => {
-    Swal.fire({
+    SafeSwal.fire({
         icon: 'info',
         html: `Looks like you have more than 2000 followers<br>
         To use Clipbot, you'll need a license key. 
@@ -141,21 +141,21 @@ let doLicenseAuth = () => {
             }
             catch (e) {
                 console.log("License key entered is invalid");
-                Swal.fire({
+                SafeSwal.fire({
                     icon: 'error',
                     text: e?.message || e?.error || e
                 });
             }
 
             if (licenseDetails?.status == 200) {
-                Swal.fire({
+                SafeSwal.fire({
                     icon: 'success',
                     text: "License key activated!"
                 });
                 uploadClip();
             }
             else if(licenseDetails?.status == 303) {
-                Swal.fire({
+                SafeSwal.fire({
                     icon: 'info',
                     text: licenseDetails?.error,
                     confirmButtonText: 'Try again',
@@ -163,7 +163,7 @@ let doLicenseAuth = () => {
             }
             else {
                 console.log(`Licensing failed: ${JSON.stringify(licenseDetails)}`);
-                Swal.fire({
+                SafeSwal.fire({
                     icon: 'error',
                     text: licenseDetails?.error
                 });
@@ -171,7 +171,7 @@ let doLicenseAuth = () => {
         }
         else {
             console.log("User did not enter a license key");
-            Swal.fire({
+            SafeSwal.fire({
                 icon: 'error',
                 text: "You did not enter a license key. Please restart Clipbot and enter a key."
             });
@@ -187,7 +187,7 @@ let doYoutubeAuth = async () => {
     console.log('post auth req');
     if(result.status == 200) {
         console.log('we are already authed');
-        return Swal.fire({
+        return SafeSwal.fire({
             icon: 'success',
             title: 'Already Logged In',
             text: 'You are already logged in to Youtube'
@@ -199,9 +199,9 @@ let doYoutubeAuth = async () => {
         let authURL = resJSON.authURL;
         console.log(JSON.stringify(resJSON));
         console.log(authURL);
-        // Swal.fire an input textbox for the Youtube auth code
+        // SafeSwal.fire an input textbox for the Youtube auth code
         window.shell.openExternal(authURL);
-        return Swal.fire({
+        return SafeSwal.fire({
             title: 'Enter Youtube Code',
             text: 'Please login on the other window, and copy your Youtube Code into this box to enable Youtube uploads!',
             input: 'text',
@@ -218,7 +218,7 @@ let doYoutubeAuth = async () => {
             if (result.status == 200) {
                 console.log('we are now authed');
                 ipcRenderer.send('youtube-auth-success');
-                return Swal.fire({
+                return SafeSwal.fire({
                     icon: 'success',
                     title: 'Successfully logged in to Youtube!',
                     text: 'You can now upload clips to Youtube.'
@@ -228,7 +228,7 @@ let doYoutubeAuth = async () => {
                 console.log('failed to auth');
                 let errorBody = await result.json();
                 errMsg = errorBody.error;
-                return Swal.fire({
+                return SafeSwal.fire({
                     icon: 'error',
                     title: 'Failed to log in to Youtube!',
                     text: errMsg

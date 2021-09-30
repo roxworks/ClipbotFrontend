@@ -196,7 +196,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let clipURL = clipBlob.url;
     let clipID = clipBlob.id;
     console.log('clip success ' + JSON.parse(clipData));
-    Swal.fire({
+    SafeSwal.fire({
       title: 'Clip Created!',
       icon: 'success',
       html: `Your clip has been created <a href='${clipURL}' target='_blank'>here</a>`,
@@ -206,7 +206,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   ipcRenderer.on('clip_failed', (event, arg) => {
     console.log('clip fail');
-    Swal.fire({
+    SafeSwal.fire({
       title: 'Clip Failed!',
       icon: 'error',
       html: `Your clip failed to create. <br>Error: ${JSON.parse(arg)?.error}`,
@@ -242,7 +242,7 @@ document.addEventListener('DOMContentLoaded', async function (event) {
         <button type="button" role="button" onclick="window.open('https://www.youtube.com/embed/AY9B0Ra-pGI?rel=0&autoplay=1&modestbranding=1','_blank');" id="helpmenu-tutorial" tabindex="0" class="swal2-confirm swal2-styled tutorial">Help Menu</button>
           `;
 
-      Swal.fire({
+      SafeSwal.fire({
         title: 'How To Use Clipbot',
         html: howitworksHTML,
       });
@@ -311,7 +311,7 @@ document.addEventListener('DOMContentLoaded', () => {
   ipcRenderer.on('tiktok_login', async (event, data) => {
     console.log('tiktok login');
     if (data == 'failed') {
-      Swal.fire({
+      SafeSwal.fire({
         icon: 'error',
         html: 'TikTok login failed.<br/>Click Retry below to try again.',
         confirmButtonText: 'Retry',
@@ -327,7 +327,7 @@ document.addEventListener('DOMContentLoaded', () => {
       `http://localhost:42074/update?sessionId=${data}`
     );
     console.log('Adding sessionId successful?: ' + successful);
-    Swal.fire(`Successfully logged in to TikTok!`, '', 'success');
+    SafeSwal.fire(`Successfully logged in to TikTok!`, '', 'success');
     uploadClip();
   });
 });
@@ -358,7 +358,7 @@ document.addEventListener('DOMContentLoaded', async function (event) {
       </div>
       `;
 
-      Swal.fire({
+      SafeSwal.fire({
         icon: 'info',
         html: cropMenuHTML,
         title: 'Vertical Video Menu',
@@ -395,7 +395,7 @@ document.addEventListener('DOMContentLoaded', async function (event) {
               );
             });
           } else {
-            Swal.fire({
+            SafeSwal.fire({
               icon: 'warning',
               title: 'Clip Not Found',
               text: "Couldn't find an example clip, please connect your twitch username and try again",
@@ -471,7 +471,7 @@ document.addEventListener('DOMContentLoaded', async function (event) {
       </div>
       `;
 
-      Swal.fire({
+      SafeSwal.fire({
         icon: 'info',
         html: cropMenuHTML,
         title: 'Logins',
@@ -484,7 +484,7 @@ document.addEventListener('DOMContentLoaded', async function (event) {
         .addEventListener('click', async function () {
           if (twitchLoggedIn) {
             await clearSettings(['broadcasterId']).then(() => {
-              Swal.fire({
+              SafeSwal.fire({
                 icon: 'success',
                 title: 'Twitch Channel Unset',
                 text: 'Please click Set New Channel below to set the new channel to grab clips from',
@@ -517,7 +517,7 @@ document.addEventListener('DOMContentLoaded', async function (event) {
         .addEventListener('click', async function () {
           if (youtubeLoggedIn) {
             await clearSettings(['youtubeToken']).then(() => {
-              Swal.fire({
+              SafeSwal.fire({
                 icon: 'success',
                 title: 'Logged Out of Youtube',
                 text: 'You will need to login again later to upload to Youtube',
@@ -548,7 +548,7 @@ document.addEventListener('DOMContentLoaded', async function (event) {
         .addEventListener('click', async function () {
           if (tiktokLoggedIn) {
             await clearSettings(['sessionId']).then(() => {
-              Swal.fire({
+              SafeSwal.fire({
                 icon: 'success',
                 title: 'Logged Out of Tiktok',
                 text: 'You will need to login again later to upload to TikTok',
@@ -620,9 +620,9 @@ document.addEventListener('DOMContentLoaded', async function (event) {
     console.log('Adding camCrop successful?: ' + result);
     // if 200 then update successful
     if (result.status == 200) {
-      Swal.fire('Successfully updated crop settings!', '', 'success');
+      SafeSwal.fire('Successfully updated crop settings!', '', 'success');
     } else {
-      Swal.fire(
+      SafeSwal.fire(
         'Failed to update crop settings: ' + result?.error,
         '',
         'error'
@@ -643,7 +643,7 @@ document.addEventListener('DOMContentLoaded', async function (event) {
   ipcRenderer.on('update_available', () => {
     console.log('update found');
     ipcRenderer.removeAllListeners('update_available');
-    Swal.fire({
+    SafeSwal.fire({
       icon: 'info',
       text: 'A new update is available. Do you want to start downloading it?',
       showDenyButton: true,
@@ -652,14 +652,14 @@ document.addEventListener('DOMContentLoaded', async function (event) {
     }).then((result) => {
       /* Read more about isConfirmed, isDenied below */
       if (result.isConfirmed) {
-        Swal.fire(
+        SafeSwal.fire(
           'Download started! You will get another notification when the download is done. Clipbot must be restarted to install the update!',
           '',
           'success'
         );
         ipcRenderer.send('download_update');
       } else if (result.isDenied) {
-        Swal.fire('Ok! We will ask again later :)', '', 'info');
+        SafeSwal.fire('Ok! We will ask again later :)', '', 'info');
       }
     });
 
@@ -670,7 +670,7 @@ document.addEventListener('DOMContentLoaded', async function (event) {
   ipcRenderer.on('update_downloaded', () => {
     console.log('update downloaded');
     ipcRenderer.removeAllListeners('update_downloaded');
-    Swal.fire({
+    SafeSwal.fire({
       icon: 'info',
       text: `New update is ready to install! Click "Restart Now" to install the update.`,
       showDenyButton: true,
@@ -679,10 +679,10 @@ document.addEventListener('DOMContentLoaded', async function (event) {
     }).then((result) => {
       /* Read more about isConfirmed, isDenied below */
       if (result.isConfirmed) {
-        Swal.fire('Great! Restarting...', '', 'success');
+        SafeSwal.fire('Great! Restarting...', '', 'success');
         restartApp();
       } else if (result.isDenied) {
-        Swal.fire('Ok! We will ask again later :)', '', 'info');
+        SafeSwal.fire('Ok! We will ask again later :)', '', 'info');
       }
     });
     // restartButton.classList.remove('hidden');
@@ -696,7 +696,7 @@ document.addEventListener('DOMContentLoaded', async function (event) {
 });
 
 // document.addEventListener('DOMContentLoaded', async function (event) {
-//   // when the #helpmenu button is clicked open a Swal.fire with helpMenuHTML as the html
+//   // when the #helpmenu button is clicked open a SafeSwal.fire with helpMenuHTML as the html
 //   //<button type="button" role="button" id="format" tabindex="0" style='font-size: 30px;' class="swal2-confirm swal2-styled"><img src='https://static-cdn.jtvnw.net/emoticons/v1/30259/1.0' height='30px' style='margin-right: 5px;'/> Format</button>
 
 //   let helpMenuHTML = `
@@ -705,7 +705,7 @@ document.addEventListener('DOMContentLoaded', async function (event) {
 //       <button type="button" role="button" id="forceupload" tabindex="0" style='font-size: 30px;' class="swal2-confirm swal2-styled"><img src='https://static-cdn.jtvnw.net/emoticons/v1/30259/1.0' height='30px' style='margin-right: 5px;'/> Force Upload Now</button>
 //       `;
 //   document.getElementById('helpmenu').addEventListener('click', function () {
-//     Swal.fire({
+//     SafeSwal.fire({
 //       icon: 'info',
 //       html: helpMenuHTML,
 //       title: 'Help Menu',
@@ -717,7 +717,7 @@ document.addEventListener('DOMContentLoaded', async function (event) {
 //       .getElementById('discord')
 //       .addEventListener('click', async function () {
 //         console.log('Join Discord');
-//         Swal.fire({
+//         SafeSwal.fire({
 //           icon: 'info',
 //           title: 'Join our Discord server!',
 //           text: 'Want to submit feedback? Got cool ideas? Come join the discord and give yourself the "Clipbot User" role :)',
@@ -734,7 +734,7 @@ document.addEventListener('DOMContentLoaded', async function (event) {
 //       .getElementById('forceupload')
 //       .addEventListener('click', async function () {
 //         console.log('Force uploading');
-//         Swal.fire({
+//         SafeSwal.fire({
 //           icon: 'success',
 //           title: 'Force Upload Started',
 //         });
@@ -748,7 +748,7 @@ document.addEventListener('DOMContentLoaded', async function (event) {
 //       .addEventListener('click', async function (event) {
 //         event.preventDefault();
 
-//         Swal.fire({
+//         SafeSwal.fire({
 //           icon: 'info',
 //           html: `What's going on? <br/> Write as much as possible, and we'll attach the internal bug logs to let Rox know`,
 //           input: 'textarea',
@@ -757,7 +757,7 @@ document.addEventListener('DOMContentLoaded', async function (event) {
 //         }).then(async (result) => {
 //           console.log(`Bug report entered: ${result?.value}`);
 //           if (result.value) {
-//             Swal.fire({
+//             SafeSwal.fire({
 //               icon: 'info',
 //               html: `Sending your bug report... Please wait`,
 //               didOpen: () => {
@@ -772,13 +772,13 @@ document.addEventListener('DOMContentLoaded', async function (event) {
 //               );
 //               console.log(bugreportResponse);
 //               if (bugreportResponse.status == 200) {
-//                 Swal.fire(
+//                 SafeSwal.fire(
 //                   'Success!',
 //                   'Your bug report has been sent!',
 //                   'success'
 //                 );
 //               } else {
-//                 Swal.fire(
+//                 SafeSwal.fire(
 //                   'Error!',
 //                   'There was an error sending your bug report!',
 //                   'error'
@@ -786,7 +786,7 @@ document.addEventListener('DOMContentLoaded', async function (event) {
 //               }
 //             } catch (e) {
 //               console.log(e);
-//               Swal.fire({
+//               SafeSwal.fire({
 //                 title: 'Error',
 //                 text: 'There was an error sending your bug report!',
 //                 type: 'error',
@@ -807,7 +807,7 @@ document.addEventListener('DOMContentLoaded', async function (event) {
 //     //     let clearResponse;
 //     //     try {
 //     //       // confirm that user wants to log out and then clear settings
-//     //       Swal.fire({
+//     //       SafeSwal.fire({
 //     //         icon: 'info',
 //     //         title: 'Logout Confirmation',
 //     //         text: 'Are you sure you want to log out? We only recommend doing this if you accidentally logged in to the wrong channel/account.',
@@ -826,7 +826,7 @@ document.addEventListener('DOMContentLoaded', async function (event) {
 //     //           console.log(clearResponse);
 
 //     //           if (clearResponse.status == 200) {
-//     //             Swal.fire(
+//     //             SafeSwal.fire(
 //     //               'Success!',
 //     //               'You have been logged out of TikTok and Twitch! Click Ok to try logging in again',
 //     //               'success'
@@ -837,7 +837,7 @@ document.addEventListener('DOMContentLoaded', async function (event) {
 //     //               }
 //     //             });
 //     //           } else {
-//     //             Swal.fire(
+//     //             SafeSwal.fire(
 //     //               'Error!',
 //     //               'There was an error clearing your settings!',
 //     //               'error'
@@ -847,7 +847,7 @@ document.addEventListener('DOMContentLoaded', async function (event) {
 //     //       });
 //     //     } catch (e) {
 //     //       console.log(e);
-//     //       Swal.fire({
+//     //       SafeSwal.fire({
 //     //         title: 'Error',
 //     //         text: 'There was an error clearing your settings!',
 //     //         type: 'error',
@@ -873,7 +873,7 @@ document.addEventListener('DOMContentLoaded', async function (event) {
     .getElementById('discord')
     .addEventListener('click', async function () {
       console.log('Join Discord');
-      Swal.fire({
+      SafeSwal.fire({
         icon: 'info',
         title: 'Join our Discord server!',
         text: 'Want to submit feedback? Got cool ideas? Come join the discord and give yourself the "Clipbot User" role :)',
@@ -892,7 +892,7 @@ document.addEventListener('DOMContentLoaded', async function (event) {
     .getElementById('forceupload')
     .addEventListener('click', async function () {
       console.log('Force uploading');
-      Swal.fire({
+      SafeSwal.fire({
         icon: 'success',
         title: 'Force Upload Started',
       });
@@ -908,7 +908,7 @@ document.addEventListener('DOMContentLoaded', async function (event) {
     .addEventListener('click', async function (event) {
       event.preventDefault();
 
-      Swal.fire({
+      SafeSwal.fire({
         icon: 'info',
         html: `What's going on? <br/> Write as much as possible, and we'll attach the internal bug logs to let Rox know`,
         input: 'textarea',
@@ -924,7 +924,7 @@ document.addEventListener('DOMContentLoaded', async function (event) {
     .addEventListener('click', async function (event) {
       event.preventDefault();
 
-      Swal.fire({
+      SafeSwal.fire({
         icon: 'info',
         html: `Enter your feedback or ideas here!`,
         input: 'textarea',
@@ -939,7 +939,7 @@ document.addEventListener('DOMContentLoaded', async function (event) {
 const sendEmail = async (result, isFeedback) => {
   console.log(`Bug report entered: ${result?.value}`);
   if (result.value) {
-    Swal.fire({
+    SafeSwal.fire({
       icon: 'info',
       html: `Sending your ${isFeedback ? 'feedback' : 'bug report'}... Please wait`,
       didOpen: () => {
@@ -954,13 +954,13 @@ const sendEmail = async (result, isFeedback) => {
       );
       console.log(bugreportResponse);
       if (bugreportResponse.status == 200) {
-        Swal.fire(
+        SafeSwal.fire(
           'Success!',
           `Your ${isFeedback ? 'feedback' : 'bug report'} has been sent!`,
           'success'
         );
       } else {
-        Swal.fire(
+        SafeSwal.fire(
           'Error!',
           `There was an error sending your ${isFeedback ? 'feedback' : 'bug report'}!`,
           'error'
@@ -968,7 +968,7 @@ const sendEmail = async (result, isFeedback) => {
       }
     } catch (e) {
       console.log(e);
-      Swal.fire({
+      SafeSwal.fire({
         title: 'Error',
         text: 'There was an error sending your bug report!',
         type: 'error',

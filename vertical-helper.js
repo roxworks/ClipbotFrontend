@@ -3,7 +3,7 @@ const selectCropType = async () => {
     changeSelection = (val) => {
         selection = val;
     }
-    let popup = Swal.fire({
+    let popup = SafeSwal.fire({
         title: 'Select crop type',
         html: /*html*/`
         <div style='margin-top: 10px' id="cropTypeDiv">

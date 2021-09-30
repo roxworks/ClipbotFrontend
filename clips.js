@@ -119,12 +119,12 @@ const changeTitle = async () => {
   }
   let result = await updateClipFrontendAndBackend({ title: newTitle });
   if (result.status === 200) {
-    Swal.fire({
+    SafeSwal.fire({
       icon: 'success',
       title: 'Title changed to ' + newTitle,
     });
   } else {
-    Swal.fire({
+    SafeSwal.fire({
       icon: 'error',
       title: 'Error changing title',
     });
@@ -242,7 +242,7 @@ const setupLoadButton = () => {
     if (clipsResult.status == 200) {
       if (allClips?.length === clipsResult?.allClips?.length) {
         console.log('no new clips');
-        Swal.fire({
+        SafeSwal.fire({
           icon: 'info',
           title: 'No new clips found.',
         });
@@ -271,12 +271,12 @@ const setupApproveRejectButtons = () => {
     });
     if (result.status === 200) {
       changeTitleFrontend(titleDidChange);
-      Swal.fire({
+      SafeSwal.fire({
         icon: 'success',
         title: 'Clip approved',
       });
     } else {
-      Swal.fire({
+      SafeSwal.fire({
         icon: 'error',
         title: 'Error approving clip',
       });
@@ -299,12 +299,12 @@ const setupApproveRejectButtons = () => {
     });
     if (result.status === 200) {
       changeTitleFrontend(titleDidChange);
-      Swal.fire({
+      SafeSwal.fire({
         icon: 'success',
         title: 'Clip rejected',
       });
     } else {
-      Swal.fire({
+      SafeSwal.fire({
         icon: 'error',
         title: 'Error rejecting clip',
       });
@@ -400,13 +400,13 @@ const setupOrientationButtons = () => {
         });
         if (result.status === 200) {
           console.log('custom crop updated');
-          Swal.fire({
+          SafeSwal.fire({
             icon: 'success',
             title: 'Custom crop updated',
           });
         } else {
           console.log('error updating custom crop');
-          Swal.fire({
+          SafeSwal.fire({
             icon: 'error',
             title: 'Custom crop failed',
           });

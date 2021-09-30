@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', async function (event) {
     let url = new URL('http://localhost:42074/update');
 
     if (!settingsWereChanged) {
-      Swal.fire({
+      SafeSwal.fire({
         icon: 'info',
         text: 'No settings changed',
       });
@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', async function (event) {
     try {
       await fetch(url);
       updateFields(params);
-      Swal.fire('Settings updated!');
+      SafeSwal.fire('Settings updated!');
       ipcRenderer.send('settings_updated');
       return true;
     } catch {
@@ -106,7 +106,7 @@ let checkFieldsAreValid = () => {
   if (hashtagsValue) {
     let hashtagsAreValid = hashtagRegex.test(hashtagsValue);
     if (!hashtagsAreValid) {
-      Swal.fire({
+      SafeSwal.fire({
         icon: 'error',
         text: 'Looks like your hashtags are wrong, make sure to use the format: #tag #anothertag #athirdtag',
       });
@@ -118,7 +118,7 @@ let checkFieldsAreValid = () => {
   if (delayValue) {
     let delayIsValid = delayValue >= 0;
     if (!delayIsValid) {
-      Swal.fire({
+      SafeSwal.fire({
         icon: 'error',
         text: 'Looks like your delay is incorrect, make sure to use a number greater than or equal to 0',
       });
@@ -131,7 +131,7 @@ let checkFieldsAreValid = () => {
     let minViewCountIsValid = minViewCountValue >= 0;
 
     if (!minViewCountIsValid) {
-      Swal.fire({
+      SafeSwal.fire({
         icon: 'error',
         text: 'Looks like your Min View Count is incorrect, make sure to use a number greater than or equal to 0',
       });
@@ -144,7 +144,7 @@ let checkFieldsAreValid = () => {
     let uploadFrequencyIsValid = uploadFrequencyValue >= 0;
 
     if (!uploadFrequencyIsValid) {
-      Swal.fire({
+      SafeSwal.fire({
         icon: 'error',
         text: 'Looks like your Upload Frequency is incorrect, make sure to use a number greater than or equal to 0',
       });
@@ -257,7 +257,7 @@ document.addEventListener('DOMContentLoaded', async function (event) {
       let storedField = field;
       let desc = descriptions[field];
       whatsThis.addEventListener('click', () => {
-        Swal.fire({
+        SafeSwal.fire({
           title: storedField.charAt(0).toUpperCase() + storedField.slice(1),
           html: desc,
         });
