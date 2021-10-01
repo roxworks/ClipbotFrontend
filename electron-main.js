@@ -311,7 +311,7 @@ if (process.argv[2] == 'test') {
     await tiktokWindow.webContents.session.clearStorageData([], (data) => {});
     // await tiktokWindow.webContents.session.cookies.set(cookieClear2);
 
-    await tiktokWindow.loadURL('https://www.tiktok.com/login');
+    await tiktokWindow.loadURL('https://www.tiktok.com/login/qrcode');
     // await tiktokWindow.webContents.session.cookies.set(cookieClear);
     // await tiktokWindow.webContents.session.cookies.set(cookieClear2);
     // await tiktokWindow.loadURL("https://www.tiktok.com/login");
