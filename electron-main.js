@@ -292,7 +292,9 @@ if (process.argv[2] == 'test') {
       },
       icon: './images/logo.png',
     });
-    WINDOWS.tiktok = tiktokWindow;
+    // WINDOWS.tiktok = tiktokWindow;
+    // let mainPos = WINDOWS.main.getPosition();
+    // tiktokWindow.setPosition(mainPos[0] + 550, mainPos[1])
 
     // tiktokWindow.setResizable(false);
     const cookieClear = {

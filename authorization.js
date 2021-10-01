@@ -36,7 +36,10 @@ let activateLicense = async (key) => {
 let doTiktokAuth = () => {
     return SafeSwal.fire({
         icon: 'info',
-        text: "Looks like you're not logged in to TikTok, please click 'Login' to open a login window",
+        html: `
+        Looks like you're not logged in to TikTok.<br>Please click 'Login' to open a login window<br><br>
+        <b style="font-size: 2em;">You MUST click QR Code Login on the next screen as pictured below:</b><br><br>
+        <img style="height: 70px" src='./images/use-qr-code.png'/>`,
         confirmButtonText: 'Login',
         showCancelButton: true,
     }).then((result) => {
