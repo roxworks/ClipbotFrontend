@@ -59,7 +59,14 @@ if (process.argv[2] == 'test') {
     process.exit(0);
   })();
 } else {
-  const { app, BrowserWindow, ipcMain, crashReporter, globalShortcut, Menu } = require('electron');
+  const {
+    app,
+    BrowserWindow,
+    ipcMain,
+    crashReporter,
+    globalShortcut,
+    Menu,
+  } = require('electron');
 
   const AutoLaunch = require('auto-launch');
   //Comment out next 2 lines to run local version - Delv
@@ -69,13 +76,15 @@ if (process.argv[2] == 'test') {
     companyName: 'Rox Works',
     productName: 'Clipbot',
     ignoreSystemCrashHandler: true,
-    submitURL: 'https://o962298.ingest.sentry.io/api/5910717/minidump/?sentry_key=5ff48b9a970746fcb3f2cfdb33bf406b',
+    submitURL:
+      'https://o962298.ingest.sentry.io/api/5910717/minidump/?sentry_key=5ff48b9a970746fcb3f2cfdb33bf406b',
   });
   process?.crashReporter?.start({
     companyName: 'Rox Works',
     productName: 'Clipbot',
     ignoreSystemCrashHandler: true,
-    submitURL: 'https://o962298.ingest.sentry.io/api/5910717/minidump/?sentry_key=5ff48b9a970746fcb3f2cfdb33bf406b',
+    submitURL:
+      'https://o962298.ingest.sentry.io/api/5910717/minidump/?sentry_key=5ff48b9a970746fcb3f2cfdb33bf406b',
   });
 
   let autoLaunchFunc = () => {
@@ -104,9 +113,15 @@ if (process.argv[2] == 'test') {
       }).then((response) => response.json());
       console.log('clip creation finished or failed');
       if (clipResponse.status == 200) {
-        WINDOWS.main.webContents.send('clip_success', JSON.stringify(clipResponse));
+        WINDOWS.main.webContents.send(
+          'clip_success',
+          JSON.stringify(clipResponse)
+        );
       } else {
-        WINDOWS.main.webContents.send('clip_failed', JSON.stringify(clipResponse));
+        WINDOWS.main.webContents.send(
+          'clip_failed',
+          JSON.stringify(clipResponse)
+        );
       }
 
       console.log('Clip command pressed');
@@ -499,7 +514,10 @@ if (process.argv[2] == 'test') {
     ipcMain.on('tiktok_open', async () => {
       console.log('Opening tiktok');
       let tiktokWindow = await createTikTokWindow();
-      console.log('TT cookies: ' + JSON.stringify(tiktokWindow?.webContents?.session?.cookies));
+      console.log(
+        'TT cookies: ' +
+          JSON.stringify(tiktokWindow?.webContents?.session?.cookies)
+      );
       // send cookies to main window session_token exists
       let tiktokChecker = setInterval(() => {
         console.log('Checking for TT Token');
