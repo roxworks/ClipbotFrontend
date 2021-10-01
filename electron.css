@@ -66,6 +66,11 @@ body {
     justify-content: flex-end;
 }
 
+.split-container {
+    margin-top: 12px;
+    display: flex;
+    justify-content: space-between;
+}
 .container {
     display: flex;
     flex-direction: column;

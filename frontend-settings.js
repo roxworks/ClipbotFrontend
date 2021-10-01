@@ -265,4 +265,10 @@ document.addEventListener('DOMContentLoaded', async function (event) {
     }
   }
 });
+
+document.addEventListener('DOMContentLoaded', async function (event) {
+  document.querySelector('#close').addEventListener('click', () => {
+    window.close();
+  });
+});
 console.log('garbo');
