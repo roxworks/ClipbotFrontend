@@ -943,12 +943,26 @@ document.addEventListener('DOMContentLoaded', async function (event) {
     .getElementById('forceupload')
     .addEventListener('click', async function () {
       console.log('Force uploading');
+      // dangerous
       SafeSwal.fire({
-        icon: 'success',
-        title: 'Force Upload Started',
-      });
+        icon: 'warning',
+        title: 'Be Careful',
+        text: 'Are you sure you want to force upload? Be careful with this option. If you upload too much too fast, you may get banned by Tiktok or Youtube.',
+        type: 'warning',
+        confirmButtonText: 'Yes, Upload Now',
+        showCancelButton: true
+      }).then(result => {
+        if(result.isConfirmed) {
+          uploadClip(true);
+          SafeSwal.fire({
+            icon: 'success',
+            title: 'Force Upload Started',
+          });
+        }
+      })
+
       // get state from backend
-      uploadClip(true);
+      
     });
 });
 // add click event listen to Report bug button
