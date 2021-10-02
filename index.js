@@ -16,6 +16,11 @@ const updateDisplayedSettings = async () => {
   );
 
   let licenseRequiredBlob = await fetch('http://localhost:42074/licenseRequired').then(res => res.json());
+  if(licenseRequiredBlob.status == 500) {
+    // licenseRequired = true;
+    // Could set it to true, but... this is just safer.
+    return;
+  }
   let licenseRequired = licenseRequiredBlob.licenseRequired;
 
   const dateOptions = {

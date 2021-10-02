@@ -63,6 +63,52 @@ let doTiktokAuth = () => {
     });
 };
 
+// This could honestly be a lot more generic...
+// if i really wanted to, I could redesign all of this to come from backend...
+// 
+let doActualTwitchAuth = async () => {
+    let twitchAuthorizeResult = await fetch("http://localhost:42074/authorizeTwitch").then(result => result.json());
+
+    if (twitchAuthorizeResult?.status == 200) {
+        return SafeSwal.fire({
+            icon: 'success',
+            text: "Login Successful! We'll start grabbing your clips right away!"
+        }).then(uploadClip);
+    }
+    else {
+        return handleRandomError(twitchAuthorizeResult?.error, twitchAuthorizeResult?.endpoint);
+    }
+}
+
+const handleRandomError = (errorMessage, endpoint) => {
+    let options = {
+        icon: 'error',
+        text: errorMessage,
+        confirmButtonText: 'Retry',
+        showCancelButton: true,
+      }
+      let endpointOptions = {};
+      let onConfirm = () => {};
+      if(endpoint) {
+        endpointOptions = {
+          confirmButtonText: 'Retry',
+          showCancelButton: true
+        }
+        switch(endpoint) {
+          case 'authorizeTwitch':
+            onConfirm = doActualTwitchAuth;
+            break;
+        } 
+        
+      }
+      console.log('regular error');
+      return SafeSwal.fire({...options, ...endpointOptions}).then((result) => {
+        if (result.isConfirmed) {
+          onConfirm();
+        }
+      });
+}
+
 let doTwitchAuth = () => {
     return SafeSwal.fire({
         icon: 'info',

@@ -58,12 +58,10 @@ let uploadClip = async (force = false) => {
       console.log('Upload too fast but no yelling');
     }
   } else if (result?.status == 500) {
+    console.log('got 500');
     let errorMessage = result?.error;
-    console.log('regular error');
-    SafeSwal.fire({
-      icon: 'error',
-      text: errorMessage,
-    });
+    let endpoint = result?.endpoint;
+    handleRandomError(errorMessage, endpoint);
   }
 
   //unconditionally update status to waiting for next upload
