@@ -93,11 +93,7 @@ const sendBugReport = async () => {
             'success'
         );
     } else {
-        SafeSwal.fire(
-            'Error!',
-            `There was an error sending your ${isFeedback ? 'feedback' : 'bug report'}!`,
-            'error'
-        );
+        handleRandomError(bugreportResponse.error, bugreportResponse.endpoint);
     }
 }
 
@@ -166,6 +162,9 @@ const handleRandomError = (errorMessage, endpoint) => {
                 onConfirm = () => {ipcRenderer.send("open-settings");}
                 endpointOptions.confirmButtonText = 'Open Settings';
                 break;
+            case 'username':
+                onConfirm = doTwitchAuth;
+                break;
         } 
         
       }
@@ -192,15 +191,14 @@ let doTwitchAuth = () => {
             try {
                 idSetResult = await fetch(`http://localhost:42074/update?username=${username}`)
                     .then(res => res.json())
-                    .catch(() => { return { status: 200 } });
+                    .catch((e) => { return { status: e.message.includes('JSON') ? 200 : 500 } });
                 console.log(idSetResult);
             }
             catch (e) {
-                console.log("Channel entered is invalid, please restart Clipbot and try again");
-                return SafeSwal.fire({
-                    icon: 'error',
-                    text: e?.message || e?.error || e
-                });
+                console.log("Channel entered crashed stuff");
+                console.log(JSONlstringify(e));
+                //TODO: better handle this error
+                return handleRandomError('An Error occured finding your channel', 'username');
             }
 
             if (idSetResult?.status == 200) {
@@ -211,23 +209,14 @@ let doTwitchAuth = () => {
             }
             else {
                 console.log(`Setting channel failed: ${JSON.stringify(idSetResult)}`);
-                return SafeSwal.fire({
-                    icon: 'error',
-                    html: idSetResult?.error + "<br/>" + "Click OK below and we will ask for your username again :)"
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        console.log("Username retry accepted");
-                        uploadClip();
-                    }
-                });
+                //TODO: account for this better
+                return handleRandomError(idSetResult?.error, idSetResult?.endpoint);
             }
         }
         else {
             console.log("User did not enter a channel");
-            return SafeSwal.fire({
-                icon: 'error',
-                text: "You did not enter a channel name. Please restart Clipbot and enter a channel name."
-            });
+            //TODO account for this too
+            return handleRandomError('You did not enter a channel', 'username');
         }
     });
 };
@@ -284,10 +273,7 @@ let doLicenseAuth = () => {
         }
         else {
             console.log("User did not enter a license key");
-            SafeSwal.fire({
-                icon: 'error',
-                text: "You did not enter a license key. Please restart Clipbot and enter a key."
-            });
+            handleRandomError("You did not enter a license key.", 'activate')
         }
     });
     // document.querySelector('#mainsite').addEventListener('click', openClipbotMainSite);

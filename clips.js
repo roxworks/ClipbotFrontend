@@ -389,6 +389,9 @@ const setupOrientationButtons = () => {
     };
 
     selectCropType().then((cropType) => {
+      if(cropType == null) {
+        return;
+      }
       ipcRenderer.once('custom_crop', async (event, cropData) => {
         console.log('custom crop received');
         let crop = JSON.parse(cropData);

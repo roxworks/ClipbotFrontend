@@ -433,6 +433,9 @@ document.addEventListener('DOMContentLoaded', async function (event) {
           let allClips = allClipsRes?.clips;
           if (state.currentClipId != '' || allClips?.length > 0) {
             selectCropType().then((cropType) => {
+              if(cropType == null) {
+                return;
+              }
               ipcRenderer.send(
                 'camvas_open',
                 JSON.stringify({
@@ -445,6 +448,7 @@ document.addEventListener('DOMContentLoaded', async function (event) {
               );
             });
           } else {
+            //TODO: Maybe do this better
             SafeSwal.fire({
               icon: 'warning',
               title: 'Clip Not Found',
@@ -928,6 +932,7 @@ document.addEventListener('DOMContentLoaded', async function (event) {
         title: 'Join our Discord server!',
         text: 'Want to submit feedback? Got cool ideas? Come join the discord and give yourself the "Clipbot User" role :)',
         confirmButtonText: 'Join Discord',
+        showCancelButton: true,
       }).then((result) => {
         if (result.isConfirmed) {
           window.open('https://clipbot.tv/discord', '_blank');
@@ -978,6 +983,7 @@ document.addEventListener('DOMContentLoaded', async function (event) {
         input: 'textarea',
         inputPlaceholder: `Nothing is happening and I am confused`,
         confirmButtonText: 'Submit',
+        showCancelButton: true,
       }).then(async (result) => {
         sendEmail(result);
       });
@@ -994,6 +1000,7 @@ document.addEventListener('DOMContentLoaded', async function (event) {
         input: 'textarea',
         inputPlaceholder: `Nothing is happening and I am confused`,
         confirmButtonText: 'Submit',
+        showCancelButton: true,
       }).then(async (result) => {
         sendEmail(result, true);
       });
@@ -1024,20 +1031,12 @@ const sendEmail = async (result, isFeedback) => {
           'success'
         );
       } else {
-        SafeSwal.fire(
-          'Error!',
-          `There was an error sending your ${isFeedback ? 'feedback' : 'bug report'}!`,
-          'error'
-        );
+        bugreportResponse = await bugreportResponse.json();
+        handleRandomError(bugreportResponse.error, bugreportResponse.endpoint);
       }
     } catch (e) {
       console.log(e);
-      SafeSwal.fire({
-        title: 'Error',
-        text: 'There was an error sending your bug report!',
-        type: 'error',
-        confirmButtonText: 'Ok',
-      });
+      handleRandomError('There was an error sending your bug report!', 'bug')
     }
   }
 }
