@@ -196,8 +196,7 @@ let doTwitchAuth = () => {
             }
             catch (e) {
                 console.log("Channel entered crashed stuff");
-                console.log(JSONlstringify(e));
-                //TODO: better handle this error
+                console.log(JSON.stringify(e));
                 return handleRandomError('An Error occured finding your channel', 'username');
             }
 
@@ -209,13 +208,11 @@ let doTwitchAuth = () => {
             }
             else {
                 console.log(`Setting channel failed: ${JSON.stringify(idSetResult)}`);
-                //TODO: account for this better
                 return handleRandomError(idSetResult?.error, idSetResult?.endpoint);
             }
         }
         else {
             console.log("User did not enter a channel");
-            //TODO account for this too
             return handleRandomError('You did not enter a channel', 'username');
         }
     });

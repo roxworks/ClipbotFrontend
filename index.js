@@ -448,12 +448,7 @@ document.addEventListener('DOMContentLoaded', async function (event) {
               );
             });
           } else {
-            //TODO: Maybe do this better
-            SafeSwal.fire({
-              icon: 'warning',
-              title: 'Clip Not Found',
-              text: "Couldn't find an example clip, please connect your twitch username and try again",
-            });
+            handleRandomError("Couldn't find an example clip, please set a channel and try again", 'username');
           }
         });
 
