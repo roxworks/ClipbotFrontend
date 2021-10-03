@@ -7,24 +7,25 @@ let activateLicense = async (key) => {
             console.log(result);
             if (result.status == 200) {
                 console.log("it werked");
-                SafeSwal.fire({
-                    icon: 'success',
-                    text: "License key activated!"
-                });
+                // SafeSwal.fire({
+                //     icon: 'success',
+                //     text: "License key activated!"
+                // });
                 return result;
             }
             else {
-                console.log("Failed to activate license: " + result?.error);
+                console.log('licensing failed: ' + JSON.stringify(result));
+                // handleRandomError(result.error, result.endpoint);
                 return result;
             }
         }).catch(
             error => {
-                console.log("error: " + error);
-                SafeSwal.fire({
-                    icon: 'error',
-                    text: error || "Bad news bears"
-                });
-                return false;
+                console.log("licensing error: " + error);
+                // SafeSwal.fire({
+                //     icon: 'error',
+                //     text: error || "Bad news bears"
+                // });
+                return error;
             }
         );
     }
@@ -80,11 +81,52 @@ let doActualTwitchAuth = async () => {
     }
 }
 
+const sendBugReport = async () => {
+    let bugreportResponse = await fetch(
+        `http://localhost:42074/bug?bug=${bug}&isFeedback=${isFeedback}`
+    );
+    console.log(bugreportResponse);
+    if (bugreportResponse.status == 200) {
+        SafeSwal.fire(
+            'Success!',
+            `Your ${isFeedback ? 'feedback' : 'bug report'} has been sent!`,
+            'success'
+        );
+    } else {
+        SafeSwal.fire(
+            'Error!',
+            `There was an error sending your ${isFeedback ? 'feedback' : 'bug report'}!`,
+            'error'
+        );
+    }
+}
+
+const createClip = async () => {
+    let response = await fetch(`http://localhost:42074/clip`, {
+        method: 'post',
+    }).then((response) => response.json());
+    if (response.status == 200) {
+        console.log('clip created');
+        let clipBlob = response.clip;
+        let clipURL = clipBlob.url;
+        console.log('clip success ' + JSON.parse(clipBlob));
+        SafeSwal.fire({
+        title: 'Clip Created!',
+        icon: 'success',
+        html: `Your clip has been created <a href='${clipURL}' target='_blank'>here</a>`,
+        confirmButtonText: 'Awesome!',
+        });
+    }
+    else {
+        handleRandomError(response.error, response.endpoint);
+    }
+}
+
 const handleRandomError = (errorMessage, endpoint) => {
+    console.log()
     let options = {
         icon: 'error',
         text: errorMessage,
-        confirmButtonText: 'Retry',
         showCancelButton: true,
       }
       let endpointOptions = {};
@@ -92,12 +134,38 @@ const handleRandomError = (errorMessage, endpoint) => {
       if(endpoint) {
         endpointOptions = {
           confirmButtonText: 'Retry',
-          showCancelButton: true
         }
+        //authorizeTwitch, retry, clip, buyLicense, activate, bug, youtubeAuth
         switch(endpoint) {
-          case 'authorizeTwitch':
-            onConfirm = doActualTwitchAuth;
-            break;
+            case 'authorizeTwitch':
+                onConfirm = doActualTwitchAuth;
+                break;
+            case 'retry':
+                onConfirm = uploadClip;
+                break;
+            case 'clip':
+                onConfirm = createClip;
+                break;
+            case 'buyLicense':
+                onConfirm = () => {
+                    openClipbotMainSite();
+                    doLicenseAuth();
+                }
+                endpointOptions.confirmButtonText = 'Buy License';
+                break;
+            case 'activate':
+                onConfirm = doLicenseAuth;
+                break;
+            case 'bug':
+                onConfirm = sendBugReport;
+                break;
+            case 'youtubeAuth':
+                onConfirm = doYoutubeAuth;
+                break;
+            case 'settings':
+                onConfirm = () => {ipcRenderer.send("open-settings");}
+                endpointOptions.confirmButtonText = 'Open Settings';
+                break;
         } 
         
       }
@@ -211,10 +279,7 @@ let doLicenseAuth = () => {
             }
             else {
                 console.log(`Licensing failed: ${JSON.stringify(licenseDetails)}`);
-                SafeSwal.fire({
-                    icon: 'error',
-                    text: licenseDetails?.error
-                });
+                handleRandomError(licenseDetails?.error, licenseDetails?.endpoint);
             }
         }
         else {
@@ -276,11 +341,7 @@ let doYoutubeAuth = async () => {
                 console.log('failed to auth');
                 let errorBody = await result.json();
                 errMsg = errorBody.error;
-                return SafeSwal.fire({
-                    icon: 'error',
-                    title: 'Failed to log in to Youtube!',
-                    text: errMsg
-                });
+                handleRandomError(errMsg, errorBody.endpoint);
             }
         });
 

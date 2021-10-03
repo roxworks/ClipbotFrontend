@@ -211,11 +211,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   ipcRenderer.on('clip_failed', (event, arg) => {
     console.log('clip fail');
-    SafeSwal.fire({
-      title: 'Clip Failed!',
-      icon: 'error',
-      html: `Your clip failed to create. <br>Error: ${JSON.parse(arg)?.error}`,
-    });
+    let errorInfo = JSON.parse(arg);
+    let errorMessage = errorInfo?.error;
+    let endpoint = errorInfo?.endpoint;
+    handleRandomError(errorMessage, endpoint);
   });
 });
 
