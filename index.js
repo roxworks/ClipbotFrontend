@@ -632,7 +632,7 @@ document.addEventListener('DOMContentLoaded', async function (event) {
     console.log('got data: ' + data);
     // call update endpoint with camCrop field as camCropDetails in query
     console.log('Updating settings with new cam crop...');
-    // TODO: Update this as well
+    // n: Update this as well
     // let result = await fetch("http://localhost:42074/update?camCrop=" + encodeURIComponent(JSON.stringify(camCropDetails)));
     // alert if the update succeeded or failed
     if(camCropDetails.cropType != 'no-cam' ) {

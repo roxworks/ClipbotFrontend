@@ -356,7 +356,8 @@ if (process.argv[2] == 'test') {
     canvasWindow.loadFile(path.join(__dirname, 'canvas.html'));
     canvasWindow.on('closed', function () {
       canvasWindow = null;
-    });
+      WINDOWS.camvas = null;
+  });
     mainWindow.on('closed', () => {
       //also close tiktokWindow
       if (canvasWindow) {
@@ -397,6 +398,7 @@ if (process.argv[2] == 'test') {
     canvasWindow.loadFile(path.join(__dirname, 'canvas.html'));
     canvasWindow.on('closed', function () {
       canvasWindow = null;
+      WINDOWS.screenvas = null;
     });
     mainWindow.on('closed', () => {
       //also close tiktokWindow
