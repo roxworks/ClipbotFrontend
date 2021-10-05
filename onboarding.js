@@ -293,7 +293,7 @@ const onboardingSteps = [
             }
         },
     },
-    {//11, default vertical video (+ crop)
+    {//11, Auto-Crop (+ crop)
         title: "Auto-Crop",
         html: `
             With Clipbot, you can crop each clip to make vertical videos like this!<br><br>

@@ -26,7 +26,7 @@ Pages
             - (I will fill this in, just need placement)
             - Example value:
                 - September 3, 7:17PM
-        - Default Vertical video
+        - Auto-Crop
             - (I will fill this in, just need placement)
             - Example value:
                 - ON
@@ -211,15 +211,15 @@ Pages
             - Value
                 - `Use these settings to make your videos vertical by default.`
                 - After that sentence, either:
-                    - `Default Vertical Video is OFF, so your videos will be uploaded as horizontal unless you customize them individually.`
-                    - `Default Vertical Video is ON, so your videos will be cropped.`
-        - Default Vertical Video
+                    - `Auto-Crop is OFF, so your videos will be uploaded as horizontal unless you customize them individually.`
+                    - `Auto-Crop is ON, so your videos will be cropped.`
+        - Auto-Crop
             - Type
                 - Toggle (On/off)
             - Example value:
                 - On
     - Buttons/Inputs
-        - Default Vertical Video
+        - Auto-Crop
             - Type
                 - Toggle (On/off)
             - Example value:

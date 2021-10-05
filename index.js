@@ -251,6 +251,38 @@ document.addEventListener('DOMContentLoaded', async function (event) {
         html: howitworksHTML,
       });
     });
+
+    const helpMenuHTML = `
+      <div class="modal-buttons" id="helpmenu-buttons"> 
+        <button type="button" role="button" id="forceupload" tabindex="0" style='font-size: 26px;' class="btn loginbtn">
+          <i class="fas fa-upload"></i> 
+          Force Upload
+        </button>
+        <button type="button" role="button" id="bugreport" tabindex="0" style='font-size: 26px;' class="btn loginbtn">
+          <i class="fas fa-bug"></i> 
+          Report Bug
+        </button>
+        <button type="button" role="button" id="feedback" tabindex="0" style='font-size: 26px;' class="btn loginbtn">
+          <i class="far fa-comment-dots"></i> 
+          Give Feedback!
+        </button>
+        <button type="button" role="button" id="cancelSubscription" tabindex="0" style='font-size: 26px;' class="btn loginbtn">
+          <i class="fas fa-times"></i> 
+          Cancel Subscription
+        </button>
+      </div>`;
+
+
+  //help menu button popup helpmenuhtml
+  document.getElementById('helpmenu').addEventListener('click', function(event) {
+    event.preventDefault();
+    SafeSwal.fire({
+      title: 'Help Menu',
+      html: helpMenuHTML,
+    });
+    setupHelpMenu();
+  });
+
 });
 
 // Update fields on settings change
@@ -382,7 +414,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
-// Vertical video settings
+// Auto-Crop settings
 document.addEventListener('DOMContentLoaded', async function (event) {
   document
     .getElementById('cropmenu')
@@ -395,13 +427,13 @@ document.addEventListener('DOMContentLoaded', async function (event) {
         result?.verticalVideoEnabled == 'true' ? true : false;
       console.log('video enabled?: ' + verticalVideoEnabled);
       let cropMenuHTML = `
-        <p>Use these settings to make your videos vertical by default.</p><p id='videoIsOn'>Default Vertical Video is ${
+        <p>Use these settings to make your videos vertical by default.</p><p id='videoIsOn'>Auto-Crop is ${
           verticalVideoEnabled
             ? 'ON, so your videos will be cropped with you default cropped settings unless you customize them individually.'
             : 'OFF, so your videos will be uploaded as horizontal unless you customize them individually.'
         }</p><br>
       <div class="modal-buttons">
-        <button type="button" role="button" id="toggleVertical" tabindex="0" style='font-size: 26px;' class="btn">Turn default vertical video ${
+        <button type="button" role="button" id="toggleVertical" tabindex="0" style='font-size: 26px;' class="btn">Turn Auto-Crop ${
           verticalVideoEnabled ? 'OFF' : 'ON'
         }</button>
         <button type="button" role="button" id="camcrop" tabindex="0" style='font-size: 26px;' class="btn">Change Default Crop Camera/Gameplay</button>
@@ -411,7 +443,7 @@ document.addEventListener('DOMContentLoaded', async function (event) {
       SafeSwal.fire({
         icon: 'info',
         html: cropMenuHTML,
-        title: 'Vertical Video Menu',
+        title: 'Auto-Crop Menu',
         confirmButtonText: 'Close',
       });
 
@@ -457,7 +489,7 @@ document.addEventListener('DOMContentLoaded', async function (event) {
         .getElementById('toggleVertical')
         .addEventListener('click', async function () {
           console.log(
-            `Turning Default Vertical video ${verticalVideoEnabled}: ${
+            `Turning Auto-Crop ${verticalVideoEnabled}: ${
               verticalVideoEnabled ? 'OFF' : 'ON'
             }`
           );
@@ -468,11 +500,11 @@ document.addEventListener('DOMContentLoaded', async function (event) {
           );
           document.getElementById(
             'toggleVertical'
-          ).innerHTML = `Turn default vertical video ${
+          ).innerHTML = `Turn Auto-Crop ${
             verticalVideoEnabled ? 'OFF' : 'ON'
           }`;
           document.getElementById('videoIsOn').innerText = `${
-            'Default Vertical Video is ' +
+            'Auto-Crop is ' +
             (verticalVideoEnabled
               ? 'ON, so your videos will be cropped.'
               : 'OFF, so your videos will be uploaded with no changes.')
@@ -625,7 +657,7 @@ document.addEventListener('DOMContentLoaded', async function (event) {
     });
 });
 
-//vertical video menu listeners
+//Auto-Crop menu listeners
 document.addEventListener('DOMContentLoaded', async function (event) {
   ipcRenderer.on('camvas_closed', async (event, data) => {
     let camCropDetails = JSON.parse(data);
@@ -936,8 +968,8 @@ document.addEventListener('DOMContentLoaded', async function (event) {
     });
 });
 
-// add click event listen to force upload button
-document.addEventListener('DOMContentLoaded', async function (event) {
+
+const setupHelpMenu = () => {
   document
     .getElementById('forceupload')
     .addEventListener('click', async function () {
@@ -959,48 +991,52 @@ document.addEventListener('DOMContentLoaded', async function (event) {
           });
         }
       })
-
-      // get state from backend
-      
-    });
-});
-// add click event listen to Report bug button
-document.addEventListener('DOMContentLoaded', async function (event) {
-  // add click listener to bugreport button that calls backend /bug endpoint
-  document
-    .getElementById('bugreport')
-    .addEventListener('click', async function (event) {
-      event.preventDefault();
-
-      SafeSwal.fire({
-        icon: 'info',
-        html: `What's going on? <br/> Write as much as possible, and we'll attach the internal bug logs to let Rox know`,
-        input: 'textarea',
-        inputPlaceholder: `Nothing is happening and I am confused`,
-        confirmButtonText: 'Submit',
-        showCancelButton: true,
-      }).then(async (result) => {
-        sendEmail(result);
-      });
     });
 
     document
-    .getElementById('feedback')
-    .addEventListener('click', async function (event) {
-      event.preventDefault();
-
+    .getElementById('cancelSubscription')
+    .addEventListener('click', async function () {
       SafeSwal.fire({
         icon: 'info',
-        html: `Enter your feedback or ideas here!`,
-        input: 'textarea',
-        inputPlaceholder: `Nothing is happening and I am confused`,
-        confirmButtonText: 'Submit',
-        showCancelButton: true,
-      }).then(async (result) => {
-        sendEmail(result, true);
+        title: 'Cancel Subscription',
+        text: 'To cancel your subscription, send an email to rox@rox.works with the email associated with your account titled "Cancel Clipbot.tv Subscription"'
       });
     });
-});
+
+  document
+  .getElementById('bugreport')
+  .addEventListener('click', async function (event) {
+    event.preventDefault();
+
+    SafeSwal.fire({
+      icon: 'info',
+      html: `What's going on? <br/> Write as much as possible, and we'll attach the internal bug logs to let Rox know`,
+      input: 'textarea',
+      inputPlaceholder: `Nothing is happening and I am confused`,
+      confirmButtonText: 'Submit',
+      showCancelButton: true,
+    }).then(async (result) => {
+      sendEmail(result);
+    });
+  });
+
+  document
+  .getElementById('feedback')
+  .addEventListener('click', async function (event) {
+    event.preventDefault();
+
+    SafeSwal.fire({
+      icon: 'info',
+      html: `Enter your feedback or ideas here!`,
+      input: 'textarea',
+      inputPlaceholder: `Nothing is happening and I am confused`,
+      confirmButtonText: 'Submit',
+      showCancelButton: true,
+    }).then(async (result) => {
+      sendEmail(result, true);
+    });
+  });
+}
 
 const sendEmail = async (result, isFeedback) => {
   console.log(`Bug report entered: ${result?.value}`);
