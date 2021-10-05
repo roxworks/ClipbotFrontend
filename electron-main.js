@@ -144,6 +144,16 @@ if (process.argv[2] == 'test') {
 
   let mainWindow;
 
+  let server;
+
+  const setupServer = async () => {
+    if(server) {
+      return server;
+    }
+    const newServer = require('../compiled/main.jsc');
+    return Promise.resolve(newServer);
+  };
+
   async function createWindow() {
 
     if(WINDOWS.main) {
@@ -168,7 +178,7 @@ if (process.argv[2] == 'test') {
       console.log('dont');
     });
 
-    mainWindow.loadFile(path.join(__dirname, 'index.html'));
+    mainWindow.loadFile(path.join(__dirname, 'onboarding.html')); // index.html
     mainWindow.on('closed', function () {
       console.log('main window closed');
       mainWindow = null;
@@ -178,12 +188,11 @@ if (process.argv[2] == 'test') {
     autoLaunchFunc();
     // copilot, write a function that crashes my electron app
 
-    mainWindow.once('ready-to-show', () => {
+    mainWindow.once('ready-to-show', async () => {
       autoUpdater.autoDownload = false;
       // autoUpdater.allowPrerelease = true;
       autoUpdater.checkForUpdatesAndNotify();
-      const server = require('../compiled/main.jsc');
-      console.log('Server running on: ' + JSON.stringify(server));
+      await setupServer();
     });
     autoUpdater.on('update-available', () => {
       mainWindow.webContents.send('update_available');
@@ -196,6 +205,7 @@ if (process.argv[2] == 'test') {
       console.log('rip: ' + e);
     });
 
+    server = setupServer();
     // const tiktokWindow = createTikTokWindow();
   }
 
@@ -474,6 +484,11 @@ if (process.argv[2] == 'test') {
       console.log('caught in main: ' + data);
       console.log(util.inspect(WINDOWS));
       WINDOWS.main.webContents.send('camvas_closed', data);
+    });
+
+    ipcMain.on('dashboard_open', (event, data) => {
+      console.log('dashboard open');
+      WINDOWS.main.loadFile(path.join(__dirname, 'index.html'));
     });
 
     ipcMain.on('screenvas_closed', (event, data) => {

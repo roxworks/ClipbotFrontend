@@ -236,6 +236,15 @@ h1 {
     background: #593a92;
 }
 
+#onboarding {
+    background: #593a92;
+    display: flex;
+    justify-content: center;
+    height: 1000px !important;
+    width: 100% !important;
+    overflow: hidden;
+}
+
 .sidebar.collapse {
     width: 80px;
     padding: 6px;

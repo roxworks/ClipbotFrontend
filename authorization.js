@@ -34,15 +34,15 @@ let activateLicense = async (key) => {
     }
 };
 
-let doTiktokAuth = () => {
-    return SafeSwal.fire({
+let doTiktokAuth = (skip) => {
+    (skip ? Promise.resolve({isConfirmed: true}) : SafeSwal.fire({
         icon: 'info',
         html: `
         Looks like you're not logged in to TikTok.<br>Please click 'Login' to open a login window<br><br>
         <b style="font-size: 2em;">You MUST use QR Code Login on the next screen.</b>`,
         confirmButtonText: 'Login',
         showCancelButton: true,
-    }).then((result) => {
+    })).then((result) => {
         if (result.isConfirmed) {
             console.log("User selected to open tiktok");
             return SafeSwal.fire({
@@ -67,14 +67,18 @@ let doTiktokAuth = () => {
 // This could honestly be a lot more generic...
 // if i really wanted to, I could redesign all of this to come from backend...
 // 
-let doActualTwitchAuth = async () => {
+let doActualTwitchAuth = async (doUpload) => {
     let twitchAuthorizeResult = await fetch("http://localhost:42074/authorizeTwitch").then(result => result.json());
 
     if (twitchAuthorizeResult?.status == 200) {
         return SafeSwal.fire({
             icon: 'success',
-            text: "Login Successful! We'll start grabbing your clips right away!"
-        }).then(uploadClip);
+            text: "Twitch Login Successful!"
+        }).then(() => {
+            if(doUpload) {
+                return uploadClip();
+            }
+        });
     }
     else {
         return handleRandomError(twitchAuthorizeResult?.error, twitchAuthorizeResult?.endpoint);
@@ -118,18 +122,18 @@ const createClip = async () => {
     }
 }
 
-const handleRandomError = (errorMessage, endpoint) => {
-    console.log()
+const handleRandomError = (errorMessage, endpoint, passthrough) => {
+    let overrideFields = {};
     let options = {
         icon: 'error',
         text: errorMessage,
         showCancelButton: true,
-      }
-      let endpointOptions = {};
-      let onConfirm = () => {};
-      if(endpoint) {
+    };
+    let endpointOptions = {};
+    let onConfirm = () => {};
+    if(endpoint) {
         endpointOptions = {
-          confirmButtonText: 'Retry',
+            confirmButtonText: 'Retry',
         }
         //authorizeTwitch, retry, clip, buyLicense, activate, bug, youtubeAuth
         switch(endpoint) {
@@ -150,7 +154,8 @@ const handleRandomError = (errorMessage, endpoint) => {
                 endpointOptions.confirmButtonText = 'Buy License';
                 break;
             case 'activate':
-                onConfirm = doLicenseAuth;
+                onConfirm = () => {return doLicenseAuth(passthrough);};
+                endpointOptions.showCancelButton = false;
                 break;
             case 'bug':
                 onConfirm = sendBugReport;
@@ -166,24 +171,23 @@ const handleRandomError = (errorMessage, endpoint) => {
                 onConfirm = doTwitchAuth;
                 break;
         } 
-        
-      }
+    }
       console.log('regular error');
-      return SafeSwal.fire({...options, ...endpointOptions}).then((result) => {
+      return SafeSwal.fire({...options, ...endpointOptions, ...overrideFields}).then((result) => {
         if (result.isConfirmed) {
-          onConfirm();
+          return onConfirm();
         }
       });
 }
 
-let doTwitchAuth = () => {
-    return SafeSwal.fire({
+let doTwitchAuth = (username, doUpload) => {
+    return (username ? Promise.resolve({value: username}) : SafeSwal.fire({
         icon: 'info',
         text: "Looks like we don't have your channel name yet. Please enter your channel name (your twitch username) below.",
         input: 'text',
         inputPlaceholder: 'Enter your channel name (NOT LINK) here',
         confirmButtonText: 'Submit',
-    }).then(async (result) => {
+    })).then(async (result) => {
         console.log(`Username entered: ${result?.value}`);
         if (result.value) {
             let username = result.value;
@@ -204,7 +208,11 @@ let doTwitchAuth = () => {
                 return SafeSwal.fire({
                     icon: 'success',
                     text: "Channel Set! We'll start grabbing your clips right away!"
-                }).then(uploadClip);
+                }).then(() => {
+                    if(doUpload) {
+                        uploadClip();
+                    }
+                });
             }
             else {
                 console.log(`Setting channel failed: ${JSON.stringify(idSetResult)}`);
@@ -224,8 +232,48 @@ const openClipbotMainSite = () => {
     return false;
 }
 
-let doLicenseAuth = () => {
-    SafeSwal.fire({
+const onHotkeyKeyUp = (event) => {
+    console.log('event: ', event);
+    const keyCode = event.keyCode;
+    const key = event.key;
+    const charCode = event.code;
+  
+    if ((keyCode >= 16 && keyCode <= 18) || keyCode === 91) return;
+  
+    const value = [];
+    event.ctrlKey ? value.push('Control') : null;
+    event.shiftKey ? value.push('Shift') : null;
+    event.isAlt ? value.push('Alt') : null;
+    value.push(key.toUpperCase());
+  
+    document.getElementById('hotkey').value = value.join('+');
+  }
+
+const updateSettings = async (settings) => {
+    let url = new URL(`http://localhost:42074/update`);
+    // add all fields in settings object to url search params then get /update
+    let params = new URLSearchParams();
+    for (let key in settings) {
+        params.append(key, settings[key]);
+    }
+    url.search = params;
+    let response = await fetch(url.toString());
+    if (response.status == 200) {
+        console.log('settings updated');
+        return true
+    }
+    else {
+        console.log('settings update failed');
+        return false;
+    }
+}
+
+const checkInputIsValid = (event) => {
+    return event.target.validity.valid || (event.target.value = '');
+}
+
+let doLicenseAuth = (doUpload = true) => {
+    return SafeSwal.fire({
         icon: 'info',
         html: `Looks like you have more than 2000 followers<br>
         To use Clipbot, you'll need a license key. 
@@ -243,37 +291,49 @@ let doLicenseAuth = () => {
             }
             catch (e) {
                 console.log("License key entered is invalid");
-                SafeSwal.fire({
-                    icon: 'error',
-                    text: e?.message || e?.error || e
-                });
+                return handleRandomError('Invalid license key', 'activate');
             }
 
             if (licenseDetails?.status == 200) {
-                SafeSwal.fire({
+                if(doUpload) {
+                    uploadClip();
+                }
+                return SafeSwal.fire({
                     icon: 'success',
                     text: "License key activated!"
                 });
-                uploadClip();
             }
             else if(licenseDetails?.status == 303) {
-                SafeSwal.fire({
-                    icon: 'info',
-                    text: licenseDetails?.error,
-                    confirmButtonText: 'Try again',
-                }).then(uploadClip); 
+                return handleRandomError(licenseDetails?.error, 'activate', doUpload).then(() => {
+                    if(doUpload) {
+                        uploadClip();
+                    }
+                });
             }
             else {
                 console.log(`Licensing failed: ${JSON.stringify(licenseDetails)}`);
-                handleRandomError(licenseDetails?.error, licenseDetails?.endpoint);
+                return handleRandomError(licenseDetails?.error, licenseDetails?.endpoint);
             }
         }
         else {
             console.log("User did not enter a license key");
-            handleRandomError("You did not enter a license key.", 'activate')
+            return handleRandomError("You did not enter a license key.", 'activate')
         }
     });
     // document.querySelector('#mainsite').addEventListener('click', openClipbotMainSite);
+}
+
+let checkLicenseRequired = async () => {
+    let licenseRequiredBlob = await fetch('http://localhost:42074/licenseRequired').then(res => res.json());
+    console.log(licenseRequiredBlob.status);
+    console.log('license needed', licenseRequiredBlob.required);
+    if(licenseRequiredBlob.status == 500) {
+        // licenseRequired = true;
+        // Could set it to true, but... this is just safer.
+        return null;
+    }
+    let licenseRequired = licenseRequiredBlob.required;
+    return licenseRequired;
 }
 
 let doYoutubeAuth = async () => {
@@ -324,7 +384,7 @@ let doYoutubeAuth = async () => {
                 console.log('failed to auth');
                 let errorBody = await result.json();
                 errMsg = errorBody.error;
-                handleRandomError(errMsg, errorBody.endpoint);
+                return handleRandomError(errMsg, errorBody.endpoint);
             }
         });
 
