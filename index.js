@@ -318,24 +318,6 @@ document.addEventListener('DOMContentLoaded', async function (event) {
 //     });
 // });
 
-let numDots = 0;
-const getDotsString = () => {
-  numDots++;
-  numDots %= 4;
-  if(numDots == 0) {
-    return '';
-  }
-  else if(numDots == 1) {
-    return '.';
-  }
-  else if(numDots == 2) {
-    return '..'
-  }
-  else if (numDots == 3) {
-    return '...';
-  }
-}
-
 let clipsLoadingPopup = undefined;
 let updateStatus = (event, data) => {
   let currStatus = data;

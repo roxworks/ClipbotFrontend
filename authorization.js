@@ -272,6 +272,34 @@ const checkInputIsValid = (event) => {
     return event.target.validity.valid || (event.target.value = '');
 }
 
+let numDots = 0;
+const getDotsString = () => {
+  numDots++;
+  numDots %= 4;
+  if(numDots == 0) {
+    return '';
+  }
+  else if(numDots == 1) {
+    return '.';
+  }
+  else if(numDots == 2) {
+    return '..'
+  }
+  else if (numDots == 3) {
+    return '...';
+  }
+}
+
+// call '/clip/load' to get clips
+const loadClips = async () => {
+    let response = await fetch(`http://localhost:42074/clip/load`);
+    let clips = await response.json();
+    if (response.status != 200) {
+        console.log('failed to load clips');
+    }
+    return clips;
+}
+
 let doLicenseAuth = (doUpload = true) => {
     return SafeSwal.fire({
         icon: 'info',

@@ -36,6 +36,10 @@ const launchStep = async (step) => {
 
 }
 
+let clipsLoadingPromise;
+let clipsLoadingPopup;
+
+
 // onboarding steps
 const onboardingSteps = [
     { //0, intro
@@ -61,6 +65,15 @@ const onboardingSteps = [
         onConfirm: async (username) => {
             await doActualTwitchAuth(false);
             await doTwitchAuth(username, false);
+            let licenseRequired = await checkLicenseRequired();
+            if(licenseRequired) {
+                console.log("License required: ", licenseRequired);
+                await doLicenseAuth(false);
+            }
+            else {
+                console.log("License required: ", licenseRequired);
+            }
+            clipsLoadingPromise = loadClips();
         }
     },
     { //3, mod/viewer
@@ -72,6 +85,15 @@ const onboardingSteps = [
         onConfirm: async (username) => {
             await doActualTwitchAuth(false);
             await doTwitchAuth(username);
+            let licenseRequired = await checkLicenseRequired();
+            if(licenseRequired) {
+                console.log("License required: ", licenseRequired);
+                await doLicenseAuth(false);
+            }
+            else {
+                console.log("License required: ", licenseRequired);
+            }
+            clipsLoadingPromise = loadClips();
         }
     }, 
     //TODO: Start loading clips
@@ -104,22 +126,6 @@ const onboardingSteps = [
             await updateSettings({
                 youtubeUploadsEnabled: true,
             });
-            //TODO: set youtube true
-            let licenseRequired = await checkLicenseRequired();
-            if(licenseRequired) {
-                console.log("License required: ", licenseRequired);
-                await doLicenseAuth(false);
-            }
-            else {
-                console.log("License required: ", licenseRequired);
-            }
-        },
-        onDeny: async () => {
-            let licenseRequired = await checkLicenseRequired();
-            console.log("License required: ", licenseRequired);
-            if(licenseRequired) {
-                await doLicenseAuth(false);
-            }
         }
     },
     { //6, clip hotkey
@@ -310,12 +316,19 @@ const onboardingSteps = [
                 defaultVerticalVideo: true,
             });
             if(success) {
+
                 await OnboardingSwal.fire({
                     icon: 'success',
                     title: "Auto-Crop on!",
                     text: `Now, let's set up your crop using a recent clip`,
                     confirmButtonText: "Choose My Crop",
                 });
+                clipsLoadingPopup = OnboardingSwal.fire({
+                    title: 'Loading Your Twitch Clips',
+                    html: `Please wait while we load your clips from Twitch.<br/>This may take a few minutes<br/><br/>0 Clips Loaded`,
+                    showConfirmButton: false,
+                });
+                await clipsLoadingPromise;
                 // set default crop
                 await selectCropType().then(async (cropType) => {
                     if(cropType == null) {
@@ -461,9 +474,33 @@ const listenForTiktokLogin = () => {
     return tiktokLoggedInPromise;
 }
 
+const setupClipsLoadingPopup = () => {
+    let updateStatus = (event, data) => {
+        let currStatus = data;
+        if (currStatus.includes('TWITCH')) {
+            let currClipsLoaded = currStatus.trim().substring(currStatus.indexOf(':') + 1);
+            let clipsLoadedNum = parseInt(currClipsLoaded);
+            if(clipsLoadedNum === 0) {
+            return;
+            }
+
+            if(clipsLoadingPopup) {
+                // get clips number which is located after the : in currStatus
+                clipsLoadingPopup.update({
+                    html: `Please wait while we load your clips from Twitch.<br/>This may take a few minutes${getDotsString()}<br/><br/>${currClipsLoaded} Clips Loaded`,
+                });
+                // clipsLoadingPopup.showLoading();
+            }
+
+        }
+    };
+    ipcRenderer.on('status_update', updateStatus);
+};
+
+
 const startOnboarding = async () => {
     //launchStep(0);
-    launchStep(9);
+    launchStep(0);
 }
 
 const getSettings = async () => {
@@ -482,6 +519,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         ipcRenderer.send('dashboard_open');
     }
     else {
+        setupClipsLoadingPopup();
         // most important
         startOnboarding();
     }
