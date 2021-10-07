@@ -256,7 +256,7 @@ if (process.argv[2] == 'test') {
 
     let settingsWindow = new BrowserWindow({
       width: 550,
-      height: 800,
+      height: 850,
       webPreferences: {
         nodeIntegration: true,
         contextIsolation: false,

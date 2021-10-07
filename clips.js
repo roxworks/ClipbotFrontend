@@ -374,62 +374,85 @@ const setupOrientationButtons = () => {
       let result = await updateClipFrontendAndBackend({
         verticalVideoEnabled: newOrientation,
       });
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Orientation changed.',
+        html: newOrientation ? 
+        'Clip is now vertical! <br><br>Click Set Custom Crop to adjust the crop' : 
+        'Clip is now horizontal.',
+        confirmButtonText: newOrientation ? 'Set Custom Crop' : 'OK',
+        showCancelButton: newOrientation,
+        cancelButtonText: newOrientation ? 'Skip' : 'Cancel',
+      }).then((result) => {
+        if(result.isConfirmed) {
+          console.log('custom orientation confirmed');
+          if(newOrientation) {
+            doCustomCrop();
+            console.log('new orientation is vertical');
+          } else {
+            console.log('new orientation is horizontal');
+          }
+        } 
+      });
     });
 
   document.getElementById('customCrop').addEventListener('click', async (e) => {
     //update clip on backend with custom crop
     e.preventDefault();
     e.stopPropagation();
-    let settings = await settingsDidLoad;
-
-    console.log('custom crop button clicked');
-    let currentCrop = displayedClip.customCrop || {
-      camCrop: settings.camCrop,
-      screenCrop: settings.screenCrop,
-    };
-
-    selectCropType().then((cropType) => {
-      if(cropType == null) {
-        return;
-      }
-      ipcRenderer.once('custom_crop', async (event, cropData) => {
-        console.log('custom crop received');
-        let crop = JSON.parse(cropData);
-        // TODO: Be wary, this might be a little confusing to users,
-        // there's not a definite right answer but this _feels_ most intuitive
-        let result = await updateClipFrontendAndBackend({
-          customCrop: crop,
-          verticalVideoEnabled: true,
-        });
-        if (result.status === 200) {
-          console.log('custom crop updated');
-          SafeSwal.fire({
-            icon: 'success',
-            title: 'Custom crop updated',
-          });
-        } else {
-          console.log('error updating custom crop');
-          SafeSwal.fire({
-            icon: 'error',
-            title: 'Custom crop failed',
-          });
-        }
-      });
-  
-        ipcRenderer.send(
-          'camvas_open',
-          JSON.stringify({
-            cropDetails: currentCrop,
-            clip: displayedClip,
-            callback: 'custom_crop',
-            cropType: cropType,
-          })
-        );  
-    })
-    // let result = await updateClipFrontendAndBackend({cropEnabled: newCrop});
-    //TODO: Call cropper somehow idek
+    doCustomCrop();
   });
 };
+
+const doCustomCrop = async () => {
+  let settings = await settingsDidLoad;
+
+  console.log('custom crop button clicked');
+  let currentCrop = displayedClip.customCrop || {
+    camCrop: settings.camCrop,
+    screenCrop: settings.screenCrop,
+  };
+
+  selectCropType().then((cropType) => {
+    if(cropType == null) {
+      return;
+    }
+    ipcRenderer.once('custom_crop', async (event, cropData) => {
+      console.log('custom crop received');
+      let crop = JSON.parse(cropData);
+      // TODO: Be wary, this might be a little confusing to users,
+      // there's not a definite right answer but this _feels_ most intuitive
+      let result = await updateClipFrontendAndBackend({
+        customCrop: crop,
+        verticalVideoEnabled: true,
+      });
+      if (result.status === 200) {
+        console.log('custom crop updated');
+        SafeSwal.fire({
+          icon: 'success',
+          title: 'Custom crop updated',
+        });
+      } else {
+        console.log('error updating custom crop');
+        SafeSwal.fire({
+          icon: 'error',
+          title: 'Custom crop failed',
+        });
+      }
+    });
+
+      ipcRenderer.send(
+        'camvas_open',
+        JSON.stringify({
+          cropDetails: currentCrop,
+          clip: displayedClip,
+          callback: 'custom_crop',
+          cropType: cropType,
+        })
+      );  
+  });
+}
 
 const setupFilterFunctionality = () => {
   // grab all data from filter inputs, then call /clip/filter with all inputs as a query string

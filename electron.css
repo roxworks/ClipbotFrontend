@@ -394,6 +394,15 @@ button:active {
     cursor: pointer;
 }
 
+.alert-info-off {
+    border: 1px solid red;
+    background-color: darkred;
+    box-shadow: 0px 0px 2px darkred;
+    color: white;
+    transition: 0.5s;
+    cursor: pointer;
+}
+
 .alert-info:hover {
     background-color: #8c6dc5;
     transition: 0.5s;

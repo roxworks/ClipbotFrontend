@@ -4,6 +4,11 @@ const addHours = function (date, h) {
   return newDate;
 };
 
+const clipbotOnAlertText = `While this window is open, we'll be uploading your twitch clips to TikTok/YT! Keep this program open`;
+const clipbotOffAlertText = `Clipbot is Off! Until you turn Clipbot on in the settings menu, no clips will be uploaded.`;
+const clipbotOnClass = 'alert-info';
+const clipbotOffClass = 'alert-info-off';
+
 let NEXT_UPLOAD_TIMEOUT_ID = undefined;
 const NO_CLIPS_URL = 'https://share.nyx.xyz/reWKYeJmokM';
 
@@ -103,7 +108,13 @@ const updateDisplayedSettings = async () => {
           if (document.querySelector('#nextUpload').value != 'Clipbot is off') {
             document.querySelector('#nextUpload').value = 'Clipbot is off';
           }
+
+          document.querySelector('.alert').classList.replace(clipbotOnClass, clipbotOffClass);
+          document.getElementById('alert-message').innerText = clipbotOffAlertText;
+          document.querySelector('.alert').classList.remove('hide');
         } else {
+          document.querySelector('.alert').classList.replace(clipbotOffClass, clipbotOnClass);
+          document.getElementById('alert-message').innerText = clipbotOnAlertText;
           if (clipToDisplay != '' && clipToDisplay != undefined) {
             if (
               document.querySelector('#nextUpload').value !=

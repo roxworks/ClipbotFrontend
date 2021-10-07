@@ -35,19 +35,10 @@
   </head>
 
   <body class="app">
-    <aside class="sidebar">
-      <img
-        src="images/logo-large.png"
-        class="sidebar__logo"
-        onclick="toggleNav()"
-      />
-      <img
-        src="images/logo.png"
-        class="sidebar__logo hide"
-        onclick="toggleNav()"
-      />
-      <nav class="sidebar__menu">
-        <form type="submit" id="filterform" class="sidebar__form">
+    <aside class="sidebar" style='padding-top: 10px;'>
+      <nav class="sidebar__menu" style='margin-top: 0px;'>
+        <h3 class="page__heading" id="title">Filters</h3>
+        <form type="submit" id="filterform" class="sidebar__form" style='margin-top: 0px;'>
           <div id="filtersDiv" class="filters">
             <div class="form__group">
               <label for="approvalStatusFilter">Approval Status:</label>
@@ -141,7 +132,7 @@
             </div>
           </div>
           <div class="form__group">
-              <label for="viewCount">Minimum View count:</label>
+              <label for="viewCount">Minimum Twitch Views:</label>
               <input
                 name="minViewCount"
                 id="viewCount"
