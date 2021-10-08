@@ -300,6 +300,63 @@ const loadClips = async () => {
     return clips;
 }
 
+const handleLicenseAuthInternal = async (doUpload, result) => {
+    console.log(`License entered: ${result?.value}`);
+    if (result.value) {
+        let licenseDetails;
+        try {
+            licenseDetails = await activateLicense(result?.value);
+        }
+        catch (e) {
+            console.log("License key entered is invalid");
+            return handleRandomError('Invalid license key', 'activate');
+        }
+
+        if (licenseDetails?.status == 200) {
+            if(doUpload) {
+                uploadClip();
+            }
+            return SafeSwal.fire({
+                icon: 'success',
+                text: "License key activated!"
+            });
+        }
+        else if(licenseDetails?.status == 303) {
+            return handleRandomError(licenseDetails?.error, 'activate', doUpload).then(() => {
+                if(doUpload) {
+                    uploadClip();
+                }
+            });
+        }
+        else {
+            console.log(`Licensing failed: ${JSON.stringify(licenseDetails)}`);
+            return handleRandomError(licenseDetails?.error, licenseDetails?.endpoint);
+        }
+    }
+    else {
+        console.log("User did not enter a license key");
+        return handleRandomError("You did not enter a license key.", 'activate')
+    }
+}
+
+let justLicenseInput = (doUpload = true) => {
+    return SafeSwal.fire({
+        icon: 'info',
+        html: `Enter your key below. Don't have one? 
+        Please head to <a href='#' id='mainsite' onClick='openClipbotMainSite()'>Clipbot.tv</a> 
+        to sign up for the free trial.`,
+        input: 'text',
+        inputPlaceholder: 'Enter your license key here',
+        confirmButtonText: 'Submit',
+        showCancelButton: true,
+    }).then(async (result) => {
+        if(result.isDismissed) {
+            return;
+        }
+        return handleLicenseAuthInternal(doUpload, result);
+    });
+}
+
 let doLicenseAuth = (doUpload = true) => {
     return SafeSwal.fire({
         icon: 'info',
@@ -311,45 +368,12 @@ let doLicenseAuth = (doUpload = true) => {
         inputPlaceholder: 'Enter your license key here',
         confirmButtonText: 'Submit',
     }).then(async (result) => {
-        console.log(`License entered: ${result?.value}`);
-        if (result.value) {
-            let licenseDetails;
-            try {
-                licenseDetails = await activateLicense(result?.value);
-            }
-            catch (e) {
-                console.log("License key entered is invalid");
-                return handleRandomError('Invalid license key', 'activate');
-            }
-
-            if (licenseDetails?.status == 200) {
-                if(doUpload) {
-                    uploadClip();
-                }
-                return SafeSwal.fire({
-                    icon: 'success',
-                    text: "License key activated!"
-                });
-            }
-            else if(licenseDetails?.status == 303) {
-                return handleRandomError(licenseDetails?.error, 'activate', doUpload).then(() => {
-                    if(doUpload) {
-                        uploadClip();
-                    }
-                });
-            }
-            else {
-                console.log(`Licensing failed: ${JSON.stringify(licenseDetails)}`);
-                return handleRandomError(licenseDetails?.error, licenseDetails?.endpoint);
-            }
-        }
-        else {
-            console.log("User did not enter a license key");
-            return handleRandomError("You did not enter a license key.", 'activate')
-        }
+        return handleLicenseAuthInternal(doUpload, result);
     });
     // document.querySelector('#mainsite').addEventListener('click', openClipbotMainSite);
 }
+
+
 
 let checkLicenseRequired = async () => {
     let licenseRequiredBlob = await fetch('http://localhost:42074/licenseRequired').then(res => res.json());

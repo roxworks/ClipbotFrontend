@@ -522,8 +522,8 @@ document.addEventListener('DOMContentLoaded', async function (event) {
       let youtubeLoggedIn = settings?.youtubeToken != '';
       let tiktokLoggedIn = settings?.sessionId != '';
       let twitchLoggedIn = settings?.broadcasterId != '';
+      let licensed = settings?.license != '';
       let cropMenuHTML = `
-      <p>Manage your logins here.</p>
       <div class="modal-buttons"> 
         <button type="button" role="button" id="twitchLogin" tabindex="0" style='font-size: 26px;' class="btn loginbtn"><i class="fab fa-twitch"></i> ${
           twitchLoggedIn ? 'Change' : 'Set'
@@ -542,6 +542,9 @@ document.addEventListener('DOMContentLoaded', async function (event) {
           />
           `
         }
+        <button type="button" role="button" id="addLicense" tabindex="0" style='font-size: 26px;' class="btn loginbtn">
+          ${licensed ? 'Remove License' : 'Add License'}
+        </button>
       </div>
       `;
 
@@ -552,6 +555,25 @@ document.addEventListener('DOMContentLoaded', async function (event) {
         confirmButtonText: 'Close',
       });
 
+      document
+        .getElementById('addLicense')
+        .addEventListener('click', async function () {
+          if(licensed) {
+            //clear license
+            await clearSettings(['license']);
+            Swal.fire({
+              icon: 'success',
+              title: 'License Removed',
+            });
+            // update license button to say add license
+            document.getElementById('addLicense').innerText = 'Add License';
+          }
+          else {
+            await justLicenseInput(false);
+            // update license button to say remove license
+            document.getElementById('addLicense').innerText = 'Remove License';
+          }
+        });
       // twitch
       document
         .getElementById('twitchLogin')
