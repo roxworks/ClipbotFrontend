@@ -993,7 +993,7 @@ const setupHelpMenu = () => {
       SafeSwal.fire({
         icon: 'warning',
         title: 'Be Careful',
-        text: 'Are you sure you want to force upload? Be careful with this option. If you upload too much too fast, you may get banned by Tiktok or Youtube.',
+        html: 'Are you sure you want to force upload?<br>Be careful with this option.<br><br><b>This only works for Tiktok and will skip Youtube.</b> <br>If you upload too much too fast, you may get banned by Tiktok.',
         type: 'warning',
         confirmButtonText: 'Yes, Upload Now',
         showCancelButton: true
