@@ -81,6 +81,7 @@ body {
     margin-left: 250px;
 }
 
+
 .container.collapse {
     margin-left: 100px;
 }
@@ -562,4 +563,34 @@ label.settings {
 .clip-status-label.grad-purple.small {
     justify-content: center;
     min-width: 106px;
-  }
+}
+
+.update{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.update .clip-status-label.grad-purple{
+    background: linear-gradient( 176deg, rgb(109, 197, 138) 0%, rgb(29, 73, 38) 100%);
+    font-size: 1.5rem;
+    font-weight: bolder;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    border: none;
+    border-radius: 0;
+}
+.update .clip-status-input{
+    font-size: 1.2rem;
+    width: 90%;
+    text-align: center;
+    background-color: rgb(27, 27, 27);
+    outline: none;
+    border: none;
+    color: rgba(223, 230, 233, 0.8);
+    padding-top: 1rem;
+}
