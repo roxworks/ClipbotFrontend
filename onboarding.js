@@ -503,11 +503,6 @@ const startOnboarding = async () => {
     launchStep(0);
 }
 
-const getSettings = async () => {
-    let settings = await fetch('http://localhost:42074/settings');
-    return await settings.json();
-}
-
 const checkIfOnboardingComplete = async () => {
     let settings = await getSettings();
     return settings.onboardingComplete;

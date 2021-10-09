@@ -184,6 +184,7 @@ document.addEventListener('DOMContentLoaded', async function () {
   setupOrientationButtons();
   setupFilterFunctionality();
   setClipsCount();
+  setupTutorial();
 });
 
 const changeTitleFrontend = (titleDidChange) => {
@@ -229,6 +230,30 @@ const setupTitleStuff = async () => {
   //     changeTitle().then(updateDisplayedSettings);
   //     return false;
   // });
+};
+
+const setupTutorial = async () => {
+  document
+  .getElementById('tutorial')
+  .addEventListener('click', async function (event) {
+    var tourguide = new Tourguide({
+      "steps": clips_steps
+    });
+    tourguide.start();
+    Swal.close();
+  });
+  //this code is so good holy poop
+  const settings = await getSettings();
+  if(settings.clipsTutorialComplete) {
+    return;
+  }
+  var tourguide = new Tourguide({
+    "steps": clips_steps,
+    "onComplete": () => {
+      updateSettings({ clipsTutorialComplete: true });
+    },
+  });
+  tourguide.start();
 };
 
 const setupLoadButton = () => {

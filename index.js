@@ -281,8 +281,11 @@ document.addEventListener('DOMContentLoaded', async function (event) {
           <i class="fas fa-times"></i> 
           Cancel Subscription
         </button>
+        <button type="button" role="button" id="tutorial" tabindex="0" style='font-size: 26px;' class="btn loginbtn">
+          <i class="fas fa-redo"></i> 
+          Redo Tutorial
+        </button>
       </div>`;
-
 
   //help menu button popup helpmenuhtml
   document.getElementById('helpmenu').addEventListener('click', function(event) {
@@ -376,9 +379,23 @@ document.addEventListener('DOMContentLoaded', async function (event) {
 });
 
 // run uploadClip after the page has loaded
-document.addEventListener('DOMContentLoaded', () => {
-  console.log('making initial upload attempt');
-  uploadClip();
+document.addEventListener('DOMContentLoaded', async () => {
+  //this code is so good holy poop
+  const settings = await getSettings();
+  console.log('Main tutorial complete: ' + settings.mainTutorialComplete);
+  if(settings.mainTutorialComplete) {
+    uploadClip();
+    return;
+  }
+  var tourguide = new Tourguide({
+    "steps": main_steps,
+    "onComplete": () => {
+      updateSettings({'mainTutorialComplete': true});
+      uploadClip
+    },
+    "onStop": uploadClip
+  });
+  tourguide.start();
 });
 
 // i hate tiktok
@@ -522,8 +539,8 @@ document.addEventListener('DOMContentLoaded', async function (event) {
       let youtubeLoggedIn = settings?.youtubeToken != '';
       let tiktokLoggedIn = settings?.sessionId != '';
       let twitchLoggedIn = settings?.broadcasterId != '';
+      let licensed = settings?.license != '';
       let cropMenuHTML = `
-      <p>Manage your logins here.</p>
       <div class="modal-buttons"> 
         <button type="button" role="button" id="twitchLogin" tabindex="0" style='font-size: 26px;' class="btn loginbtn"><i class="fab fa-twitch"></i> ${
           twitchLoggedIn ? 'Change' : 'Set'
@@ -542,6 +559,9 @@ document.addEventListener('DOMContentLoaded', async function (event) {
           />
           `
         }
+        <button type="button" role="button" id="addLicense" tabindex="0" style='font-size: 26px;' class="btn loginbtn">
+          ${licensed ? 'Remove License' : 'Add License'}
+        </button>
       </div>
       `;
 
@@ -552,6 +572,25 @@ document.addEventListener('DOMContentLoaded', async function (event) {
         confirmButtonText: 'Close',
       });
 
+      document
+        .getElementById('addLicense')
+        .addEventListener('click', async function () {
+          if(licensed) {
+            //clear license
+            await clearSettings(['license']);
+            Swal.fire({
+              icon: 'success',
+              title: 'License Removed',
+            });
+            // update license button to say add license
+            document.getElementById('addLicense').innerText = 'Add License';
+          }
+          else {
+            await justLicenseInput(false);
+            // update license button to say remove license
+            document.getElementById('addLicense').innerText = 'Remove License';
+          }
+        });
       // twitch
       document
         .getElementById('twitchLogin')
@@ -963,6 +1002,17 @@ document.addEventListener('DOMContentLoaded', async function (event) {
 
 
 const setupHelpMenu = () => {
+
+  document
+  .getElementById('tutorial')
+  .addEventListener('click', async function (event) {
+    var tourguide = new Tourguide({
+      steps: main_steps
+    });
+    tourguide.start();
+    Swal.close();
+  });
+
   document
     .getElementById('forceupload')
     .addEventListener('click', async function () {
@@ -971,7 +1021,7 @@ const setupHelpMenu = () => {
       SafeSwal.fire({
         icon: 'warning',
         title: 'Be Careful',
-        text: 'Are you sure you want to force upload? Be careful with this option. If you upload too much too fast, you may get banned by Tiktok or Youtube.',
+        html: 'Are you sure you want to force upload?<br>Be careful with this option.<br><br><b>This only works for Tiktok and will skip Youtube.</b> <br>If you upload too much too fast, you may get banned by Tiktok.',
         type: 'warning',
         confirmButtonText: 'Yes, Upload Now',
         showCancelButton: true
