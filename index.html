@@ -1,193 +1,167 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Clipbot</title>
-    <meta
-      name="description"
-      content="Automatically upload your twitch clips to TikTok!"
-    />
-    <meta name="author" content="Roxkstar74" />
-    <meta property="og:title" content="Clipbot" />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://www.Clipbot.tv/" />
-    <meta
-      property="og:description"
-      content="Automatically upload your twitch clips to TikTok!"
-    />
-    <meta property="og:image" content="image.png" />
-    <!-- <link rel="icon" href="/favicon.ico">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Clipbot</title>
+  <meta name="description" content="Automatically upload your twitch clips to TikTok!" />
+  <meta name="author" content="Roxkstar74" />
+  <meta property="og:title" content="Clipbot" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.Clipbot.tv/" />
+  <meta property="og:description" content="Automatically upload your twitch clips to TikTok!" />
+  <meta property="og:image" content="image.png" />
+  <!-- <link rel="icon" href="/favicon.ico">
       <link rel="icon" href="/favicon.svg" type="image/svg+xml">
       <link rel="apple-touch-icon" href="/apple-touch-icon.png"> -->
 
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
-    />
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="safeswal.js"></script>
-    <link rel="stylesheet" href="clips.css" />
-    <link rel="stylesheet" href="electron.css" />
-    <script src="vertical-helper.js"></script>
-    <script src="uploadClip.js"></script>
-    <script src="authorization.js"></script>
-    <script src="index.js"></script>
-  </head>
+  <link rel="stylesheet" href="./bootstrap/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="./node_modules/bootstrap-icons/font/bootstrap-icons.css" />
+  <link rel="stylesheet" href="./index.css" />
 
-  <body class="app">
-    <aside class="sidebar">
-      <img
-        src="images/logo-large.png"
-        class="sidebar__logo"
-        onclick="toggleNav()"
-      />
-      <img
-        src="images/logo.png"
-        class="sidebar__logo hide"
-        onclick="toggleNav()"
-      />
-      <nav class="sidebar__menu">
-        <!-- <button class="sidebar__button">
-          <i class="fas fa-upload"></i> Upload Clips
-        </button> -->
-        <button class="sidebar__button" id="manageClips" type="reset">
-          <i class="fas fa-th"></i> <span class="btn-text">Clips</span>
-        </button>
-        <button class="sidebar__button" id="logins" type="reset">
-          <i class="fas fa-users"></i>
-          <span class="btn-text">Logins</span>
-        </button>
-        <button class="sidebar__button" id="howitworks" type="reset">
-          <i class="fas fa-lightbulb"></i>
-          <span class="btn-text">How It Works </span>
-        </button>
-        <button class="sidebar__button" id="settings" type="reset">
-          <i class="fas fa-cog"></i> <span class="btn-text">Settings </span>
-        </button>
-        <button class="sidebar__button" id="cropmenu" type="reset">
-          <i class="fas fa-video"></i>
-          <span class="btn-text">Auto-Crop</span>
-        </button>
-        <button class="sidebar__button" id="discord" type="reset">
-          <i class="fab fa-discord"></i>
-          <span class="btn-text">Join Discord</span>
-        </button>
-        <button class="sidebar__button" id="helpmenu" type="reset">
-          <i class="fas fa-question"></i>
-          <span class="btn-text">Help</span>
-        </button>
-      </nav>
-      <section class="sidebar__version">
-        <span class="sidebar__version-text">Version</span>
-        <span id="version">1.0.77</span>
-      </section>
-    </aside>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="safeswal.js"></script>
+  <!-- <link rel="stylesheet" href="clips.css" /> -->
+  <!-- <link rel="stylesheet" href="electron.css" /> -->
+  <script src="vertical-helper.js"></script>
+  <script src="uploadClip.js"></script>
+  <script src="authorization.js"></script>
+  <script src="index.js"></script>
+</head>
+
+<body class="d-flex bd-highlight">
+  <aside class="p-2 flex-shrink-1 bd-highlight navBarColor">
+    <!-- <img src="images/logo-large.png" class="img-fluid img-thumbnail" onclick="toggleNav()"/> -->
+
+    <picture>
+      <img src="images/Newlogo.svg" class="sideLogo container" onclick="toggleNav()" />
+    </picture>
+
+    <br /> <br />
+
+    <nav class="d-grid gap-2 ">
+      <button class="btn btn-outline-primary" id="manageClips" type="reset">
+        <!-- <i class="bi bi-layout-three-columns"></i> <span class="btn-text">Clips</span> -->
+        <i class="bi bi-collection-play-fill"></i> <span class="btn-text">Clips</span>
+      </button>
+
+      <button class="btn btn-outline-secondary" id="logins" type="reset">
+        <i class="bi bi-people-fill"></i>
+        <span class="btn-text">Logins</span>
+      </button>
+
+      <button class="btn btn-outline-success" id="howitworks" type="reset">
+        <i class="bi bi-lightbulb-fill"></i>
+        <span class="text-right"> How It Works </span>
+      </button>
+
+      <button class="btn btn-outline-light" id="settings" type="reset">
+        <i class="bi bi-sliders"></i> <span class="btn-text">Settings </span>
+      </button>
+
+      <button class="btn btn-outline-danger" id="cropmenu" type="reset">
+        <i class="bi bi-camera-reels-fill"></i>
+        <span class="btn-text">Auto-Crop</span>
+      </button>
+
+      <button class="btn btn-outline-info" id="discord" type="reset">
+        <i class="bi bi-discord"></i>
+        <span class="btn-text">Join Discord</span>
+      </button>
+
+      <button class="btn btn-outline-warning" id="helpmenu" type="reset">
+        <i class="bi bi-question-diamond-fill"></i>
+        <span class="btn-text">Help</span>
+      </button>
+    </nav>
+
+    <br />
+    <section class="text-center">
+      <span class="text-white">Version</span>
+      <span id="version" class="text-white">1.0.77</span>
+    </section>
+  </aside>
+
+  <!-- ******************************************************************************************************************* -->
+  <div class="p-2 w-100 workSpace ">
+    <header id="pageHeader" class="container">
+      <div class="text-end" onclick="toggleInfoText()">
+        <span> <i class="bi bi-info-circle-fill"></i></span>
+      </div>
+
+      <!-- <h3 class="page__heading" id="title">Uploads</h3> -->
+
+      <div class="alert alert-info container ">
+        <!-- <div class="text-end"><i class="fa fa-times blue-cross " onclick="toggleInfoText()"></i></div> -->
+        <p class="container">
+          <i class="fa fa-info-circle"></i>
+          <strong class="alert__info-header">Heads up!</strong>
+          <!-- <span id='alert-message'> -->
+          While this window is open, we'll be uploading your twitch clips to
+          TikTok/YT! Keep this program open.
+          <!-- </span> -->
+        </p>
+      </div>
+    </header>
+
     <div class="container">
-      <header id="pageHeader">
-        <div class="circle" onclick="toggleInfoText()">
-          <i class="fas fa-info fa-xs info-circle"></i>
-        </div>
-        <h3 class="page__heading" id="title">Uploads</h3>
-        <div class="alert alert-info">
-          <p class="info__text">
-            <i class="fa fa-info-circle"></i>
-            <strong class="alert__info-header">Heads up!</strong>
-            <span id='alert-message'>
-            While this window is open, we'll be uploading your twitch clips to
-            TikTok/YT! Keep this program open.
-            </span>
-          </p>
-          <i class="fa fa-times blue-cross" onclick="toggleInfoText()"></i>
-        </div>
-      </header>
-      <section>
-        <div class="clip-details">
-          <div id="cliptitle" class="cliptitlemain clip__title">
-            NO NEW CLIPS - CLIP TITLE HERE
-          </div>
-          <video
-            id="upload-video"
-            src="https://share.nyx.xyz/reWKYeJmokM"
-            autoplay
-            loop
-            muted
-            controls
-            width="550px"
-            height="312px"
-          ></video>
-        </div>
-      </section>
-      <section class="info-details">
-        <div class="clip-status">
-          <div class="clip-status-label grad-purple">
-            <span class="status-text">Current Status </span>
-          </div>
-          <input
-            id="status"
-            type="text"
-            class="clip-status-input"
-            disabled
-            value="Waiting until next upload"
-          />
-        </div>
-        <div class="info-details-split">
-          <div class="clip-status">
-            <div class="clip-status-label grad-purple small">
-              <span class="status-text">Next Upload </span>
-            </div>
-            <input
-              id="nextUpload"
-              type="text"
-              class="clip-status-input"
-              disabled
-              value="No clips approved"
-            />
-          </div>
-          <div class="clip-status">
-            <div class="clip-status-label grad-purple small">
-              <span class="status-text">Last Upload </span>
-            </div>
-            <input
-              id="lastUploaded"
-              type="text"
-              class="clip-status-input"
-              disabled
-              value="Your upload is scheduled!"
-            />
-          </div>
-        </div>
-
-        <div class="info-details-split">
-          <div class="clip-status">
-            <div class="clip-status-label grad-purple small">
-              <span class="status-text">Auto-Crop </span>
-            </div>
-            <input
-              id="videoEnabled"
-              type="text"
-              class="clip-status-input"
-              disabled
-              value="OFF"
-            />
-          </div>
-          <div class="clip-status">
-            <div class="clip-status-label grad-purple small">
-              <span class="status-text">Clip Hotkey </span>
-            </div>
-            <input
-              id="hotkey"
-              type="text"
-              class="clip-status-input"
-              disabled
-              value="F10"
-            />
-          </div>
+      <section class="container">
+        <div class="">
+          <div id="cliptitle" class="text-center text-white"> NO NEW CLIPS - CLIP TITLE HERE </div>
+          <video class="videoLocation" id="upload-video" src="https://share.nyx.xyz/reWKYeJmokM" autoplay loop muted
+            controls width="550px" height="312px"></video>
         </div>
       </section>
 
+      <section class=" mt-3 container">
+        <div class="row">
+          <div class="input-group flex-nowrap col-8">
+            <button class="input-group-text btn btn-outline-light" id="addon-wrapping">Current Status</button>
+            <input type="text" class="form-control" disabled placeholder="Username" aria-label="Username"
+              aria-describedby="addon-wrapping" value="Waiting until next upload">
+            <!-- <input id="status" type="text" class="" disabled value="Waiting until next upload"/> -->
+          </div>
+
+          <div class="row">
+            <div class="input-group flex-nowrap col mt-3">
+              <button class="input-group-text btn btn-outline-light" id="addon-wrapping">Next Upload </button>
+              <input type="text" class="form-control" disabled placeholder="Username" aria-label="Username"
+                aria-describedby="addon-wrapping" value="No clips approved">
+              <!-- <input id="nextUpload" type="text" class="clip-status-input" disabled value="No clips approved"/> -->
+            </div>
+
+            <div class="input-group flex-nowrap col mt-3">
+              <button class="input-group-text btn btn-outline-light" id="addon-wrapping">Last Upload </button>
+              <input type="text" class="form-control" disabled placeholder="Username" aria-label="Username"
+                aria-describedby="addon-wrapping" value="Your upload is scheduled!">
+              <!-- <input id="lastUploaded" type="text" class="clip-status-input" disabled value="Your upload is scheduled!"/> -->
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="input-group flex-nowrap col mt-3">
+              <button class="input-group-text btn btn-outline-light" id="addon-wrapping">Auto-Crop </button>
+              <input type="text" class="form-control" disabled placeholder="Username" aria-label="Username"
+                aria-describedby="addon-wrapping" value="OFF">
+              <!-- <input id="videoEnabled" type="text" class="clip-status-input" disabled value="OFF"/> -->
+            </div>
+
+            <div class="input-group flex-nowrap col mt-3">
+              <button class="input-group-text btn btn-outline-light" id="addon-wrapping">Clip Hotkey </button>
+              <input type="text" class="form-control" disabled placeholder="Username" aria-label="Username"
+                aria-describedby="addon-wrapping" value="F10">
+              <!-- <input id="hotkey"  type="text" class="clip-status-input" disabled value="F10" />           -->
+            </div>
+          </div>
+        </div>
+      </section>
       <!-- <button id="push-to-talk">Push to Talk</button> -->
     </div>
-    <script src="script.js"></script>
+      <script src="script.js"></script>
+      <script src="./bootstrap/js/bootstrap.min.js"></script>
+      <script src="/node_modules/bootstrap-icons/font/bootstrap-icons.json"></script>
   </body>
 </html>

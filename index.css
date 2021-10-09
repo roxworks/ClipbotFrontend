@@ -1,0 +1,26 @@
+.sideLogo{
+    width: 159px;
+    height: 167px;
+}
+
+.hide {
+    display: none;
+}
+
+.videoLocation{
+display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.navBarColor{
+  /* background-color: #dfdfe25d; */
+  /* background-color: #4c3774; */
+  background-color: #4c3774;
+  height: 100vh;
+}
+
+.workSpace{
+  /* background-color: #6D4DA9; */
+  background-color: #453169;
+}
