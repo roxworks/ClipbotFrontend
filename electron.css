@@ -54,6 +54,7 @@ body {
     color: white;
     margin: 0;
     font-family: 'Open Sans', sans-serif;
+    overflow: hidden;
 }
 
 .app {

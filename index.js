@@ -281,8 +281,11 @@ document.addEventListener('DOMContentLoaded', async function (event) {
           <i class="fas fa-times"></i> 
           Cancel Subscription
         </button>
+        <button type="button" role="button" id="tutorial" tabindex="0" style='font-size: 26px;' class="btn loginbtn">
+          <i class="fas fa-redo"></i> 
+          Redo Tutorial
+        </button>
       </div>`;
-
 
   //help menu button popup helpmenuhtml
   document.getElementById('helpmenu').addEventListener('click', function(event) {
@@ -376,9 +379,23 @@ document.addEventListener('DOMContentLoaded', async function (event) {
 });
 
 // run uploadClip after the page has loaded
-document.addEventListener('DOMContentLoaded', () => {
-  console.log('making initial upload attempt');
-  uploadClip();
+document.addEventListener('DOMContentLoaded', async () => {
+  //this code is so good holy poop
+  const settings = await getSettings();
+  console.log('Main tutorial complete: ' + settings.mainTutorialComplete);
+  if(settings.mainTutorialComplete) {
+    uploadClip();
+    return;
+  }
+  var tourguide = new Tourguide({
+    "steps": main_steps,
+    "onComplete": () => {
+      updateSettings({'mainTutorialComplete': true});
+      uploadClip
+    },
+    "onStop": uploadClip
+  });
+  tourguide.start();
 });
 
 // i hate tiktok
@@ -985,6 +1002,17 @@ document.addEventListener('DOMContentLoaded', async function (event) {
 
 
 const setupHelpMenu = () => {
+
+  document
+  .getElementById('tutorial')
+  .addEventListener('click', async function (event) {
+    var tourguide = new Tourguide({
+      steps: main_steps
+    });
+    tourguide.start();
+    Swal.close();
+  });
+
   document
     .getElementById('forceupload')
     .addEventListener('click', async function () {

@@ -14,7 +14,7 @@
     <meta property="og:url" content="https://www.Clipbot.tv/" />
     <meta
       property="og:description"
-      content="Automatically upload your twitch clips to TikTok!"
+      content="Automatically upload your twitch clips to TikTok and Youtube Shorts!"
     />
     <meta property="og:image" content="image.png" />
     <!-- <link rel="icon" href="/favicon.ico">
@@ -29,15 +29,19 @@
     <script src="safeswal.js"></script>
     <link rel="stylesheet" href="clips.css" />
     <link rel="stylesheet" href="electron.css" />
+    <link rel="stylesheet" href="tourguide.css" />
+    <script src="tourguide.min.js"></script>
     <script src="vertical-helper.js"></script>
     <script src="uploadClip.js"></script>
     <script src="authorization.js"></script>
     <script src="index.js"></script>
+    <script src="tour.js"></script>
   </head>
 
   <body class="app">
     <aside class="sidebar">
       <img
+        id='sidebarlogoguy'
         src="images/logo-large.png"
         class="sidebar__logo"
         onclick="toggleNav()"
@@ -80,7 +84,7 @@
       </nav>
       <section class="sidebar__version">
         <span class="sidebar__version-text">Version</span>
-        <span id="version">1.0.77</span>
+        <span id="version"></span>
       </section>
     </aside>
     <div class="container">
@@ -119,7 +123,7 @@
         </div>
       </section>
       <section class="info-details">
-        <div class="clip-status">
+        <div class="clip-status" id='clipstatusdiv'>
           <div class="clip-status-label grad-purple">
             <span class="status-text">Current Status </span>
           </div>
@@ -132,7 +136,7 @@
           />
         </div>
         <div class="info-details-split">
-          <div class="clip-status">
+          <div class="clip-status" id='nextuploaddiv'>
             <div class="clip-status-label grad-purple small">
               <span class="status-text">Next Upload </span>
             </div>
@@ -144,7 +148,7 @@
               value="No clips approved"
             />
           </div>
-          <div class="clip-status">
+          <div class="clip-status" id='lastuploaddiv'>
             <div class="clip-status-label grad-purple small">
               <span class="status-text">Last Upload </span>
             </div>
@@ -159,7 +163,7 @@
         </div>
 
         <div class="info-details-split">
-          <div class="clip-status">
+          <div class="clip-status" id='autocropdiv'>
             <div class="clip-status-label grad-purple small">
               <span class="status-text">Auto-Crop </span>
             </div>
@@ -171,7 +175,7 @@
               value="OFF"
             />
           </div>
-          <div class="clip-status">
+          <div class="clip-status" id='hotkeydiv'>
             <div class="clip-status-label grad-purple small">
               <span class="status-text">Clip Hotkey </span>
             </div>
