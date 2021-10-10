@@ -171,6 +171,7 @@ if (process.argv[2] == 'test') {
         preload: path.join(__dirname, 'preload.js'),
       },
       icon: './images/logo.png',
+      show: false,
     });
 
     WINDOWS.main = mainWindow;
@@ -193,6 +194,7 @@ if (process.argv[2] == 'test') {
       // autoUpdater.allowPrerelease = true;
       autoUpdater.checkForUpdatesAndNotify();
       await setupServer();
+      mainWindow.show();
     });
     autoUpdater.on('update-available', () => {
       mainWindow.webContents.send('update_available');
@@ -225,6 +227,7 @@ if (process.argv[2] == 'test') {
         preload: path.join(__dirname, 'preload.js'),
       },
       icon: './images/logo.png',
+      show: false
     });
     WINDOWS.clips = clipsWindow;
     console.log('settings window set: ' + WINDOWS.settings);
@@ -232,6 +235,9 @@ if (process.argv[2] == 'test') {
     clipsWindow.setResizable(false);
 
     clipsWindow.loadFile(path.join(__dirname, 'clips.html'));
+    clipsWindow.on('ready-to-show', () => {
+      clipsWindow.show();
+    });
     clipsWindow.on('closed', function () {
       clipsWindow = null;
       WINDOWS.clips = null;
@@ -263,6 +269,7 @@ if (process.argv[2] == 'test') {
         preload: path.join(__dirname, 'preload.js'),
       },
       icon: './images/logo.png',
+      show: false,
     });
     WINDOWS.settings = settingsWindow;
     console.log('settings window set: ' + WINDOWS.settings);
@@ -270,6 +277,10 @@ if (process.argv[2] == 'test') {
     settingsWindow.setResizable(false);
 
     settingsWindow.loadFile(path.join(__dirname, 'settings.html'));
+
+    settingsWindow.once('ready-to-show', async () => {
+      settingsWindow.show();
+    });
     settingsWindow.on('closed', function () {
       settingsWindow = null;
       WINDOWS.settings = null;
@@ -301,6 +312,7 @@ if (process.argv[2] == 'test') {
         preload: path.join(__dirname, 'preload.js'),
       },
       icon: './images/logo.png',
+      show: false,
     });
     // WINDOWS.tiktok = tiktokWindow;
     // let mainPos = WINDOWS.main.getPosition();
@@ -317,6 +329,25 @@ if (process.argv[2] == 'test') {
       name: 'sessionid',
       value: '',
     };
+    
+    tiktokWindow.once('ready-to-show', function () {
+      tiktokWindow.show();
+    });
+
+    tiktokWindow.on('closed', function () {
+      tiktokWindow = null;
+      WINDOWS.tiktok = null;
+    });
+    
+    mainWindow.on('closed', () => {
+      //also close tiktokWindow
+      if (tiktokWindow) {
+        tiktokWindow.close();
+        tiktokWindow = null;
+        WINDOWS.tiktok = null;
+      }
+    });
+
     //clear cookieClear from tiktokWindow
     await tiktokWindow.webContents.session.clearStorageData([], (data) => {});
     // await tiktokWindow.webContents.session.cookies.set(cookieClear2);
@@ -326,18 +357,6 @@ if (process.argv[2] == 'test') {
     // await tiktokWindow.webContents.session.cookies.set(cookieClear2);
     // await tiktokWindow.loadURL("https://www.tiktok.com/login");
 
-    tiktokWindow.on('closed', function () {
-      tiktokWindow = null;
-      WINDOWS.tiktok = null;
-    });
-    mainWindow.on('closed', () => {
-      //also close tiktokWindow
-      if (tiktokWindow) {
-        tiktokWindow.close();
-        tiktokWindow = null;
-        WINDOWS.tiktok = null;
-      }
-    });
 
     return tiktokWindow;
   };
@@ -359,11 +378,15 @@ if (process.argv[2] == 'test') {
         preload: path.join(__dirname, 'preload.js'),
       },
       icon: './images/logo.png',
+      show: false,
     });
     WINDOWS.camvas = canvasWindow;
 
     canvasWindow.setResizable(false);
     canvasWindow.loadFile(path.join(__dirname, 'canvas.html'));
+    canvasWindow.once('ready-to-show', async () => {
+      canvasWindow.show();
+    });
     canvasWindow.on('closed', function () {
       canvasWindow = null;
       WINDOWS.camvas = null;
@@ -401,11 +424,16 @@ if (process.argv[2] == 'test') {
         preload: path.join(__dirname, 'preload.js'),
       },
       icon: './images/logo.png',
+      show: false,
     });
     WINDOWS.screenvas = canvasWindow;
 
     canvasWindow.setResizable(false);
     canvasWindow.loadFile(path.join(__dirname, 'canvas.html'));
+    
+    canvasWindow.once('ready-to-show', async () => {
+      canvasWindow.show();
+    });
     canvasWindow.on('closed', function () {
       canvasWindow = null;
       WINDOWS.screenvas = null;
