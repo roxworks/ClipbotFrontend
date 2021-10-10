@@ -148,6 +148,7 @@ if (process.argv[2] == 'test') {
   let server;
 
   const setupServer = async () => {
+    return true; //This prevents running the backend so the frontend can be used individually.
     if(server) {
       return server;
     }
