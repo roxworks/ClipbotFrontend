@@ -4,6 +4,11 @@ const addHours = function (date, h) {
   return newDate;
 };
 
+const clipbotOnAlertText = `While this window is open, we'll be uploading your twitch clips to TikTok/YT! Keep this program open`;
+const clipbotOffAlertText = `Clipbot is Off! Until you turn Clipbot on in the settings menu, no clips will be uploaded.`;
+const clipbotOnClass = 'alert-info';
+const clipbotOffClass = 'alert-info-off';
+
 let NEXT_UPLOAD_TIMEOUT_ID = undefined;
 const NO_CLIPS_URL = 'https://share.nyx.xyz/reWKYeJmokM';
 
@@ -16,6 +21,11 @@ const updateDisplayedSettings = async () => {
   );
 
   let licenseRequiredBlob = await fetch('http://localhost:42074/licenseRequired').then(res => res.json());
+  if(licenseRequiredBlob.status == 500) {
+    // licenseRequired = true;
+    // Could set it to true, but... this is just safer.
+    return;
+  }
   let licenseRequired = licenseRequiredBlob.licenseRequired;
 
   const dateOptions = {
@@ -98,7 +108,13 @@ const updateDisplayedSettings = async () => {
           if (document.querySelector('#nextUpload').value != 'Clipbot is off') {
             document.querySelector('#nextUpload').value = 'Clipbot is off';
           }
+
+          document.querySelector('.alert').classList.replace(clipbotOnClass, clipbotOffClass);
+          document.getElementById('alert-message').innerText = clipbotOffAlertText;
+          document.querySelector('.alert').classList.remove('hide');
         } else {
+          document.querySelector('.alert').classList.replace(clipbotOffClass, clipbotOnClass);
+          document.getElementById('alert-message').innerText = clipbotOnAlertText;
           if (clipToDisplay != '' && clipToDisplay != undefined) {
             if (
               document.querySelector('#nextUpload').value !=
@@ -206,11 +222,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   ipcRenderer.on('clip_failed', (event, arg) => {
     console.log('clip fail');
-    SafeSwal.fire({
-      title: 'Clip Failed!',
-      icon: 'error',
-      html: `Your clip failed to create. <br>Error: ${JSON.parse(arg)?.error}`,
-    });
+    let errorInfo = JSON.parse(arg);
+    let errorMessage = errorInfo?.error;
+    let endpoint = errorInfo?.endpoint;
+    handleRandomError(errorMessage, endpoint);
   });
 });
 
@@ -247,6 +262,41 @@ document.addEventListener('DOMContentLoaded', async function (event) {
         html: howitworksHTML,
       });
     });
+
+    const helpMenuHTML = `
+      <div class="modal-buttons" id="helpmenu-buttons"> 
+        <button type="button" role="button" id="forceupload" tabindex="0" style='font-size: 26px;' class="btn loginbtn">
+          <i class="fas fa-upload"></i> 
+          Force Upload
+        </button>
+        <button type="button" role="button" id="bugreport" tabindex="0" style='font-size: 26px;' class="btn loginbtn">
+          <i class="fas fa-bug"></i> 
+          Report Bug
+        </button>
+        <button type="button" role="button" id="feedback" tabindex="0" style='font-size: 26px;' class="btn loginbtn">
+          <i class="far fa-comment-dots"></i> 
+          Give Feedback!
+        </button>
+        <button type="button" role="button" id="cancelSubscription" tabindex="0" style='font-size: 26px;' class="btn loginbtn">
+          <i class="fas fa-times"></i> 
+          Cancel Subscription
+        </button>
+        <button type="button" role="button" id="tutorial" tabindex="0" style='font-size: 26px;' class="btn loginbtn">
+          <i class="fas fa-redo"></i> 
+          Redo Tutorial
+        </button>
+      </div>`;
+
+  //help menu button popup helpmenuhtml
+  document.getElementById('helpmenu').addEventListener('click', function(event) {
+    event.preventDefault();
+    SafeSwal.fire({
+      title: 'Help Menu',
+      html: helpMenuHTML,
+    });
+    setupHelpMenu();
+  });
+
 });
 
 // Update fields on settings change
@@ -281,24 +331,6 @@ document.addEventListener('DOMContentLoaded', async function (event) {
 //         ipcRenderer.send('settings_updated');
 //     });
 // });
-
-let numDots = 0;
-const getDotsString = () => {
-  numDots++;
-  numDots %= 4;
-  if(numDots == 0) {
-    return '';
-  }
-  else if(numDots == 1) {
-    return '.';
-  }
-  else if(numDots == 2) {
-    return '..'
-  }
-  else if (numDots == 3) {
-    return '...';
-  }
-}
 
 let clipsLoadingPopup = undefined;
 let updateStatus = (event, data) => {
@@ -347,9 +379,23 @@ document.addEventListener('DOMContentLoaded', async function (event) {
 });
 
 // run uploadClip after the page has loaded
-document.addEventListener('DOMContentLoaded', () => {
-  console.log('making initial upload attempt');
-  uploadClip();
+document.addEventListener('DOMContentLoaded', async () => {
+  //this code is so good holy poop
+  const settings = await getSettings();
+  console.log('Main tutorial complete: ' + settings.mainTutorialComplete);
+  if(settings.mainTutorialComplete) {
+    uploadClip();
+    return;
+  }
+  var tourguide = new Tourguide({
+    "steps": main_steps,
+    "onComplete": () => {
+      updateSettings({'mainTutorialComplete': true});
+      uploadClip
+    },
+    "onStop": uploadClip
+  });
+  tourguide.start();
 });
 
 // i hate tiktok
@@ -378,7 +424,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
-// Vertical video settings
+// Auto-Crop settings
 document.addEventListener('DOMContentLoaded', async function (event) {
   document
     .getElementById('cropmenu')
@@ -391,13 +437,13 @@ document.addEventListener('DOMContentLoaded', async function (event) {
         result?.verticalVideoEnabled == 'true' ? true : false;
       console.log('video enabled?: ' + verticalVideoEnabled);
       let cropMenuHTML = `
-        <p>Use these settings to make your videos vertical by default.</p><p id='videoIsOn'>Default Vertical Video is ${
+        <p>Use these settings to make your videos vertical by default.</p><p id='videoIsOn'>Auto-Crop is ${
           verticalVideoEnabled
             ? 'ON, so your videos will be cropped with you default cropped settings unless you customize them individually.'
             : 'OFF, so your videos will be uploaded as horizontal unless you customize them individually.'
         }</p><br>
       <div class="modal-buttons">
-        <button type="button" role="button" id="toggleVertical" tabindex="0" style='font-size: 26px;' class="btn">Turn default vertical video ${
+        <button type="button" role="button" id="toggleVertical" tabindex="0" style='font-size: 26px;' class="btn">Turn Auto-Crop ${
           verticalVideoEnabled ? 'OFF' : 'ON'
         }</button>
         <button type="button" role="button" id="camcrop" tabindex="0" style='font-size: 26px;' class="btn">Change Default Crop Camera/Gameplay</button>
@@ -407,7 +453,7 @@ document.addEventListener('DOMContentLoaded', async function (event) {
       SafeSwal.fire({
         icon: 'info',
         html: cropMenuHTML,
-        title: 'Vertical Video Menu',
+        title: 'Auto-Crop Menu',
         confirmButtonText: 'Close',
       });
 
@@ -429,6 +475,9 @@ document.addEventListener('DOMContentLoaded', async function (event) {
           let allClips = allClipsRes?.clips;
           if (state.currentClipId != '' || allClips?.length > 0) {
             selectCropType().then((cropType) => {
+              if(cropType == null) {
+                return;
+              }
               ipcRenderer.send(
                 'camvas_open',
                 JSON.stringify({
@@ -441,11 +490,7 @@ document.addEventListener('DOMContentLoaded', async function (event) {
               );
             });
           } else {
-            SafeSwal.fire({
-              icon: 'warning',
-              title: 'Clip Not Found',
-              text: "Couldn't find an example clip, please connect your twitch username and try again",
-            });
+            handleRandomError("Couldn't find an example clip, please set a channel and try again", 'username');
           }
         });
 
@@ -454,7 +499,7 @@ document.addEventListener('DOMContentLoaded', async function (event) {
         .getElementById('toggleVertical')
         .addEventListener('click', async function () {
           console.log(
-            `Turning Default Vertical video ${verticalVideoEnabled}: ${
+            `Turning Auto-Crop ${verticalVideoEnabled}: ${
               verticalVideoEnabled ? 'OFF' : 'ON'
             }`
           );
@@ -465,11 +510,11 @@ document.addEventListener('DOMContentLoaded', async function (event) {
           );
           document.getElementById(
             'toggleVertical'
-          ).innerHTML = `Turn default vertical video ${
+          ).innerHTML = `Turn Auto-Crop ${
             verticalVideoEnabled ? 'OFF' : 'ON'
           }`;
           document.getElementById('videoIsOn').innerText = `${
-            'Default Vertical Video is ' +
+            'Auto-Crop is ' +
             (verticalVideoEnabled
               ? 'ON, so your videos will be cropped.'
               : 'OFF, so your videos will be uploaded with no changes.')
@@ -494,8 +539,8 @@ document.addEventListener('DOMContentLoaded', async function (event) {
       let youtubeLoggedIn = settings?.youtubeToken != '';
       let tiktokLoggedIn = settings?.sessionId != '';
       let twitchLoggedIn = settings?.broadcasterId != '';
+      let licensed = settings?.license != '';
       let cropMenuHTML = `
-      <p>Manage your logins here.</p>
       <div class="modal-buttons"> 
         <button type="button" role="button" id="twitchLogin" tabindex="0" style='font-size: 26px;' class="btn loginbtn"><i class="fab fa-twitch"></i> ${
           twitchLoggedIn ? 'Change' : 'Set'
@@ -514,6 +559,9 @@ document.addEventListener('DOMContentLoaded', async function (event) {
           />
           `
         }
+        <button type="button" role="button" id="addLicense" tabindex="0" style='font-size: 26px;' class="btn loginbtn">
+          ${licensed ? 'Remove License' : 'Add License'}
+        </button>
       </div>
       `;
 
@@ -524,6 +572,25 @@ document.addEventListener('DOMContentLoaded', async function (event) {
         confirmButtonText: 'Close',
       });
 
+      document
+        .getElementById('addLicense')
+        .addEventListener('click', async function () {
+          if(licensed) {
+            //clear license
+            await clearSettings(['license']);
+            Swal.fire({
+              icon: 'success',
+              title: 'License Removed',
+            });
+            // update license button to say add license
+            document.getElementById('addLicense').innerText = 'Add License';
+          }
+          else {
+            await justLicenseInput(false);
+            // update license button to say remove license
+            document.getElementById('addLicense').innerText = 'Remove License';
+          }
+        });
       // twitch
       document
         .getElementById('twitchLogin')
@@ -622,14 +689,14 @@ document.addEventListener('DOMContentLoaded', async function (event) {
     });
 });
 
-//vertical video menu listeners
+//Auto-Crop menu listeners
 document.addEventListener('DOMContentLoaded', async function (event) {
   ipcRenderer.on('camvas_closed', async (event, data) => {
     let camCropDetails = JSON.parse(data);
     console.log('got data: ' + data);
     // call update endpoint with camCrop field as camCropDetails in query
     console.log('Updating settings with new cam crop...');
-    // TODO: Update this as well
+    // n: Update this as well
     // let result = await fetch("http://localhost:42074/update?camCrop=" + encodeURIComponent(JSON.stringify(camCropDetails)));
     // alert if the update succeeded or failed
     if(camCropDetails.cropType != 'no-cam' ) {
@@ -924,6 +991,7 @@ document.addEventListener('DOMContentLoaded', async function (event) {
         title: 'Join our Discord server!',
         text: 'Want to submit feedback? Got cool ideas? Come join the discord and give yourself the "Clipbot User" role :)',
         confirmButtonText: 'Join Discord',
+        showCancelButton: true,
       }).then((result) => {
         if (result.isConfirmed) {
           window.open('https://clipbot.tv/discord', '_blank');
@@ -932,55 +1000,86 @@ document.addEventListener('DOMContentLoaded', async function (event) {
     });
 });
 
-// add click event listen to force upload button
-document.addEventListener('DOMContentLoaded', async function (event) {
+
+const setupHelpMenu = () => {
+
+  document
+  .getElementById('tutorial')
+  .addEventListener('click', async function (event) {
+    var tourguide = new Tourguide({
+      steps: main_steps
+    });
+    tourguide.start();
+    Swal.close();
+  });
+
   document
     .getElementById('forceupload')
     .addEventListener('click', async function () {
       console.log('Force uploading');
+      // dangerous
       SafeSwal.fire({
-        icon: 'success',
-        title: 'Force Upload Started',
-      });
-      // get state from backend
-      uploadClip(true);
-    });
-});
-// add click event listen to Report bug button
-document.addEventListener('DOMContentLoaded', async function (event) {
-  // add click listener to bugreport button that calls backend /bug endpoint
-  document
-    .getElementById('bugreport')
-    .addEventListener('click', async function (event) {
-      event.preventDefault();
-
-      SafeSwal.fire({
-        icon: 'info',
-        html: `What's going on? <br/> Write as much as possible, and we'll attach the internal bug logs to let Rox know`,
-        input: 'textarea',
-        inputPlaceholder: `Nothing is happening and I am confused`,
-        confirmButtonText: 'Submit',
-      }).then(async (result) => {
-        sendEmail(result);
-      });
+        icon: 'warning',
+        title: 'Be Careful',
+        html: 'Are you sure you want to force upload?<br>Be careful with this option.<br><br><b>This only works for Tiktok and will skip Youtube.</b> <br>If you upload too much too fast, you may get banned by Tiktok.',
+        type: 'warning',
+        confirmButtonText: 'Yes, Upload Now',
+        showCancelButton: true
+      }).then(result => {
+        if(result.isConfirmed) {
+          uploadClip(true);
+          SafeSwal.fire({
+            icon: 'success',
+            title: 'Force Upload Started',
+          });
+        }
+      })
     });
 
     document
-    .getElementById('feedback')
-    .addEventListener('click', async function (event) {
-      event.preventDefault();
-
+    .getElementById('cancelSubscription')
+    .addEventListener('click', async function () {
       SafeSwal.fire({
         icon: 'info',
-        html: `Enter your feedback or ideas here!`,
-        input: 'textarea',
-        inputPlaceholder: `Nothing is happening and I am confused`,
-        confirmButtonText: 'Submit',
-      }).then(async (result) => {
-        sendEmail(result, true);
+        title: 'Cancel Subscription',
+        text: 'To cancel your subscription, send an email to rox@rox.works with the email associated with your account titled "Cancel Clipbot.tv Subscription"'
       });
     });
-});
+
+  document
+  .getElementById('bugreport')
+  .addEventListener('click', async function (event) {
+    event.preventDefault();
+
+    SafeSwal.fire({
+      icon: 'info',
+      html: `What's going on? <br/> Write as much as possible, and we'll attach the internal bug logs to let Rox know`,
+      input: 'textarea',
+      inputPlaceholder: `Nothing is happening and I am confused`,
+      confirmButtonText: 'Submit',
+      showCancelButton: true,
+    }).then(async (result) => {
+      sendEmail(result);
+    });
+  });
+
+  document
+  .getElementById('feedback')
+  .addEventListener('click', async function (event) {
+    event.preventDefault();
+
+    SafeSwal.fire({
+      icon: 'info',
+      html: `Enter your feedback or ideas here!`,
+      input: 'textarea',
+      inputPlaceholder: `Nothing is happening and I am confused`,
+      confirmButtonText: 'Submit',
+      showCancelButton: true,
+    }).then(async (result) => {
+      sendEmail(result, true);
+    });
+  });
+}
 
 const sendEmail = async (result, isFeedback) => {
   console.log(`Bug report entered: ${result?.value}`);
@@ -1006,20 +1105,12 @@ const sendEmail = async (result, isFeedback) => {
           'success'
         );
       } else {
-        SafeSwal.fire(
-          'Error!',
-          `There was an error sending your ${isFeedback ? 'feedback' : 'bug report'}!`,
-          'error'
-        );
+        bugreportResponse = await bugreportResponse.json();
+        handleRandomError(bugreportResponse.error, bugreportResponse.endpoint);
       }
     } catch (e) {
       console.log(e);
-      SafeSwal.fire({
-        title: 'Error',
-        text: 'There was an error sending your bug report!',
-        type: 'error',
-        confirmButtonText: 'Ok',
-      });
+      handleRandomError('There was an error sending your bug report!', 'bug')
     }
   }
 }

@@ -29,27 +29,22 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="safeswal.js"></script>
     <link rel="stylesheet" href="electron.css" />
+    <link rel="stylesheet" href="tourguide.css" />
+    <script src="authorization.js"></script>
+    <script src="tourguide.min.js"></script>
+    <script src="tour.js"></script>
     <script src="vertical-helper.js"></script>
     <script src="uploadClip.js"></script>
     <script src="clips.js"></script>
   </head>
 
   <body class="app">
-    <aside class="sidebar">
-      <img
-        src="images/logo-large.png"
-        class="sidebar__logo"
-        onclick="toggleNav()"
-      />
-      <img
-        src="images/logo.png"
-        class="sidebar__logo hide"
-        onclick="toggleNav()"
-      />
-      <nav class="sidebar__menu">
-        <form type="submit" id="filterform" class="sidebar__form">
+    <aside class="sidebar" style='padding-top: 10px;'>
+      <nav class="sidebar__menu" style='margin-top: 0px;'>
+        <h3 class="page__heading" id="title-side">Filters</h3>
+        <form type="submit" id="filterform" class="sidebar__form" style='margin-top: 0px;'>
           <div id="filtersDiv" class="filters">
-            <div class="form__group">
+            <div class="form__group" id='approvalgroup'>
               <label for="approvalStatusFilter">Approval Status:</label>
               <div class="form__svg">
                 <svg
@@ -96,7 +91,7 @@
                 </select>
               </div>
             </div>
-            <div class="form__group">
+            <div class="form__group" id='uploadedgroup'>
               <label for="uploaded">Upload Status:</label>
               <div class="form__svg">
                 <svg
@@ -140,8 +135,8 @@
               </select>
             </div>
           </div>
-          <div class="form__group">
-              <label for="viewCount">Minimum View count:</label>
+          <div class="form__group" id='viewcountgroup'>
+              <label for="viewCount">Minimum Twitch Views:</label>
               <input
                 name="minViewCount"
                 id="viewCount"
@@ -152,7 +147,7 @@
                 class="form__input"
               />
             </div>
-            <div class="form__group">
+            <div class="form__group" id='startdategroup'>
               <label for="startDate">Start Date:</label>
               <input
                 name="startDate"
@@ -162,7 +157,7 @@
                 class="form__input"
               />
             </div>
-            <div class="form__group">
+            <div class="form__group" id='enddategroup'>
               <label for="endDate">End Date:</label>
               <input
                 name="endDate"
@@ -184,17 +179,18 @@
           </button>
         </form>
 
+        <button class="sidebar__button" id="tutorial" type="reset">
+          <i class="fas fa-redo"></i>
+          <span class="btn-text">Replay Tutorial</span>
+        </button>
         <button class="sidebar__button" id="close" type="reset">
           <i class="fas fa-times-circle"></i>
           <span class="btn-text">Close</span>
         </button>
       </nav>
 
-      <section class="sidebar__version">
-        <span class="sidebar__version-text">Version</span> 1.0.77
-      </section>
     </aside>
-    <div class="container">
+    <div class="container" id='clipscontainer'>
       <header id="pageHeader">
         <h3 class="page__heading" id="title">
           Manage Clips - <span class="clip-amount" id="clip-amount"> 0 </span>
@@ -202,6 +198,7 @@
       </header>
       <div>
         <video
+          id='currentclip'
           src="https://share.nyx.xyz/4XnZYjhZk2a"
           autoplay
           loop
@@ -224,7 +221,7 @@
           </div>
         </form>
         <div id="clipDetails" class="clipDetails">
-          <div class="clip-status">
+          <div class="clip-status" id='approvaldiv'>
             <div class="clip-status-label">
               <span class="status-text">Status</span>
             </div>
@@ -236,7 +233,7 @@
               value="Clip status"
             />
           </div>
-          <div class="clip-status">
+          <div class="clip-status" id='uploadeddiv'>
             <div class="clip-status-label">
               <span class="status-text">Uploaded</span>
             </div>

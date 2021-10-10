@@ -59,6 +59,7 @@ document.addEventListener('DOMContentLoaded', async function (event) {
     try {
       await fetch(url);
       updateFields(params);
+      hideSettingsNotSavedPopup();
       SafeSwal.fire('Settings updated!');
       ipcRenderer.send('settings_updated');
       return true;
@@ -151,7 +152,6 @@ let checkFieldsAreValid = () => {
       return false;
     }
   }
-
   return true;
 };
 // Set interval for querying backend to publish clips
@@ -272,3 +272,12 @@ document.addEventListener('DOMContentLoaded', async function (event) {
   });
 });
 console.log('garbo');
+
+let showSettingsNotSavedPopup = () => {
+  document.getElementById('notsaved').style.display = 'block';
+}
+
+
+let hideSettingsNotSavedPopup = () => {
+  document.getElementById('notsaved').style.display = 'none';
+}

@@ -14,7 +14,7 @@
     <meta property="og:url" content="https://www.Clipbot.tv/" />
     <meta
       property="og:description"
-      content="Automatically upload your twitch clips to TikTok!"
+      content="Automatically upload your twitch clips to TikTok and Youtube Shorts!"
     />
     <meta property="og:image" content="image.png" />
     <!-- <link rel="icon" href="/favicon.ico">
@@ -29,15 +29,19 @@
     <script src="safeswal.js"></script>
     <link rel="stylesheet" href="clips.css" />
     <link rel="stylesheet" href="electron.css" />
+    <link rel="stylesheet" href="tourguide.css" />
+    <script src="tourguide.min.js"></script>
     <script src="vertical-helper.js"></script>
     <script src="uploadClip.js"></script>
     <script src="authorization.js"></script>
     <script src="index.js"></script>
+    <script src="tour.js"></script>
   </head>
 
   <body class="app">
     <aside class="sidebar">
       <img
+        id='sidebarlogoguy'
         src="images/logo-large.png"
         class="sidebar__logo"
         onclick="toggleNav()"
@@ -52,14 +56,14 @@
           <i class="fas fa-upload"></i> Upload Clips
         </button> -->
         <button class="sidebar__button" id="manageClips" type="reset">
-          <i class="fas fa-th"></i> <span class="btn-text">Manage Clips</span>
+          <i class="fas fa-th"></i> <span class="btn-text">Clips</span>
         </button>
         <button class="sidebar__button" id="logins" type="reset">
           <i class="fas fa-users"></i>
-          <span class="btn-text">Manage Logins</span>
+          <span class="btn-text">Logins</span>
         </button>
         <button class="sidebar__button" id="howitworks" type="reset">
-          <i class="fas fa-question"></i>
+          <i class="fas fa-lightbulb"></i>
           <span class="btn-text">How It Works </span>
         </button>
         <button class="sidebar__button" id="settings" type="reset">
@@ -67,27 +71,20 @@
         </button>
         <button class="sidebar__button" id="cropmenu" type="reset">
           <i class="fas fa-video"></i>
-          <span class="btn-text">Video Settings</span>
-        </button>
-        <button class="sidebar__button" id="forceupload" type="reset">
-          <i class="fas fa-upload"></i>
-          <span class="btn-text">Force Upload</span>
+          <span class="btn-text">Auto-Crop</span>
         </button>
         <button class="sidebar__button" id="discord" type="reset">
           <i class="fab fa-discord"></i>
           <span class="btn-text">Join Discord</span>
         </button>
-        <button class="sidebar__button" id="bugreport" type="reset">
-          <i class="fas fa-bug"></i> <span class="btn-text">Report Bug</span>
-        </button>
-        <button class="sidebar__button" id="feedback" type="reset">
-          <i class="far fa-comment-dots"></i>
-          <span class="btn-text">Give Feedback!</span>
+        <button class="sidebar__button" id="helpmenu" type="reset">
+          <i class="fas fa-question"></i>
+          <span class="btn-text">Help</span>
         </button>
       </nav>
       <section class="sidebar__version">
         <span class="sidebar__version-text">Version</span>
-        <span id="version">1.0.77</span>
+        <span id="version"></span>
       </section>
     </aside>
     <div class="container">
@@ -100,8 +97,10 @@
           <p class="info__text">
             <i class="fa fa-info-circle"></i>
             <strong class="alert__info-header">Heads up!</strong>
+            <span id='alert-message'>
             While this window is open, we'll be uploading your twitch clips to
-            TikTok! Keep this program open
+            TikTok/YT! Keep this program open.
+            </span>
           </p>
           <i class="fa fa-times blue-cross" onclick="toggleInfoText()"></i>
         </div>
@@ -124,7 +123,7 @@
         </div>
       </section>
       <section class="info-details">
-        <div class="clip-status">
+        <div class="clip-status" id='clipstatusdiv'>
           <div class="clip-status-label grad-purple">
             <span class="status-text">Current Status </span>
           </div>
@@ -137,9 +136,9 @@
           />
         </div>
         <div class="info-details-split">
-          <div class="clip-status">
+          <div class="clip-status" id='nextuploaddiv'>
             <div class="clip-status-label grad-purple small">
-              <span class="status-text">Next Clip </span>
+              <span class="status-text">Next Upload </span>
             </div>
             <input
               id="nextUpload"
@@ -149,7 +148,7 @@
               value="No clips approved"
             />
           </div>
-          <div class="clip-status">
+          <div class="clip-status" id='lastuploaddiv'>
             <div class="clip-status-label grad-purple small">
               <span class="status-text">Last Upload </span>
             </div>
@@ -164,9 +163,9 @@
         </div>
 
         <div class="info-details-split">
-          <div class="clip-status">
+          <div class="clip-status" id='autocropdiv'>
             <div class="clip-status-label grad-purple small">
-              <span class="status-text">Vertical Clip </span>
+              <span class="status-text">Auto-Crop </span>
             </div>
             <input
               id="videoEnabled"
@@ -176,7 +175,7 @@
               value="OFF"
             />
           </div>
-          <div class="clip-status">
+          <div class="clip-status" id='hotkeydiv'>
             <div class="clip-status-label grad-purple small">
               <span class="status-text">Clip Hotkey </span>
             </div>

@@ -226,7 +226,7 @@ let doAllCropperStuff = (
     },
   });
   //TODO: DELETE
-  window.cropper = cropper;
+  // window.cropper = cropper;
 
   console.log(cropper);
   let currAspectRatioNumber = 16 / 9;

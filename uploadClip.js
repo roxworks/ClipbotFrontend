@@ -21,12 +21,7 @@ let uploadClip = async (force = false) => {
     console.log('Clip upload finished successfully, updating frontend');
     ipcRenderer.send('settings_updated');
   } else if (result?.status == 302 && result?.type == 'all') {
-    SafeSwal.fire({
-      title: 'No uploads enabled',
-      text: 'You have Tiktok Uploads off and Youtube Uploads off, please enable at least one in Main Settings',
-      icon: 'error',
-      confirmButtonText: 'Ok',
-    });
+    handleRandomError('You have Tiktok Uploads off and Youtube Uploads off, please enable at least one in Main Settings', 'settings');
   } else if (result?.status == 302 && result?.type == 'tiktok') {
     doTiktokAuth();
   } else if (result?.status == 302 && result?.type == 'youtube') {
@@ -58,12 +53,10 @@ let uploadClip = async (force = false) => {
       console.log('Upload too fast but no yelling');
     }
   } else if (result?.status == 500) {
+    console.log('got 500');
     let errorMessage = result?.error;
-    console.log('regular error');
-    SafeSwal.fire({
-      icon: 'error',
-      text: errorMessage,
-    });
+    let endpoint = result?.endpoint;
+    handleRandomError(errorMessage, endpoint);
   }
 
   //unconditionally update status to waiting for next upload

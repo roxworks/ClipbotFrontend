@@ -28,8 +28,15 @@ const selectCropType = async () => {
                 />
             </label>
         </div>
-        `
-    }).then(() => {console.log("Selection: " + selection); return selection;});
+        `,
+        showCancelButton: true,
+    }).then((result) => {
+        if(result.dismiss == 'cancel') {
+            return null;
+        }
+        console.log("Selection: " + selection); 
+        return selection;
+    });
 
     return popup;
 }

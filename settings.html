@@ -32,10 +32,16 @@
     <div class="container settings">
       <header id="pageHeader">
         <h3 class="page__heading" id="title">Settings</h3>
+        <div class="alert alert-info" id='notsaved' style='display: none'>
+          <p class="info__text">
+            <i class="fa fa-info-circle"></i>
+            <strong class="alert__info-header" >Settings Not Saved!</strong>
+        </div>
       </header>
       <form
         class="form-group settings"
         id="update"
+        onclick="showSettingsNotSavedPopup()"
         method="GET"
         action="http://localhost:42074/update"
       >
@@ -85,7 +91,7 @@
 
         <div class="form__group settings" id="minViewCount-form">
           <label class="settings">
-            <div><img src="./images/eye.png" class="icon" /> Minimum views</div>
+            <div><img src="./images/eye.png" class="icon" /> Required views on Twitch</div>
             <p class="what">
               Clips must have this many views to get posted
             </p></label
