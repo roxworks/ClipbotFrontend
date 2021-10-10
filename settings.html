@@ -26,6 +26,7 @@
     <link rel="stylesheet" href="electron.css" />
     <script src="uploadClip.js"></script>
     <script src="frontend-settings.js"></script>
+    <script src="hotkeyHandler.js"></script>
   </head>
 
   <body id="settings" class="app">
@@ -68,7 +69,7 @@
           </label>
           <input
             id="hotkey"
-            onkeyup="keyUp(event)"
+            onkeyup="hotkeyHandler(event)"
             placeholder="F10"
             class="form__input settings"
           />

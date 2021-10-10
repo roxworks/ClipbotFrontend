@@ -156,22 +156,6 @@ let checkFieldsAreValid = () => {
 };
 // Set interval for querying backend to publish clips
 
-function keyUp(event) {
-  const keyCode = event.keyCode;
-  const key = event.key;
-  const charCode = event.code;
-
-  if ((keyCode >= 16 && keyCode <= 18) || keyCode === 91) return;
-
-  const value = [];
-  event.ctrlKey ? value.push('Control') : null;
-  event.shiftKey ? value.push('Shift') : null;
-  event.isAlt ? value.push('Alt') : null;
-  value.push(key.toUpperCase());
-
-  document.getElementById('hotkey').value = value.join('+');
-}
-
 // Call backend settings endpoint to get current settings
 document.addEventListener('DOMContentLoaded', async function (event) {
   let result = await fetch('http://localhost:42074/settings');
