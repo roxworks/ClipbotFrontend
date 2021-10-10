@@ -45,16 +45,22 @@ Clipbot frontend repo. Help make Clipbot better!
    ```sh
    git clone https://github.com/DanGiaime/ClipbotFrontend.git
    ```
-2. Install NPM packages
+2. Checkout the dev branch
+   ```
+   git checkout dev
+   ```
+3. Install NPM packages
    ```sh
    npm install
    ```
-3. Run the app <br />
+4. Run the app <br />
    To run the backend you need to run the live version of clipbot
    ```sh
    npm start
    ```
-   This will open an electron app. To open dev tools in electron you can press 'crtl'+'shift'+i you will also need add the enviroment variable. Ask in [discord](https://clipbot.tv/discord) for this
+   This will open an electron app. To open dev tools in electron you can press 'crtl'+'shift'+i.
+5. Join the [Discord](https://clipbot.tv/discord)
+
 
 <!-- CONTRIBUTING -->
 
@@ -65,9 +71,10 @@ Clipbot frontend repo. Help make Clipbot better!
 Any contributions you make are **greatly appreciated**.
 
 1. Fork the Project
-2. Create your Feature Branch (`git checkout -b newBranch`)
-3. Commit your Changes (`git commit -m 'New Changes'`)
-4. Push to the Branch (`git push origin newBranch`)
-5. Open a Pull Request
+2. Checkout dev branch (`git checkout dev`)
+3. Create your Feature Branch (`git checkout -b newBranch`)
+4. Commit your Changes (`git commit -m 'New Changes'`)
+5. Push to the Branch (`git push origin newBranch`)
+6. Open a Pull Request
 
 Github standard [Form & Pull request](https://gist.github.com/Chaser324/ce0505fbed06b947d962) workflow
