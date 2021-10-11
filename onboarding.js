@@ -362,7 +362,7 @@ const onboardingSteps = [
         title: "IMPORTANT NOTE",
         html: `
             <b>Clipbot will not upload clips made in the last 24 hours. Ever.</b><br><br>
-            This is against Twitch <a href='https://www.twitch.tv/p/en/legal/affiliate-agreement/'>Terms Of Service.<a/><br><br>
+            This is against Twitch <a href='https://www.twitch.tv/p/en/legal/affiliate-agreement/' target='_blank' style='color: #ADD8E6'>Terms Of Service.<a/><br><br>
             If you're wondering why a recent clip hasn't uploaded, it is probably because of this.
             `,
         confirmButtonText: "I understand",
