@@ -405,8 +405,12 @@ let doYoutubeAuth = async () => {
                 autocapitalize: 'off'
             },
             confirmButtonText: 'Submit',
-            showLoaderOnConfirm: true
+            showLoaderOnConfirm: true,
+            showCancelButton: true,
         }).then(async (codeInput) => {
+            if(codeInput.isDismissed) {
+                return;
+            }
             let code = codeInput?.value;
             console.log(`code: ${code}`);
             let result = await fetch(`http://localhost:42074/youtubeAuth?code=${code}`);
