@@ -313,7 +313,7 @@ const onboardingSteps = [
         showDenyButton: true,
         onConfirm: async () => {
             let success = await updateSettings({
-                defaultVerticalVideo: true,
+                verticalVideoEnabled: true,
             });
             if(success) {
 
@@ -346,7 +346,7 @@ const onboardingSteps = [
         },
         onDeny: async () => {
             let success = await updateSettings({
-                defaultVerticalVideo: false,
+                verticalVideoEnabled: false,
             });
             if(success) {
                 await OnboardingSwal.fire({

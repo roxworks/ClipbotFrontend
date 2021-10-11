@@ -35,35 +35,6 @@ const updateDisplayedSettings = async () => {
     minute: 'numeric',
   };
 
-  if (settings.broadcasterId == '' || (licenseRequired && settings.license == '')) {
-    return;
-  }
-
-  if (
-    settings.sessionId == '' &&
-    (settings.tiktokUploadEnabled == true ||
-      settings.tiktokUploadEnabled == 'true')
-  ) {
-    return;
-  }
-
-  if (
-    settings.youtubeToken == '' &&
-    (settings.youtubeUploadEnabled == true ||
-      settings.youtubeUploadEnabled == 'true')
-  ) {
-    return;
-  }
-
-  if (
-    (settings.youtubeUploadEnabled == false ||
-      settings.youtubeUploadEnabled == 'false') &&
-    (settings.tiktokUploadEnabled == false ||
-      settings.tiktokUploadEnabled == 'false')
-  ) {
-    return;
-  }
-
   if (result.status == 200) {
     result.json().then(async (state) => {
       let currentClipId = state.currentClipId;
@@ -79,6 +50,49 @@ const updateDisplayedSettings = async () => {
         undefined,
         dateOptions
       );
+
+      if (
+        (document.querySelector('#videoEnabled').value !=
+          settings.verticalVideoEnabled) ==
+        'true'
+          ? 'ON'
+          : 'OFF'
+      ) {
+        document.querySelector('#videoEnabled').value =
+          settings.verticalVideoEnabled == 'true' ? 'ON' : 'OFF';
+      }
+      console.log('state we got: ' + JSON.stringify(state));
+      if (
+        document.querySelector('video').src != (clipToDisplay || NO_CLIPS_URL)
+      ) {
+        document.querySelector('video').src = clipToDisplay || NO_CLIPS_URL;
+        if (clipToDisplay == null) {
+          document.querySelector('video').pause();
+          document.querySelector('video').controls = false;
+        } else {
+          document.querySelector('video').controls = true;
+        }
+      }
+
+      if (document.querySelector('video').src == NO_CLIPS_URL) {
+        document.querySelector('video').controls = false;
+      }
+      // updateGlobalShortcut(settings?.hotkey);
+      ipcRenderer.send('hotkey_changed', settings?.hotkey);
+      if (document.querySelector('#hotkey').value != settings?.hotkey) {
+        document.querySelector('#hotkey').value = settings?.hotkey;
+      }
+
+      if (document.getElementById('cliptitle').innerText != '') {
+        document.getElementById('cliptitle').innerText = '';
+      }
+      if (clipToDisplay != '' && clipToDisplay != undefined) {
+        document.getElementById('cliptitle').innerText =
+          clipToDisplayBlob?.clip?.title;
+      } else {
+        document.getElementById('cliptitle').innerText = 'No clips yet!';
+      }
+
       if (lastUploadedDate == 'Invalid Date') {
         lastUploadedDate =
           "No uploads yet! <img src='https://static-cdn.jtvnw.net/emoticons/v1/86/1.0' height=15px'/> Trying to upload...";
@@ -123,6 +137,38 @@ const updateDisplayedSettings = async () => {
               document.querySelector('#nextUpload').value =
                 nextUploadDate.toLocaleString(undefined, dateOptions);
             }
+
+
+
+            if (settings.broadcasterId == '' || (licenseRequired && settings.license == '')) {
+              return;
+            }
+          
+            if (
+              settings.sessionId == '' &&
+              (settings.tiktokUploadEnabled == true ||
+                settings.tiktokUploadEnabled == 'true')
+            ) {
+              return;
+            }
+          
+            if (
+              settings.youtubeToken == '' &&
+              (settings.youtubeUploadEnabled == true ||
+                settings.youtubeUploadEnabled == 'true')
+            ) {
+              return;
+            }
+          
+            if (
+              (settings.youtubeUploadEnabled == false ||
+                settings.youtubeUploadEnabled == 'false') &&
+              (settings.tiktokUploadEnabled == false ||
+                settings.tiktokUploadEnabled == 'false')
+            ) {
+              return;
+            }
+
             const MINUTE = 60 * 1000;
             let msUntilUpload =
               Math.ceil((nextUploadDate.getTime() - Date.now()) / MINUTE) *
@@ -150,47 +196,7 @@ const updateDisplayedSettings = async () => {
       // if(document.getElementById("uploadEnabled").innerHTML != `Turn Clipbot ${settings.uploadEnabled == 'true' ? 'OFF' : 'ON'}`) {
       //     document.getElementById("uploadEnabled").innerHTML = `Turn Clipbot ${settings.uploadEnabled == 'true' ? 'OFF' : 'ON'}`;
       // }
-      if (
-        (document.querySelector('#videoEnabled').value !=
-          settings.verticalVideoEnabled) ==
-        'true'
-          ? 'ON'
-          : 'OFF'
-      ) {
-        document.querySelector('#videoEnabled').value =
-          settings.verticalVideoEnabled == 'true' ? 'ON' : 'OFF';
-      }
-      console.log('state we got: ' + JSON.stringify(state));
-      if (
-        document.querySelector('video').src != (clipToDisplay || NO_CLIPS_URL)
-      ) {
-        document.querySelector('video').src = clipToDisplay || NO_CLIPS_URL;
-        if (clipToDisplay == null) {
-          document.querySelector('video').pause();
-          document.querySelector('video').controls = false;
-        } else {
-          document.querySelector('video').controls = true;
-        }
-      }
 
-      if (document.querySelector('video').src == NO_CLIPS_URL) {
-        document.querySelector('video').controls = false;
-      }
-      // updateGlobalShortcut(settings?.hotkey);
-      ipcRenderer.send('hotkey_changed', settings?.hotkey);
-      if (document.querySelector('#hotkey').value != settings?.hotkey) {
-        document.querySelector('#hotkey').value = settings?.hotkey;
-      }
-
-      if (document.getElementById('cliptitle').innerText != '') {
-        document.getElementById('cliptitle').innerText = '';
-      }
-      if (clipToDisplay != '' && clipToDisplay != undefined) {
-        document.getElementById('cliptitle').innerText =
-          clipToDisplayBlob?.clip?.title;
-      } else {
-        document.getElementById('cliptitle').innerText = 'No clips yet!';
-      }
     });
   }
 };
