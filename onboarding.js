@@ -139,7 +139,7 @@ const onboardingSteps = [
         input: 'text',
         inputValue: 'F10',
         inputAttributes: {
-            onkeyup: "onHotkeyKeyUp(event)",
+            onkeyup: "hotkeyHandler(event)",
             id: 'hotkey',
         },
         onConfirm: async (hotkey) => {

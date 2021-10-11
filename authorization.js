@@ -232,23 +232,6 @@ const openClipbotMainSite = () => {
     return false;
 }
 
-const onHotkeyKeyUp = (event) => {
-    console.log('event: ', event);
-    const keyCode = event.keyCode;
-    const key = event.key;
-    const charCode = event.code;
-  
-    if ((keyCode >= 16 && keyCode <= 18) || keyCode === 91) return;
-  
-    const value = [];
-    event.ctrlKey ? value.push('Control') : null;
-    event.shiftKey ? value.push('Shift') : null;
-    event.isAlt ? value.push('Alt') : null;
-    value.push(key.toUpperCase());
-  
-    document.getElementById('hotkey').value = value.join('+');
-  }
-
 const updateSettings = async (settings) => {
     let url = new URL(`http://localhost:42074/update`);
     // add all fields in settings object to url search params then get /update
