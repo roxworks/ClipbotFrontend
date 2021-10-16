@@ -7,6 +7,7 @@ const fs = require('fs');
 const fetch = require('node-fetch');
 const util = require('util');
 const path = require('path');
+require('dotenv').config();
 
 const WINDOWS = {
   main: null,
@@ -147,6 +148,7 @@ if (process.argv[2] == 'test') {
   let server;
 
   const setupServer = async () => {
+    return true; //This prevents running the backend so the frontend can be used individually.
     if(server) {
       return server;
     }
@@ -155,8 +157,7 @@ if (process.argv[2] == 'test') {
   };
 
   async function createWindow() {
-
-    if(WINDOWS.main) {
+    if (WINDOWS.main) {
       console.log('redirecting to existing window');
       WINDOWS.main.focus();
       return;
@@ -212,7 +213,7 @@ if (process.argv[2] == 'test') {
   }
 
   const createClipsWindow = () => {
-    if(WINDOWS.clips) {
+    if (WINDOWS.clips) {
       console.log('redirecting to existing window');
       WINDOWS.clips.focus();
       return;
@@ -253,8 +254,7 @@ if (process.argv[2] == 'test') {
   };
 
   const createSettingsWindow = () => {
-
-    if(WINDOWS.settings) {
+    if (WINDOWS.settings) {
       console.log('redirecting to existing window');
       WINDOWS.settings.focus();
       return;
@@ -296,8 +296,7 @@ if (process.argv[2] == 'test') {
   };
 
   const createTikTokWindow = async () => {
-
-    if(WINDOWS.tiktok) {
+    if (WINDOWS.tiktok) {
       console.log('redirecting to existing window');
       WINDOWS.tiktok.focus();
       return;
@@ -362,8 +361,7 @@ if (process.argv[2] == 'test') {
   };
 
   const createCamvasWindow = (cropData) => {
-
-    if(WINDOWS.camvas) {
+    if (WINDOWS.camvas) {
       console.log('redirecting to existing window');
       WINDOWS.camvas.focus();
       return;
@@ -408,8 +406,7 @@ if (process.argv[2] == 'test') {
   };
 
   const createScreenvasWindow = (camData) => {
-
-    if(WINDOWS.screenvas) {
+    if (WINDOWS.screenvas) {
       console.log('redirecting to existing window');
       WINDOWS.screenvas.focus();
       return;
@@ -456,10 +453,6 @@ if (process.argv[2] == 'test') {
   };
 
   app.on('ready', async () => {
-    //TODO: reenable this
-    if (!process.env.LETMEIN) {
-      Menu.setApplicationMenu(null);
-    }
 
     // Must do this before window gets made so we
     // have correct settings
