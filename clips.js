@@ -523,3 +523,46 @@ const setClipsCount = () => {
     clipsCount.innerHTML = clipsTotal;
   }
 };
+
+// fucntion for auto save forms
+window.addEventListener("load", () =>{
+  var fForm = document.getElementById("filterform");
+  var timeoutId;
+
+  fForm.addEventListener("change", () =>{
+    console.log("Form inputs have changed");
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(function() {
+        saveToSettings();
+    }, 1000);
+  });
+
+  async function saveToSettings(){
+      console.log("now saved");
+      let formData = new FormData(document.getElementById('filterform'));
+      let filterData = {};
+      for (let [key, value] of formData.entries()) {
+        filterData[key] = value;
+      }
+      let result = await fetch('http://localhost:42074/clip/filtered', {
+        method: 'POST',
+        body: JSON.stringify(filterData),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (result.status === 200) {
+        console.log('filter success');
+        let json = await result.json();
+        console.log(json);
+        // ipcRenderer.send('filter_clips', JSON.stringify(json));
+        setFrontendClips(json.clips);
+        clipsTotal = json.clips.length;
+        setClipsCount();
+      } else {
+        console.log('filter error');
+      }
+      return false;
+  }
+});
