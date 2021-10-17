@@ -1,73 +1,81 @@
-// Listen to submit event on the <form> itself!
+// Listen to change event on the <form> itself!
 document.addEventListener('DOMContentLoaded', async function (event) {
-  document.getElementById('update').addEventListener('submit', async (e) => {
-    console.log('test2');
-
+  document.getElementById('update').addEventListener('change', async (e) => {
     e.preventDefault();
-
-    // must match id of element in html
-    let allSettings = [
-      'hashtags',
-      'delay',
-      'minViewCount',
-      'uploadFrequency',
-      'hotkey',
-    ];
-    let params = {};
-    let settingsWereChanged = false;
-    for (setting of allSettings) {
-      params[setting] = document.querySelector('#' + setting).value;
-      if (params[setting]) {
-        settingsWereChanged = true;
-      }
-    }
-
-    params['defaultApprove'] =
-      document.querySelector('#defaultApprove').checked;
-    params['uploadEnabled'] = document.querySelector('#uploadEnabled').checked;
-    params['tiktokUploadEnabled'] = document.querySelector(
-      '#tiktokUploadEnabled'
-    ).checked;
-    params['youtubeUploadEnabled'] = document.querySelector(
-      '#youtubeUploadEnabled'
-    ).checked;
-    params['fastUploadEnabled'] = document.querySelector(
-      '#fastUploadEnabled'
-    ).checked;
-    settingsWereChanged = true;
-
-    let url = new URL('http://localhost:42074/update');
-
-    if (!settingsWereChanged) {
-      SafeSwal.fire({
-        icon: 'info',
-        text: 'No settings changed',
-      });
-      return false;
-    }
-
-    if (!checkFieldsAreValid()) {
-      return false;
-    }
-
-    Object.keys(params).forEach((key) => {
-      if (params[key] != undefined) {
-        url.searchParams.append(key, params[key]);
-      }
-    });
-
-    try {
-      await fetch(url);
-      updateFields(params);
-      hideSettingsNotSavedPopup();
-      SafeSwal.fire('Settings updated!');
-      ipcRenderer.send('settings_updated');
-      return true;
-    } catch {
-      return false;
-    }
+    await handleSaveSettings();    
   });
 });
+
+// Listen to submit button!
+document.addEventListener('DOMContentLoaded', async function (event) {
+  document.getElementById('update').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    await handleSaveSettings();
+    window.close();
+  });
+});
+
+let handleSaveSettings = async () => {
+  // must match id of element in html
+  let allSettings = [
+    'hashtags',
+    'delay',
+    'minViewCount',
+    'uploadFrequency',
+    'hotkey',
+  ];
+  let params = {};
+  let settingsWereChanged = false;
+  for (setting of allSettings) {
+    params[setting] = document.querySelector('#' + setting).value;
+    if (params[setting]) {
+      settingsWereChanged = true;
+    }
+  }
+
+  params['defaultApprove'] =
+    document.querySelector('#defaultApprove').checked;
+  params['uploadEnabled'] = document.querySelector('#uploadEnabled').checked;
+  params['tiktokUploadEnabled'] = document.querySelector(
+    '#tiktokUploadEnabled'
+  ).checked;
+  params['youtubeUploadEnabled'] = document.querySelector(
+    '#youtubeUploadEnabled'
+  ).checked;
+  params['fastUploadEnabled'] = document.querySelector(
+    '#fastUploadEnabled'
+  ).checked;
+  settingsWereChanged = true;
+
+  let url = new URL('http://localhost:42074/update');
+
+  if (!settingsWereChanged) {
+    SafeSwal.fire({
+      icon: 'info',
+      text: 'No settings changed',
+    });
+    return false;
+  }
+
+  if (!checkFieldsAreValid()) {
+    return false;
+  }
+
+  Object.keys(params).forEach((key) => {
+    if (params[key] != undefined) {
+      url.searchParams.append(key, params[key]);
+    }
+  });
+
+  try {
+    await fetch(url);
+    updateFields(params);
+    ipcRenderer.send('settings_updated');
+    return true;
+  } catch {
+    return false;
+  }
+}
 
 let updateFields = (fields) => {
   for (fieldName in fields) {
@@ -249,19 +257,3 @@ document.addEventListener('DOMContentLoaded', async function (event) {
     }
   }
 });
-
-document.addEventListener('DOMContentLoaded', async function (event) {
-  document.querySelector('#close').addEventListener('click', () => {
-    window.close();
-  });
-});
-console.log('garbo');
-
-let showSettingsNotSavedPopup = () => {
-  document.getElementById('notsaved').style.display = 'block';
-}
-
-
-let hideSettingsNotSavedPopup = () => {
-  document.getElementById('notsaved').style.display = 'none';
-}

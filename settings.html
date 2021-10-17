@@ -33,16 +33,15 @@
     <div class="container settings">
       <header id="pageHeader">
         <h3 class="page__heading" id="title">Settings</h3>
-        <div class="alert alert-info" id='notsaved' style='display: none'>
+        <div class="alert alert-info" id='settingsupdateinfo'>
           <p class="info__text">
             <i class="fa fa-info-circle"></i>
-            <strong class="alert__info-header" >Settings Not Saved!</strong>
+            <strong class="alert__info-header">Settings are saved automatically</strong>
         </div>
       </header>
       <form
         class="form-group settings"
         id="update"
-        onclick="showSettingsNotSavedPopup()"
         method="GET"
         action="http://localhost:42074/update"
       >
@@ -195,12 +194,9 @@
           </label>
         </div>
 
-        <div class="split-container">
-          <button class="btn" type="" id="close">
-            Close
-          </button>
+        <div class="right-container">
           <button class="btn" type="submit" id="savesettings">
-            Save settings
+            OK
           </button>
         </div>
       </form>
