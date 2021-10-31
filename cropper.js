@@ -291,7 +291,7 @@ let doAllCropperStuff = (
     // let ipcRenderer = window.ipcRenderer;
     // ipcRenderer.send('canvas_closed', JSON.stringify(currCropDetails));
     // window.close();
-    if (currRatio = roundTo4Digits(16/9)) {
+    if (currRatio == roundTo4Digits(16/9)) {
       currAspectRatioNumber = 4 / 3;
       currRatio = roundTo4Digits(currAspectRatioNumber);
     } else {
