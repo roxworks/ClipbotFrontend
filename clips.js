@@ -199,7 +199,7 @@ const setupTitleStuff = async () => {
   //add click listener to #changetitlebutton
   document
     .getElementById('changetitlebutton')
-    .addEventListener('click', async function () {
+    .addEventListener('click', async function (e) {
       e.preventDefault();
       e.stopPropagation();
       console.log('title changin');
