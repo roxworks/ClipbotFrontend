@@ -17,22 +17,32 @@ let outputWidth = 1920;
 let outputHeight = 1080;
 
 let scaleUpCrop = (crop, video) => {
-  let scaleX = video.videoWidth / internalWidth;
-  let scaleY = video.videoHeight / internalHeight;
-  crop.x = crop.x * scaleX;
-  crop.y = crop.y * scaleY;
-  crop.width = crop.width * scaleX;
-  crop.height = crop.height * scaleY;
-  return crop;
+    crop.x = crop.x / internalWidth;
+    crop.y = crop.y / internalHeight;
+    crop.width = crop.width / internalWidth;
+    crop.height = crop.height / internalHeight;
+    crop.isNormalized = true;
+    return crop;
 };
 
 let scaleDownCrop = (crop, video) => {
-  let scaleX = video.videoWidth / internalWidth;
-  let scaleY = video.videoHeight / internalHeight;
-  crop.x = crop.x / scaleX;
-  crop.y = crop.y / scaleY;
-  crop.width = crop.width / scaleX;
-  crop.height = crop.height / scaleY;
+  if(crop.isNormalized) {
+    console.log('normal');
+    let scaleX = internalWidth;
+    let scaleY = internalHeight;
+    crop.x = crop.x * scaleX;
+    crop.y = crop.y * scaleY;
+    crop.width = crop.width * scaleX;
+    crop.height = crop.height * scaleY;
+  }
+  else {
+    let scaleX = video.videoWidth / internalWidth;
+    let scaleY = video.videoHeight / internalHeight;
+    crop.x = crop.x / scaleX;
+    crop.y = crop.y / scaleY;
+    crop.width = crop.width / scaleX;
+    crop.height = crop.height / scaleY;
+  }
   return crop;
 };
 
@@ -255,9 +265,11 @@ let doAllCropperStuff = (
           camCrop: scaleUpCrop(camCrop, video),
           screenCrop: scaleUpCrop(screenCrop, video),
           cropType: cropType,
+          isNormalized: true,
         },
         camData: cropType == 'no-cam' ? scaleUpCrop(currCropDetails, video) : currCropDetails,
         callback: callback,
+        isNormalized: true,
         clip: clip,
         cropType: cropType,
       })
@@ -359,6 +371,7 @@ let doAllCropperStuff = (
         JSON.stringify({
           camCrop: scaleUpCrop(camData, video),
           screenCrop: scaleUpCrop(currCropDetails, video),
+          isNormalized: true,
           callback: callback,
           cropType: cropType,
         })
