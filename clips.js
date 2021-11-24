@@ -6,6 +6,30 @@ let currentIndex = 0;
 let settingsDidLoad = undefined;
 let clipsTotal = 0;
 const querystring = require('querystring');
+const fields = ['title', 'youtubeTitle', 'youtubeHashtags', 'youtubeDescription', 'tiktokTitle', 'tiktokHashtags']
+
+const setPlaceholders = () => {
+  fields.forEach(field => {
+    document.getElementById(field).value = '';
+    document.getElementById(field).placeholder = displayedClip[field] || 'None (will use normal settings)';
+  })
+}
+
+const saveAll = async () => {
+  let newSettings = getAllFieldsAsObject();
+  return updateClipFrontendAndBackend(newSettings).then(setPlaceholders);
+}
+
+const getAllFieldsAsObject = () => {
+  let newSettings = {};
+  fields.forEach(field => {
+    let newValue = document.getElementById(field).value;
+    if (newValue != '') {
+      newSettings[field] = newValue;
+    }
+  });
+  return newSettings;
+}
 
 const setClip = (newIndex) => {
   if (newIndex > -1 && newIndex < allClips.length) {
@@ -13,8 +37,8 @@ const setClip = (newIndex) => {
     vid.controls = true;
     displayedClip = allClips[newIndex];
     vid.src = displayedClip.download_url;
-    document.getElementById('cliptitle').placeholder = displayedClip.title;
     clipsTotal = allClips.length;
+    setPlaceholders();
     changeFrontendStatuses();
     if (currentIndex == allClips.length - 1 && allClips.length > 1) {
       document.getElementById('next').disabled = true;
@@ -110,18 +134,17 @@ const updateClipFrontendAndBackend = async (newSettings) => {
   return changeClipOnFrontend(newSettings);
 };
 
-const changeTitle = async () => {
+const changeTitle = async (dataToChange) => {
   console.log('Change title');
   // hit setting endpoint with new title
-  let newTitle = document.getElementById('cliptitle').value;
-  if (newTitle == '') {
+  if (dataToChange == {} || !dataToChange) {
     return false;
   }
-  let result = await updateClipFrontendAndBackend({ title: newTitle });
+  let result = await updateClipFrontendAndBackend(dataToChange);
   if (result.status === 200) {
     SafeSwal.fire({
       icon: 'success',
-      title: 'Title changed to ' + newTitle,
+      title: 'Title(s) changed!',
     });
   } else {
     SafeSwal.fire({
@@ -187,41 +210,52 @@ document.addEventListener('DOMContentLoaded', async function () {
   setupTutorial();
 });
 
-const changeTitleFrontend = (titleDidChange) => {
+const changeTitleFrontend = (titleDidChange, dataChangedId) => {
   if (titleDidChange) {
-    document.getElementById('cliptitle').value = '';
-    document.getElementById('cliptitle').placeholder = displayedClip.title;
+    console.log(dataChangedId)
+    document.getElementById(dataChangedId).value = '';
+    document.getElementById(dataChangedId).placeholder = displayedClip[dataChangedId];
     console.log('placeholders changed');
   }
 };
 
 const setupTitleStuff = async () => {
   //add click listener to #changetitlebutton
-  document
-    .getElementById('changetitlebutton')
-    .addEventListener('click', async function (e) {
+  let buttons = Array.from(document.getElementsByClassName('clipTextbtn'));
+  buttons.forEach(button => {
+    button.addEventListener('click', async function (e) {
       e.preventDefault();
       e.stopPropagation();
       console.log('title changin');
-      let titleDidChange = await changeTitle();
-      changeTitleFrontend(titleDidChange);
+      let actualId = button.getAttribute('id').replace('-button', '');
+      let newValue = document.getElementById(actualId).value;
+      let dataToChange = {};
+      dataToChange[actualId] = newValue;
+      console.log(dataToChange);
+      // await Swal.fire({actualId, newValue})
+      let titleDidChange = await changeTitle(dataToChange);
+      changeTitleFrontend(titleDidChange, actualId);
       return false;
     });
+  });
+    
 
-  document
-    .getElementById('title-form')
-    .addEventListener('submit', async (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      console.log('update submitted');
-      let titleDidChange = await changeTitle();
-      if (titleDidChange) {
-        document.getElementById('cliptitle').value = '';
-        document.getElementById('cliptitle').placeholder = displayedClip?.title;
-        console.log('placeholders changed');
-      }
-      return false;
-    });
+  // document
+  //   .getElementById('title-form').on('submit', () => {})
+  // document
+  //   .getElementById('title-form')
+  //   .addEventListener('submit', async (e) => {
+  //     e.preventDefault();
+  //     e.stopPropagation();
+  //     console.log('update submitted');
+  //     // let titleDidChange = await changeTitle();
+  //     // if (titleDidChange) {
+  //     //   document.getElementById('cliptitle').value = '';
+  //     //   document.getElementById('cliptitle').placeholder = displayedClip?.title;
+  //     //   console.log('placeholders changed');
+  //     // }
+  //     return false;
+  //   });
 
   // document.getElementById("cliptitle").addEventListener('submit', (e) => {
   //     e.preventDefault();
@@ -285,17 +319,13 @@ const setupApproveRejectButtons = () => {
     e.preventDefault();
     e.stopPropagation();
     console.log('approve button clicked');
-    let changedTitle = undefined;
-    let titleDidChange = document.getElementById('cliptitle').value != '';
-    if (titleDidChange) {
-      changedTitle = document.getElementById('cliptitle').value;
-    }
+    let newSettings = getAllFieldsAsObject();
     let result = await updateClipFrontendAndBackend({
       approved: true,
-      title: changedTitle,
+      ...newSettings
     });
     if (result.status === 200) {
-      changeTitleFrontend(titleDidChange);
+      setPlaceholders();
       SafeSwal.fire({
         icon: 'success',
         title: 'Clip approved',
@@ -313,17 +343,13 @@ const setupApproveRejectButtons = () => {
     e.preventDefault();
     e.stopPropagation();
     console.log('reject button clicked');
-    let changedTitle = undefined;
-    let titleDidChange = document.getElementById('cliptitle').value != '';
-    if (titleDidChange) {
-      changedTitle = document.getElementById('cliptitle').value;
-    }
+    let newSettings = getAllFieldsAsObject();
     let result = await updateClipFrontendAndBackend({
       approved: false,
-      title: changedTitle,
+      ...newSettings
     });
     if (result.status === 200) {
-      changeTitleFrontend(titleDidChange);
+      setPlaceholders();
       SafeSwal.fire({
         icon: 'success',
         title: 'Clip rejected',
@@ -428,6 +454,31 @@ const setupOrientationButtons = () => {
     e.stopPropagation();
     doCustomCrop();
   });
+
+  document.getElementById('reupload').addEventListener('click', async (e) => {
+    //update clip on backend with custom crop
+    e.preventDefault();
+    e.stopPropagation();
+    updateClipFrontendAndBackend({
+      uploaded: false,
+    }).then(Swal.fire({
+      icon: 'success',
+      title: 'Clip will be uploaded again.',
+      text: `This clip has been marked as "Not uploaded", when the next upload time comes, this clip will be used.`
+    }));
+  });
+
+  document.getElementById('saveAll').addEventListener('click', async (e) => {
+    //update clip on backend with custom crop
+    e.preventDefault();
+    e.stopPropagation();
+    saveAll().then(Swal.fire({
+      icon: 'success',
+      title: 'Fields updated!',
+    }));
+  });
+
+  
 };
 
 const doCustomCrop = async () => {

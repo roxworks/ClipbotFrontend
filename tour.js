@@ -95,7 +95,7 @@ const clips_steps = [
         "content": "This is the clip you're currently editing. Any button you press below will affect only this clip."
     },
     {
-        "selector": '#cliptitle',
+        "selector": '#title',
         "title": "Clip Title",
         "content": "This is the title of the clip you're editing. You can change the title here."
     },

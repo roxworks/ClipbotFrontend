@@ -248,20 +248,20 @@
             />
           </div>
         </div>
-        <form class="form-group clipTextContainer" id="title-form">
+        <div class="form-group clipTextContainer" id="title-form">
           <div class="form__group cliptitle clipText">
             <div class="clip-status-label">
               <span class="status-text">Default Title</span>
             </div>
             <input
               type="text"
-              name="cliptitle"
+              name="title"
               oninput="validity.valid||(value='');"
-              id="cliptitle"
+              id="title"
               placeholder="Your clip title"
               class="form__input"
             />
-            <button class="btn save clipTextbtn" id="changetitlebutton">Save</button>
+            <button class="btn save clipTextbtn" id="title-button">Save</button>
           </div>
           <div class="form__group cliptitle clipText">
             <div class="clip-status-label">
@@ -269,13 +269,13 @@
             </div>
             <input
               type="text"
-              name="cliptitle-youtube"
+              name="youtubeTitle"
               oninput="validity.valid||(value='');"
-              id="cliptitle-youtube"
+              id="youtubeTitle"
               placeholder="Youtube Specific Title"
               class="form__input"
             />
-            <button class="btn save clipTextbtn" id="changeyoutubetitlebutton">Save</button>
+            <button class="btn save clipTextbtn" id="youtubeTitle-button">Save</button>
           </div>
           <div class="form__group cliptitle clipText">
             <div class="clip-status-label">
@@ -289,7 +289,7 @@
               placeholder="Youtube Hashtags"
               class="form__input"
             />
-            <button class="btn save clipTextbtn" id="changeyoutubeHashtagsbutton">Save</button>
+            <button class="btn save clipTextbtn" id="youtubeHashtags-button">Save</button>
           </div>
           <div class="form__group cliptitle clipText">
             <div class="clip-status-label">
@@ -303,7 +303,7 @@
               placeholder="Youtube Description"
               class="form__input"
             />
-            <button class="btn save clipTextbtn" id="changeyoutubeDescriptionbutton">Save</button>
+            <button class="btn save clipTextbtn" id="youtubeDescription-button">Save</button>
           </div>
           <div class="form__group cliptitle clipText">
             <div class="clip-status-label">
@@ -311,13 +311,13 @@
             </div>
             <input
               type="text"
-              name="cliptitle-tiktok"
+              name="tiktokTitle"
               oninput="validity.valid||(value='');"
-              id="cliptitle-tiktok"
+              id="tiktokTitle"
               placeholder="Tiktok specific title"
               class="form__input"
             />
-            <button class="btn save clipTextbtn" id="changetiktoktitlebutton">Save</button>
+            <button class="btn save clipTextbtn" id="tiktokTitle-button">Save</button>
           </div>
           <div class="form__group cliptitle clipText">
             <div class="clip-status-label">
@@ -331,9 +331,9 @@
               placeholder="Tiktok Hashtags"
               class="form__input"
             />
-            <button class="btn save clipTextbtn" id="changetiktokHashtagsbutton">Save</button>
+            <button class="btn save clipTextbtn" id="tiktokHashtags-button">Save</button>
           </div>
-        </form>
+        </div>
 
         <div class="morebuttons" id="clipsbuttons">
 
@@ -343,6 +343,12 @@
             </button>
             <button class="btn" id="customOrientation" type="reset">
               Change Orientation
+            </button>
+            <button class="btn" id="reupload" type="reset">
+              Re-upload
+            </button>
+            <button class="btn" id="saveAll" type="reset">
+              Save Titles/Tags
             </button>
           </div>
         </div>
