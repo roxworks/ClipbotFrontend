@@ -7,7 +7,9 @@ document.addEventListener('DOMContentLoaded', async function (event) {
 
     // must match id of element in html
     let allSettings = [
-      'hashtags',
+      // 'hashtags',
+      'youtubeHashtags',
+      'tiktokHashtags',
       'delay',
       'minViewCount',
       'uploadFrequency',
@@ -103,13 +105,38 @@ let updateFields = (fields) => {
 let checkFieldsAreValid = () => {
   const hashtagRegex = /^\s*(#\w+\s)*#\w+\s*$/;
   // Ensure entire hashtags string is space separated and every tag starts with #
-  let hashtagsValue = document.querySelector('#hashtags').value;
+  // let hashtagsValue = document.querySelector('#hashtags').value;
+  // if (hashtagsValue) {
+  //   let hashtagsAreValid = hashtagRegex.test(hashtagsValue);
+  //   if (!hashtagsAreValid) {
+  //     SafeSwal.fire({
+  //       icon: 'error',
+  //       text: 'Looks like your hashtags are wrong, make sure to use the format: #tag #anothertag #athirdtag',
+  //     });
+  //     return false;
+  //   }
+  // }
+
+  
+  let hashtagsValue = document.querySelector('#youtubeHashtags').value;
   if (hashtagsValue) {
     let hashtagsAreValid = hashtagRegex.test(hashtagsValue);
     if (!hashtagsAreValid) {
       SafeSwal.fire({
         icon: 'error',
-        text: 'Looks like your hashtags are wrong, make sure to use the format: #tag #anothertag #athirdtag',
+        text: 'Looks like your Youtube hashtags are wrong, make sure to use the format: #tag #anothertag #athirdtag',
+      });
+      return false;
+    }
+  }
+  
+  hashtagsValue = document.querySelector('#tiktokHashtags').value;
+  if (hashtagsValue) {
+    let hashtagsAreValid = hashtagRegex.test(hashtagsValue);
+    if (!hashtagsAreValid) {
+      SafeSwal.fire({
+        icon: 'error',
+        text: 'Looks like your Tiktok hashtags are wrong, make sure to use the format: #tag #anothertag #athirdtag',
       });
       return false;
     }

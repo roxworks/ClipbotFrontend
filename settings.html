@@ -46,7 +46,7 @@
         method="GET"
         action="http://localhost:42074/update"
       >
-        <div class="form__group" id="hashtags-form">
+        <!-- <div class="form__group" id="hashtags-form">
           <label class="settings hashtags">
             <div>
               <img src="./images/hashtag.png" class="icon" /> Hashtags
@@ -58,6 +58,38 @@
             name="hashtags"
             id="hashtags"
             placeholder="#smallstreamer #twitch"
+            class="form__input hashtag"
+          />
+        </div> -->
+
+        <div class="form__group" id="youtubeHashtags-form">
+          <label class="settings hashtags">
+            <div>
+              <img src="./images/hashtag.png" class="icon" /> Youtube Hashtags
+              <span class="what">(What's this?)</span>
+            </div>
+          </label>
+          <input
+            type="text"
+            name="youtubeHashtags"
+            id="youtubeHashtags"
+            placeholder=""
+            class="form__input hashtag"
+          />
+        </div>
+
+        <div class="form__group" id="tiktokHashtags-form">
+          <label class="settings hashtags">
+            <div>
+              <img src="./images/hashtag.png" class="icon" /> Tiktok Hashtags
+              <span class="what">(What's this?)</span>
+            </div>
+          </label>
+          <input
+            type="text"
+            name="tiktokHashtags"
+            id="tiktokHashtags"
+            placeholder=""
             class="form__input hashtag"
           />
         </div>
