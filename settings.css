@@ -64,6 +64,10 @@ input:checked + .slider:before {
   max-width: 200px;
 }
 
+#settings {
+  overflow-y: auto;
+}
+
 .form-group.settings {
   width: 100%;
   flex-direction: column;

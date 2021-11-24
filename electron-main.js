@@ -457,9 +457,9 @@ if (process.argv[2] == 'test') {
 
   app.on('ready', async () => {
     //TODO: reenable this
-    if (!process.env.LETMEIN) {
+    // if (!process.env.LETMEIN) {
       Menu.setApplicationMenu(null);
-    }
+    // }
 
     // Must do this before window gets made so we
     // have correct settings
