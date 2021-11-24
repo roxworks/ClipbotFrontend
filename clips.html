@@ -41,7 +41,10 @@
   <body class="app">
     <aside class="sidebar" style='padding-top: 10px;'>
       <nav class="sidebar__menu" style='margin-top: 0px;'>
+      <div>
         <h3 class="page__heading" id="title-side">Filters</h3>
+        <span style='margin: 0; padding: 0; font-size: 16px'>Showing <span id="clip-amount"> 0 </span> Clips </span>
+      </div>
         <form type="submit" id="filterform" class="sidebar__form" style='margin-top: 0px;'>
           <div id="filtersDiv" class="filters">
             <div class="form__group" id='approvalgroup'>
@@ -191,12 +194,7 @@
 
     </aside>
     <div class="container" id='clipscontainer'>
-      <header id="pageHeader">
-        <h3 class="page__heading" id="title">
-          Manage Clips - <span class="clip-amount" id="clip-amount"> 0 </span>
-        </h3>
-      </header>
-      <div>
+      <div style="text-align: center;">
         <video
           id='currentclip'
           src="https://share.nyx.xyz/4XnZYjhZk2a"
@@ -207,19 +205,23 @@
           width="550px"
           height="312px"
         ></video>
-        <form class="form-group" id="title-form">
-          <div class="form__group cliptitle">
-            <input
-              type="text"
-              name="cliptitle"
-              oninput="validity.valid||(value='');"
-              id="cliptitle"
-              placeholder="Your clip title"
-              class="form__input"
-            />
-            <button class="btn save" id="changetitlebutton">Save</button>
+        <div class="morebuttons" id="clipsbuttons">
+          <div class="video-buttons">
+            <button class="btn video-button" id="prev" type="reset">
+              &lt;&lt;
+            </button>
+            <button class="btn video-button status" id="approve" type="reset">
+              Approve
+            </button>
+
+            <button class="btn video-button status" id="reject" type="reset">
+              Reject
+            </button>
+            <button class="btn video-button" id="next" type="reset">
+              &gt;&gt;
+            </button>
           </div>
-        </form>
+        </div>
         <div id="clipDetails" class="clipDetails">
           <div class="clip-status" id='approvaldiv'>
             <div class="clip-status-label">
@@ -246,22 +248,94 @@
             />
           </div>
         </div>
-        <div class="morebuttons" id="clipsbuttons">
-          <div class="video-buttons">
-            <button class="btn video-button" id="prev" type="reset">
-              &lt;&lt;
-            </button>
-            <button class="btn video-button status" id="approve" type="reset">
-              Approve
-            </button>
-
-            <button class="btn video-button status" id="reject" type="reset">
-              Reject
-            </button>
-            <button class="btn video-button" id="next" type="reset">
-              &gt;&gt;
-            </button>
+        <form class="form-group clipTextContainer" id="title-form">
+          <div class="form__group cliptitle clipText">
+            <div class="clip-status-label">
+              <span class="status-text">Default Title</span>
+            </div>
+            <input
+              type="text"
+              name="cliptitle"
+              oninput="validity.valid||(value='');"
+              id="cliptitle"
+              placeholder="Your clip title"
+              class="form__input"
+            />
+            <button class="btn save clipTextbtn" id="changetitlebutton">Save</button>
           </div>
+          <div class="form__group cliptitle clipText">
+            <div class="clip-status-label">
+              <span class="status-text">YT Title</span>
+            </div>
+            <input
+              type="text"
+              name="cliptitle-youtube"
+              oninput="validity.valid||(value='');"
+              id="cliptitle-youtube"
+              placeholder="Youtube Specific Title"
+              class="form__input"
+            />
+            <button class="btn save clipTextbtn" id="changeyoutubetitlebutton">Save</button>
+          </div>
+          <div class="form__group cliptitle clipText">
+            <div class="clip-status-label">
+              <span class="status-text">YT Tags</span>
+            </div>
+            <input
+              type="text"
+              name="youtubeHashtags"
+              oninput="validity.valid||(value='');"
+              id="youtubeHashtags"
+              placeholder="Youtube Hashtags"
+              class="form__input"
+            />
+            <button class="btn save clipTextbtn" id="changeyoutubeHashtagsbutton">Save</button>
+          </div>
+          <div class="form__group cliptitle clipText">
+            <div class="clip-status-label">
+              <span class="status-text">YT Desc</span>
+            </div>
+            <input
+              type="text"
+              name="youtubeDescription"
+              oninput="validity.valid||(value='');"
+              id="youtubeDescription"
+              placeholder="Youtube Description"
+              class="form__input"
+            />
+            <button class="btn save clipTextbtn" id="changeyoutubeDescriptionbutton">Save</button>
+          </div>
+          <div class="form__group cliptitle clipText">
+            <div class="clip-status-label">
+              <span class="status-text">Tiktok Title</span>
+            </div>
+            <input
+              type="text"
+              name="cliptitle-tiktok"
+              oninput="validity.valid||(value='');"
+              id="cliptitle-tiktok"
+              placeholder="Tiktok specific title"
+              class="form__input"
+            />
+            <button class="btn save clipTextbtn" id="changetiktoktitlebutton">Save</button>
+          </div>
+          <div class="form__group cliptitle clipText">
+            <div class="clip-status-label">
+              <span class="status-text">Tiktok Tags</span>
+            </div>
+            <input
+              type="text"
+              name="tiktokHashtags"
+              oninput="validity.valid||(value='');"
+              id="tiktokHashtags"
+              placeholder="Tiktok Hashtags"
+              class="form__input"
+            />
+            <button class="btn save clipTextbtn" id="changetiktokHashtagsbutton">Save</button>
+          </div>
+        </form>
+
+        <div class="morebuttons" id="clipsbuttons">
 
           <div class="crop-buttons">
             <button class="btn" id="customCrop" type="reset">

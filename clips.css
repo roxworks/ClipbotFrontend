@@ -21,11 +21,55 @@
   margin: 0;
   padding: 1rem 2rem;
 }
+
+.app {
+ overflow-y: auto; 
+}
+
+.clipTextContainer {
+  flex-direction: column;
+}
+
+#GuidedTourIconSet {
+  display: none;
+}
+
+#clipscontainer {
+  overflow-y: auto;
+  height: auto;
+}
+
+.btn.video-button {
+  padding: 8px;
+}
+
 .clipDetails {
   width: 100%;
   display: flex;
   justify-content: space-between;
   gap: 8px;
+}
+
+.clipText {
+  height: 30px;
+}
+
+.clipText.cliptitle {
+  align-items: center;
+}
+
+#clipsbuttons {
+  gap: 5px;
+}
+
+#title-form > .cliptitle > input{
+  padding: 8px;
+}
+
+.clipTextbtn.btn {
+  padding: 10px;
+  padding-top: 5px;
+  margin-left: 5px;
 }
 
 .clip-status {
@@ -37,6 +81,21 @@
   width: 100%;
   position: relative;
 }
+
+.cliptitle > .clip-status-label {
+  border: none;
+}
+
+
+.cliptitle > input {
+  border: none;
+  border-radius: 0;
+}
+
+.form__group.cliptitle.clipText {
+  align-items: stretch;
+}
+
 
 .clip-status-label {
   display: flex;
@@ -53,6 +112,9 @@
   border-right: none;
   border-bottom: 2px solid #2d1d49;
   white-space: nowrap;
+  align-items: center;
+  justify-content: center;
+  min-width: 110px;
 }
 
 .status-text {
@@ -90,6 +152,7 @@
   justify-content: flex-end;
   gap: 12px;
   display: flex;
+  margin-top: 8px;
 }
 
 .video-button {
