@@ -54,7 +54,7 @@ const setClip = (newIndex) => {
       document.getElementById('prev').disabled = false;
     }
   } else {
-    document.getElementById('cliptitle').placeholder =
+    document.getElementById('title').placeholder =
       'No clips found, load more clips!';
     let vid = document.getElementsByTagName('video')[0];
     vid.src = 'https://share.nyx.xyz/4XnZYjhZk2a';

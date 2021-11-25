@@ -1076,14 +1076,38 @@ const setupHelpMenu = () => {
 
     SafeSwal.fire({
       icon: 'info',
-      html: `Enter your feedback or ideas here!`,
-      input: 'textarea',
-      inputPlaceholder: `Nothing is happening and I am confused`,
-      confirmButtonText: 'Submit',
+      html: `Got a feature request? Want a change made?
+      We now have a board where you can request features!
+      Click below to vote on new features or submit your own requests :D`,
+      confirmButtonText: 'Open New Features Board',
       showCancelButton: true,
-    }).then(async (result) => {
-      sendEmail(result, true);
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.shell.openExternal('https://clipbot.tv/vote', '_blank');
+        SafeSwal.fire({
+          icon: 'info',
+          title: 'Join our Discord server!',
+          text: 'Thanks for voting on new ideas :D  Come join the discord and give yourself the "Clipbot User" role to keep up with new updates! :)',
+          confirmButtonText: 'Join Discord',
+          showCancelButton: true,
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.open('https://clipbot.tv/discord', '_blank');
+          }
+        })
+      }
     });
+
+    // SafeSwal.fire({
+    //   icon: 'info',
+    //   html: `Enter your feedback or ideas here!`,
+    //   input: 'textarea',
+    //   inputPlaceholder: `Nothing is happening and I am confused`,
+    //   confirmButtonText: 'Submit',
+    //   showCancelButton: true,
+    // }).then(async (result) => {
+    //   sendEmail(result, true);
+    // });
   });
 }
 

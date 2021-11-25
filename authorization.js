@@ -142,6 +142,7 @@ const handleRandomError = (errorMessage, endpoint, passthrough) => {
                 break;
             case 'retry':
                 onConfirm = uploadClip;
+                options.html = options.text + '</br></br>' + '<b>If you see this a lot, try restarting Clipbot - you might be missing an important update.</b>';
                 break;
             case 'clip':
                 onConfirm = createClip;
