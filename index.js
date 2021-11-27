@@ -352,18 +352,17 @@ let updateStatus = (event, data) => {
   else if (currStatus.includes('TWITCH')) {
     let currClipsLoaded = currStatus.trim().substring(currStatus.indexOf(':') + 1);
     let clipsLoadedNum = parseInt(currClipsLoaded);
-    if(clipsLoadedNum === 0) {
-      return;
-    }
+    // if(clipsLoadedNum === 0) {
+    //   return;
+    // }
 
     if(!clipsLoadingPopup) {
       clipsLoadingPopup = SafeSwal.fire({
-        title: 'Loading Your Twitch Clips',
-        html: 'Please wait while we load your clips from Twitch.<br/>This may take a few minutes.<br/><br/>0 Clips Loaded',
+        title: 'Checking for new Twitch Clips...',
         showConfirmButton: false
       });
     }
-    else {
+    else if (clipsLoadedNum > 0) {
       // get clips number which is located after the : in currStatus
       clipsLoadingPopup.update({
         html: `Please wait while we load your clips from Twitch.<br/>This may take a few minutes${getDotsString()}<br/><br/>${currClipsLoaded} Clips Loaded`,
