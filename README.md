@@ -1,6 +1,6 @@
 <!-- PROJECT LOGO -->
 <p align="center">
-  <a href="https://github.com/DanGiaime/ClipbotFrontende">
+  <a href="https://github.com/Roxkstar74/ClipbotFrontend">
     <img src="images/logo.png" alt="Logo" width="80" height="80">
   </a>
 
@@ -43,7 +43,7 @@ Clipbot frontend repo. Help make Clipbot better!
 
 1. Clone the repo
    ```sh
-   git clone https://github.com/DanGiaime/ClipbotFrontend.git
+   git clone https://github.com/Roxkstar74/ClipbotFrontend.git
    ```
 2. Checkout the dev branch
    ```
