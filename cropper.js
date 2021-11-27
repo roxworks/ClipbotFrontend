@@ -255,6 +255,10 @@ let doAllCropperStuff = (
     }
   }
 
+  if(cropType === 'no-cam') {
+    document.querySelector('h1').innerHTML = 'Select Your Gameplay Area';
+  }
+
   const doneButton = document.getElementById('done');
   const doneFunc = () => {
     console.log('done clicked');
