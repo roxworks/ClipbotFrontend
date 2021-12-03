@@ -2,7 +2,6 @@ const { ipcRenderer } = require('electron');
 
 // just uploadClip function
 let uploadClip = async (force = false) => {
-  ipcRenderer.send('check_for_updates');
   let result = await fetch(`http://localhost:42074/?force=${force}`);
   let isSuccess = result == 200;
   try {
@@ -62,5 +61,6 @@ let uploadClip = async (force = false) => {
   //unconditionally update status to waiting for next upload
   if (result?.status != 429) {
     ipcRenderer.send('status_update', 'Waiting until next upload');
+    ipcRenderer.send('check_for_updates');
   }
 };

@@ -346,7 +346,6 @@ let updateStatus = (event, data) => {
     updateDisplayedSettings();
     if(clipsLoadingPopup) {
       clipsLoadingPopup.close();
-
     }
   }
   else if (currStatus.includes('TWITCH')) {
@@ -370,6 +369,11 @@ let updateStatus = (event, data) => {
       // clipsLoadingPopup.showLoading();
     }
 
+  }
+  else {
+    if(clipsLoadingPopup) {
+      clipsLoadingPopup.close();
+    }
   }
 };
 
