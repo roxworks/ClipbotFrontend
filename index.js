@@ -287,6 +287,10 @@ document.addEventListener('DOMContentLoaded', async function (event) {
           <i class="fas fa-times"></i> 
           Cancel Subscription
         </button>
+        <button type="button" role="button" id="hardReset" tabindex="0" style='font-size: 26px;' class="btn loginbtn">
+          <i class="fas fa-times"></i> 
+          Reset Clips
+        </button>
         <button type="button" role="button" id="tutorial" tabindex="0" style='font-size: 26px;' class="btn loginbtn">
           <i class="fas fa-redo"></i> 
           Redo Tutorial
@@ -1055,6 +1059,33 @@ const setupHelpMenu = () => {
       });
     });
 
+    
+    
+  document
+  .getElementById('hardReset')
+  .addEventListener('click', async function (event) {
+    event.preventDefault();
+    SafeSwal.fire({
+      icon: 'warning',
+      html: `Are you sure you want to reset all your clips? <br> 
+      This will delete all clip history within Clipbot. <br> <br> 
+      Your uploads will stay on Youtube/Tiktok.
+      However, Clipbot will have no memory of what you've uploaded, approved, or rejected.
+      All clips will disappear from Clipbot, and you will need to set a new channel for Clipbot to pull from.`,
+      confirmButtonText: "I'm sure, reset all my clips",
+      showCancelButton: true,
+    }).then(async (result) => {
+      if(result.isConfirmed) {
+        hardReset().then(async () => {return Swal.fire({
+          icon: 'success',
+          title: 'Hard Reset Complete. Click OK to restart Clipbot and set a new channel.',
+        })}).then(() => {
+          ipcRenderer.send('just_restart'); 
+        });
+      }
+    });
+  });clipbotOnAlertText
+
   document
   .getElementById('bugreport')
   .addEventListener('click', async function (event) {
@@ -1112,6 +1143,12 @@ const setupHelpMenu = () => {
     //   sendEmail(result, true);
     // });
   });
+}
+
+const hardReset = async () => {
+  return fetch(
+    `http://localhost:42074/hardReset`
+  );
 }
 
 const sendEmail = async (result, isFeedback) => {

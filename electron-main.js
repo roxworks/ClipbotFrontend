@@ -536,6 +536,11 @@ if (process.argv[2] == 'test') {
       autoUpdater.quitAndInstall();
     });
 
+    ipcMain.on('just_restart', () => {
+      app.relaunch()
+      app.exit()
+    });
+
     ipcMain.on('hotkey_changed', (event, data) => {
       updateGlobalShortcut(data);
     });

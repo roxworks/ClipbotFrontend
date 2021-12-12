@@ -38,7 +38,7 @@ let uploadClip = async (force = false) => {
   } else if (result?.status == 303) {
     doLicenseAuth();
   } else if (result?.status == 306) {
-    doTwitchAuth();
+    doTwitchAuth(undefined, true);
   } else if (result?.status == 429) {
     let errorMessage = result?.error;
     if (result.force == 'true') {
