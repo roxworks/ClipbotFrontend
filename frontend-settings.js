@@ -36,6 +36,10 @@ document.addEventListener('DOMContentLoaded', async function (event) {
     params['fastUploadEnabled'] = document.querySelector(
       '#fastUploadEnabled'
     ).checked;
+    
+    params['youtubeAutoCategorizationEnabled'] = document.querySelector(
+      '#youtubeAutoCategorizationEnabled'
+    ).checked;
     settingsWereChanged = true;
 
     let url = new URL('http://localhost:42074/update');
@@ -85,7 +89,8 @@ let updateFields = (fields) => {
     ) {
       if (
         fieldName == 'defaultApprove' ||
-        fieldName.toLowerCase().includes('upload')
+        fieldName.toLowerCase().includes('upload') || 
+        fieldName.toLowerCase().includes('categorization')
       ) {
         fieldSpan.checked = JSON.parse(fields[fieldName]);
       }
