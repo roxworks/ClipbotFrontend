@@ -307,6 +307,12 @@ document.addEventListener('DOMContentLoaded', async function (event) {
     setupHelpMenu();
   });
 
+  //checkForUpdates
+  document.getElementById('checkForUpdates').addEventListener('click', function(event) {
+    event.preventDefault();
+    ipcRenderer.send('check_for_updates');
+  });
+
 });
 
 // Update fields on settings change
@@ -343,6 +349,7 @@ document.addEventListener('DOMContentLoaded', async function (event) {
 // });
 
 let clipsLoadingPopup = undefined;
+let loadingPopupClosed = false;
 let updateStatus = (event, data) => {
   let currStatus = data;
   document.getElementById('status').value = currStatus;
@@ -365,7 +372,7 @@ let updateStatus = (event, data) => {
         showConfirmButton: false
       });
     }
-    else if (clipsLoadedNum > 0) {
+    else if (clipsLoadedNum > 0 && !loadingPopupClosed) {
       // get clips number which is located after the : in currStatus
       clipsLoadingPopup.update({
         html: `Please wait while we load your clips from Twitch.<br/>This may take a few minutes${getDotsString()}<br/><br/>${currClipsLoaded} Clips Loaded`,
@@ -377,6 +384,7 @@ let updateStatus = (event, data) => {
   else {
     if(clipsLoadingPopup) {
       clipsLoadingPopup.close();
+      loadingPopupClosed = true;
     }
   }
 };

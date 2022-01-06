@@ -546,6 +546,7 @@ if (process.argv[2] == 'test') {
     });
 
     ipcMain.on('check_for_updates', () => {
+      console.log('checking for updates');
       autoUpdater.checkForUpdatesAndNotify();
     });
 
