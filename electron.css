@@ -179,6 +179,14 @@ h1 {
     visibility: hidden;
 }
 
+.hidden {
+    display: none;
+}
+
+.rotate90 {
+    transform: rotate(90deg);
+}
+
 .hash-tags {
     margin: 2rem 0;
     max-width: 650px;

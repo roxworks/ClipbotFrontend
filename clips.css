@@ -113,8 +113,21 @@
   border-bottom: 2px solid #2d1d49;
   white-space: nowrap;
   align-items: center;
-  justify-content: center;
+  justify-content: left;
   min-width: 110px;
+}
+
+.youtubeLogo {
+  width: 22px;
+  height: 16px;
+  margin-right: 5px;
+}
+
+.tiktokLogo {
+  width: 16px;
+  height: 16px;
+  margin-right: 5px;
+  margin-left: 5px;
 }
 
 .status-text {

@@ -333,7 +333,7 @@ let justLicenseInput = (doUpload = true) => {
         icon: 'info',
         html: `Enter your key below. Don't have one? 
         Please head to <a href='#' id='mainsite' onClick='openClipbotMainSite()'>Clipbot.tv</a> 
-        to sign up for the free trial.`,
+        to get a key.`,
         input: 'text',
         inputPlaceholder: 'Enter your license key here',
         confirmButtonText: 'Submit',
@@ -352,7 +352,7 @@ let doLicenseAuth = (doUpload = true) => {
         html: `Looks like your chosen channel has more than 2000 followers<br>
         To use Clipbot, you'll need a license key. 
         Please head to <a href='#' id='mainsite' onClick='openClipbotMainSite()'>Clipbot.tv</a> 
-        to sign up for the free trial.`,
+        to get a key.`,
         input: 'text',
         inputPlaceholder: 'Enter your license key here',
         confirmButtonText: 'Submit',

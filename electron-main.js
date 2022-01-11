@@ -31,6 +31,7 @@ const awaitAllFileCompilations = async () => {
     createBytecodeFile('clipqueue'),
     createBytecodeFile('youtubeUpload'),
     createBytecodeFile('helpers'),
+    createBytecodeFile('tests'),
   ]);
 };
 
@@ -500,12 +501,18 @@ if (process.argv[2] == 'test') {
 
     ipcMain.on('youtube-auth-success', (event, data) => {
       console.log('youtube auth successful');
-      WINDOWS.main.webContents.send('retry', data);
+    WINDOWS.main.webContents.send('retry', data);
     });
 
     ipcMain.on('status_update', (event, data) => {
       console.log('Status update from uploadClip');
-      WINDOWS.main.webContents.send('status_update', data);
+      
+      // if(BrowserWindow.getFocusedWindow() == WINDOWS.clips) {
+        WINDOWS.clips.webContents.send('status_update', data);
+      // }
+      // else {
+        WINDOWS.main.webContents.send('status_update', data);
+      // }
     });
 
     ipcMain.on('camvas_closed', (event, data) => {

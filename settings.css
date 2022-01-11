@@ -57,6 +57,11 @@ input:checked + .slider:before {
   border-radius: 34px;
 }
 
+.settingsHeader3 {
+  margin-top: 5px;
+  background: #222222;
+}
+
 .slider.round:before {
   border-radius: 50%;
 }

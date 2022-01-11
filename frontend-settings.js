@@ -1,3 +1,22 @@
+let allSettings = [
+  // 'hashtags',
+  'youtubeHashtags',
+  'tiktokHashtags',
+  'delay',
+  'minViewCount',
+  'uploadFrequency',
+  'hotkey',
+  'youtubeTags',
+  'youtubePrivacy',
+];
+
+let canBeBlank = [
+  'youtubeHashtags',
+  'tiktokHashtags',
+  'youtubeTags',
+  'youtubePrivacy',
+]
+
 // Listen to submit event on the <form> itself!
 document.addEventListener('DOMContentLoaded', async function (event) {
   document.getElementById('update').addEventListener('submit', async (e) => {
@@ -6,15 +25,7 @@ document.addEventListener('DOMContentLoaded', async function (event) {
     e.preventDefault();
 
     // must match id of element in html
-    let allSettings = [
-      // 'hashtags',
-      'youtubeHashtags',
-      'tiktokHashtags',
-      'delay',
-      'minViewCount',
-      'uploadFrequency',
-      'hotkey',
-    ];
+
     let params = {};
     let settingsWereChanged = false;
     for (setting of allSettings) {
@@ -22,6 +33,17 @@ document.addEventListener('DOMContentLoaded', async function (event) {
       if (params[setting]) {
         settingsWereChanged = true;
       }
+      else if(!canBeBlank.includes(setting)) {
+        delete params[setting];
+      }
+      
+    }
+
+    if(params.youtubeTags) {
+      console.log('youtubeTags: ' + typeof(params.youtubeTags));
+      params.youtubeTags = params.youtubeTags.split(',');
+      params.youtubeTags = params.youtubeTags.map(tag => tag.trim());
+      console.log('youtubeTags fixed: ' + params.youtubeTags?.length);
     }
 
     params['defaultApprove'] =
@@ -63,6 +85,7 @@ document.addEventListener('DOMContentLoaded', async function (event) {
     });
 
     try {
+      console.log('fetching: ' + url);
       await fetch(url);
       updateFields(params);
       hideSettingsNotSavedPopup();
@@ -75,6 +98,31 @@ document.addEventListener('DOMContentLoaded', async function (event) {
   });
 });
 
+const rotateChevron = (chevronSelector) => {
+  let chevron = document.querySelector(chevronSelector);
+  chevron.classList.toggle('rotate90');
+};
+
+document.addEventListener('DOMContentLoaded', async function (event) {
+  document.getElementById('clipDefaultsHeader').addEventListener('click', async (e) => {
+    e.preventDefault();
+    document.querySelector('#clipDefaults').classList.toggle('hidden');
+    rotateChevron('#clipDefaultsChevron');
+  });
+
+  document.getElementById('AdvancedSettingsHeader').addEventListener('click', async (e) => {
+    e.preventDefault();
+    document.querySelector('#AdvancedSettings').classList.toggle('hidden');
+    rotateChevron('#AdvancedSettingsChevron');
+  });
+
+  document.getElementById('uploadSettingsHeader').addEventListener('click', async (e) => {
+    e.preventDefault();
+    document.querySelector('#uploadSettings').classList.toggle('hidden');
+    rotateChevron('#uploadSettingsChevron');
+  });
+});
+
 let updateFields = (fields) => {
   for (fieldName in fields) {
     let fieldSpan = document.querySelector('#' + fieldName); //+ "-value"
@@ -83,8 +131,10 @@ let updateFields = (fields) => {
     console.log('val:' + fields[fieldName]);
 
     if (
-      fields[fieldName] !== '' &&
-      fields[fieldName] !== undefined &&
+      (
+        (fields[fieldName] !== '' && fields[fieldName] !== undefined) 
+        || canBeBlank.includes(fieldName)
+      ) &&
       fieldSpan
     ) {
       if (
@@ -97,18 +147,26 @@ let updateFields = (fields) => {
 
       fieldSpan.value = '';
       fieldSpan.placeholder = fields[fieldName];
+      if(fieldName == 'youtubePrivacy') {
+        fieldSpan.value = fields[fieldName];
+      }
 
       if (fieldName == 'delay' || fieldName == 'uploadFrequency') {
         fieldSpan.placeholder += ' hours';
       } else if (fieldName == 'minViewCount') {
         fieldSpan.placeholder += ' views';
       }
+      else {
+        fieldSpan.value = fields[fieldName];
+      }
     }
   }
 };
 
+
 let checkFieldsAreValid = () => {
   const hashtagRegex = /^\s*(#\w+\s)*#\w+\s*$/;
+  const commaSeparatedWithManyWordsAllowedRegex = /^\s*((\w+\s*)*,\s*)*(\w+\s*)*$/;
   // Ensure entire hashtags string is space separated and every tag starts with #
   // let hashtagsValue = document.querySelector('#hashtags').value;
   // if (hashtagsValue) {
@@ -142,6 +200,18 @@ let checkFieldsAreValid = () => {
       SafeSwal.fire({
         icon: 'error',
         text: 'Looks like your Tiktok hashtags are wrong, make sure to use the format: #tag #anothertag #athirdtag',
+      });
+      return false;
+    }
+  }
+
+  ytTagsValue = document.querySelector('#youtubeTags').value;
+  if (ytTagsValue) {
+    let ytTagsAreValid = commaSeparatedWithManyWordsAllowedRegex.test(ytTagsValue);
+    if (!ytTagsAreValid) {
+      SafeSwal.fire({
+        icon: 'error',
+        text: 'Looks like your youtube tags are wrong, make sure to use the format: tag1, tag2, long tag 3, tag4',
       });
       return false;
     }

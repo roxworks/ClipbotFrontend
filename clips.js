@@ -6,7 +6,7 @@ let currentIndex = 0;
 let settingsDidLoad = undefined;
 let clipsTotal = 0;
 const querystring = require('querystring');
-const fields = ['title', 'youtubeTitle', 'youtubeHashtags', 'youtubeDescription', 'tiktokTitle', 'tiktokHashtags']
+const fields = ['title', 'youtubeTitle', 'youtubeHashtags', 'youtubeTags', 'youtubeDescription', 'tiktokTitle', 'tiktokHashtags']
 
 const setPlaceholders = () => {
   fields.forEach(field => {
@@ -567,10 +567,67 @@ const setupFilterFunctionality = () => {
     });
 };
 
+
+let clipsLoadingPopup = undefined;
+let loadingPopupClosed = false;
+let updateStatus = (event, data) => {
+  console.log('UPDATE STATUS IN CLIPS WOOOO')
+  let currStatus = data;
+  if (currStatus.includes('TWITCH')) {
+    let currClipsLoaded = currStatus.trim().substring(currStatus.indexOf(':') + 1);
+    let clipsLoadedNum = parseInt(currClipsLoaded);
+    // if(clipsLoadedNum === 0) {
+    //   return;
+    // }
+
+    if(!clipsLoadingPopup) {
+      clipsLoadingPopup = SafeSwal.fire({
+        title: 'Checking for new Twitch Clips...',
+        showConfirmButton: false
+      });
+    }
+    else if (clipsLoadedNum > 0 && !loadingPopupClosed) {
+      // get clips number which is located after the : in currStatus
+      clipsLoadingPopup.update({
+        html: `Please wait while we load your clips from Twitch.<br/>This may take a few minutes${getDotsString()}<br/><br/>${currClipsLoaded} Clips Loaded`,
+      });
+      // clipsLoadingPopup.showLoading();
+    }
+
+  }
+  else {
+    if(clipsLoadingPopup) {
+      clipsLoadingPopup.close();
+      loadingPopupClosed = true;
+      // refresh the window
+      if(clipsLoadedNum > 0) {
+        window.location.reload();
+      }
+    }
+  }
+};
+
+document.addEventListener('DOMContentLoaded', async function (event) {
+  let ipcRenderer = window.ipcRenderer;
+  ipcRenderer.on('status_update', updateStatus);
+  console.log('prepped to update');
+
+});
+
 const setClipsCount = () => {
   const clipsCount = document.getElementById('clip-amount');
 
   if (clipsCount) {
     clipsCount.innerHTML = clipsTotal;
   }
+
+  document
+  .getElementById('loadClips')
+  .addEventListener('click', async function (event) {
+    // hit /clip/load endpoint on backend
+    event.preventDefault();
+    event.stopPropagation();
+    console.log('load clips button clicked');
+    fetch('http://localhost:42074/clip/load');
+  });
 };

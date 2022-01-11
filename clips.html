@@ -186,6 +186,10 @@
           <i class="fas fa-redo"></i>
           <span class="btn-text">Replay Tutorial</span>
         </button>
+        <button class="sidebar__button" id="loadClips" type="reset">
+          <i class="fas fa-redo"></i>
+          <span class="btn-text">Check for new clips</span>
+        </button>
         <button class="sidebar__button" id="close" type="reset">
           <i class="fas fa-times-circle"></i>
           <span class="btn-text">Close</span>
@@ -265,7 +269,7 @@
           </div>
           <div class="form__group cliptitle clipText">
             <div class="clip-status-label">
-              <span class="status-text">YT Title</span>
+              <span class="status-text"><img src='images/youtube.svg' class="youtubeLogo"></img> Title</span>
             </div>
             <input
               type="text"
@@ -279,7 +283,7 @@
           </div>
           <div class="form__group cliptitle clipText">
             <div class="clip-status-label">
-              <span class="status-text">YT Tags</span>
+              <span class="status-text"><img src='images/youtube.svg' class="youtubeLogo"></img> Hashtags</span>
             </div>
             <input
               type="text"
@@ -293,7 +297,21 @@
           </div>
           <div class="form__group cliptitle clipText">
             <div class="clip-status-label">
-              <span class="status-text">YT Desc</span>
+              <span class="status-text"><img src='images/youtube.svg' class="youtubeLogo"></img> Tags</span>
+            </div>
+            <input
+              type="text"
+              name="youtubeTags"
+              oninput="validity.valid||(value='');"
+              id="youtubeTags"
+              placeholder="Youtube Tags"
+              class="form__input"
+            />
+            <button class="btn save clipTextbtn" id="youtubeTags-button">Save</button>
+          </div>
+          <div class="form__group cliptitle clipText">
+            <div class="clip-status-label">
+              <span class="status-text"><img src='images/youtube.svg' class="youtubeLogo"></img> Desc</span>
             </div>
             <input
               type="text"
@@ -307,7 +325,7 @@
           </div>
           <div class="form__group cliptitle clipText">
             <div class="clip-status-label">
-              <span class="status-text">Tiktok Title</span>
+              <span class="status-text"><img src='images/tiktaktwo.png' class="tiktokLogo"></img> Title</span>
             </div>
             <input
               type="text"
@@ -321,7 +339,7 @@
           </div>
           <div class="form__group cliptitle clipText">
             <div class="clip-status-label">
-              <span class="status-text">Tiktok Tags</span>
+              <span class="status-text"><img src='images/tiktaktwo.png' class="tiktokLogo"></img> Hashtags</span>
             </div>
             <input
               type="text"
