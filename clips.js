@@ -313,11 +313,24 @@ const setupLoadButton = () => {
   });
 };
 
+let getDelayDate = (delay) => {
+  var today = new Date();
+  var delayedDate = new Date(today.getFullYear(), today.getMonth(), today.getDate(), today.getHours() - delay, today.getMinutes(), today.getSeconds(), today.getMilliseconds());
+  return delayedDate;
+};
+
+const checkClipIsOldEnough = (clip, settings) => {
+  return (clip?.created_at != undefined) &&
+      (clip?.created_at < getDelayDate(settings.delay).toISOString());
+};
+
+
 const setupApproveRejectButtons = () => {
   // add click listeners to approve button and reject button that update the clip on the backend
   document.getElementById('approve').addEventListener('click', async (e) => {
     e.preventDefault();
     e.stopPropagation();
+    let settings = await settingsDidLoad;
     console.log('approve button clicked');
     let newSettings = getAllFieldsAsObject();
     let result = await updateClipFrontendAndBackend({
@@ -326,10 +339,23 @@ const setupApproveRejectButtons = () => {
     });
     if (result.status === 200) {
       setPlaceholders();
-      SafeSwal.fire({
-        icon: 'success',
-        title: 'Clip approved',
-      });
+      if(checkClipIsOldEnough(allClips[currentIndex], settings)) {
+        SafeSwal.fire({
+          icon: 'success',
+          title: 'Clip approved',
+        });
+      }
+      else {
+        SafeSwal.fire({
+          icon: 'info',
+          title: 'Clip approved, but not enough time has passed.',
+          html: `
+          Twitch policy will not allow clips to upload before 24 hours has passed.<br /><br />
+          You can still approve the clip, but it will not show up or be uploaded until 24 hours has passed.<br /><br />
+          To upload a clip sooner, please Approve a clip that is older than 24 hours.
+          `
+        });
+      }
     } else {
       SafeSwal.fire({
         icon: 'error',
@@ -580,7 +606,7 @@ let updateStatus = (event, data) => {
     //   return;
     // }
 
-    if(!clipsLoadingPopup) {
+    if(!clipsLoadingPopup && clipsLoadedNum > 0) {
       clipsLoadingPopup = SafeSwal.fire({
         title: 'Checking for new Twitch Clips...',
         showConfirmButton: false
