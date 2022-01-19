@@ -73,7 +73,7 @@
 }
 
 .clip-status {
-  margin: 8px 0;
+  margin-top: 4px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -172,7 +172,8 @@
   width: 100%;
   font-size: 1.5rem;
 }
-.clip-status-input:disabled {
+
+.clip-status-input:disabled, .halfClipStatus {
   background: #fff;
   border: 2px solid #2d1d49;
   border-left: none;

@@ -6,7 +6,7 @@ let currentIndex = 0;
 let settingsDidLoad = undefined;
 let clipsTotal = 0;
 const querystring = require('querystring');
-const fields = ['title', 'youtubeTitle', 'youtubeHashtags', 'youtubeTags', 'youtubeDescription', 'tiktokTitle', 'tiktokHashtags']
+const fields = ['title', 'youtubeTitle', 'youtubeHashtags', 'youtubeTags', 'youtubeDescription', 'tiktokTitle', 'tiktokHashtags', 'startTime', 'endTime']
 
 const setPlaceholders = () => {
   fields.forEach(field => {

@@ -1,137 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Clipbot - Manage Clips</title>
-    <meta
-      name="description"
-      content="Automatically upload your twitch clips to TikTok!"
-    />
-    <meta name="author" content="Roxkstar74" />
-    <meta property="og:title" content="Clipbot" />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://www.Clipbot.tv/" />
-    <meta
-      property="og:description"
-      content="Automatically upload your twitch clips to TikTok!"
-    />
-    <meta property="og:image" content="image.png" />
-    <!-- <link rel="icon" href="/favicon.ico">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Clipbot - Manage Clips</title>
+  <meta name="description" content="Automatically upload your twitch clips to TikTok!" />
+  <meta name="author" content="Roxkstar74" />
+  <meta property="og:title" content="Clipbot" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.Clipbot.tv/" />
+  <meta property="og:description" content="Automatically upload your twitch clips to TikTok!" />
+  <meta property="og:image" content="image.png" />
+  <!-- <link rel="icon" href="/favicon.ico">
       <link rel="icon" href="/favicon.svg" type="image/svg+xml">
       <link rel="apple-touch-icon" href="/apple-touch-icon.png"> -->
 
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
-    />
-    <link rel="stylesheet" href="clips.css" />
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="safeswal.js"></script>
-    <link rel="stylesheet" href="electron.css" />
-    <link rel="stylesheet" href="tourguide.css" />
-    <script src="authorization.js"></script>
-    <script src="tourguide.min.js"></script>
-    <script src="tour.js"></script>
-    <script src="vertical-helper.js"></script>
-    <script src="uploadClip.js"></script>
-    <script src="clips.js"></script>
-  </head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+  <link rel="stylesheet" href="clips.css" />
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="safeswal.js"></script>
+  <link rel="stylesheet" href="electron.css" />
+  <link rel="stylesheet" href="tourguide.css" />
+  <script src="authorization.js"></script>
+  <script src="tourguide.min.js"></script>
+  <script src="tour.js"></script>
+  <script src="vertical-helper.js"></script>
+  <script src="uploadClip.js"></script>
+  <script src="clips.js"></script>
+</head>
 
-  <body class="app">
-    <aside class="sidebar" style='padding-top: 10px;'>
-      <nav class="sidebar__menu" style='margin-top: 0px;'>
+<body class="app">
+  <aside class="sidebar" style='padding-top: 10px;'>
+    <nav class="sidebar__menu" style='margin-top: 0px;'>
       <div>
         <h3 class="page__heading" id="title-side">Filters</h3>
         <span style='margin: 0; padding: 0; font-size: 16px'>Showing <span id="clip-amount"> 0 </span> Clips </span>
       </div>
-        <form type="submit" id="filterform" class="sidebar__form" style='margin-top: 0px;'>
-          <div id="filtersDiv" class="filters">
-            <div class="form__group" id='approvalgroup'>
-              <label for="approvalStatusFilter">Approval Status:</label>
-              <div class="form__svg">
-                <svg
-                  class="form__select-svg"
-                  xmlns="http://www.w3.org/2000/svg"
-                  xmlns:xlink="http://www.w3.org/1999/xlink"
-                  width="20px"
-                  height="20px"
-                  viewBox="0 0 38 22"
-                  version="1.1"
-                >
-                  <g
-                    stroke="none"
-                    stroke-width="1"
-                    fill="none"
-                    fill-rule="evenodd"
-                  >
-                    <g
-                      transform="translate(-539.000000, -199.000000)"
-                      fill="#ffffff"
-                      fill-rule="nonzero"
-                    >
-                      <g transform="translate(538.000000, 183.521208)">
-                        <polygon
-                          id="Path-Copy"
-                          transform="translate(20.000000, 18.384776) rotate(135.000000) translate(-20.000000, -18.384776) "
-                          points="33 5.38477631 33 31.3847763 29 31.3847763 28.999 9.38379168 7 9.38477631 7 5.38477631"
-                        />
-                      </g>
+      <form type="submit" id="filterform" class="sidebar__form" style='margin-top: 0px;'>
+        <div id="filtersDiv" class="filters">
+          <div class="form__group" id='approvalgroup'>
+            <label for="approvalStatusFilter">Approval Status:</label>
+            <div class="form__svg">
+              <svg class="form__select-svg" xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink" width="20px" height="20px" viewBox="0 0 38 22" version="1.1">
+                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                  <g transform="translate(-539.000000, -199.000000)" fill="#ffffff" fill-rule="nonzero">
+                    <g transform="translate(538.000000, 183.521208)">
+                      <polygon id="Path-Copy"
+                        transform="translate(20.000000, 18.384776) rotate(135.000000) translate(-20.000000, -18.384776) "
+                        points="33 5.38477631 33 31.3847763 29 31.3847763 28.999 9.38379168 7 9.38477631 7 5.38477631" />
                     </g>
                   </g>
-                </svg>
-                <select
-                  name="approved"
-                  id="approvalStatusFilter"
-                  class="form__select"
-                >
-                  <option value="">Any</option>
-                  <option value="true">Approved</option>
-                  <option value="false">Rejected</option>
-                  <option value="default">Auto-Approved</option>
-                  <option value="null">Not Reviewed</option>
-                  <option value="all">All Approved</option>
-                </select>
-              </div>
+                </g>
+              </svg>
+              <select name="approved" id="approvalStatusFilter" class="form__select">
+                <option value="">Any</option>
+                <option value="true">Approved</option>
+                <option value="false">Rejected</option>
+                <option value="default">Auto-Approved</option>
+                <option value="null">Not Reviewed</option>
+                <option value="all">All Approved</option>
+              </select>
             </div>
-            <div class="form__group" id='uploadedgroup'>
-              <label for="uploaded">Upload Status:</label>
-              <div class="form__svg">
-                <svg
-                  class="form__select-svg"
-                  xmlns="http://www.w3.org/2000/svg"
-                  xmlns:xlink="http://www.w3.org/1999/xlink"
-                  width="20px"
-                  height="20px"
-                  viewBox="0 0 38 22"
-                  version="1.1"
-                >
-                  <g
-                    stroke="none"
-                    stroke-width="1"
-                    fill="none"
-                    fill-rule="evenodd"
-                  >
-                    <g
-                      transform="translate(-539.000000, -199.000000)"
-                      fill="#ffffff"
-                      fill-rule="nonzero"
-                    >
-                      <g transform="translate(538.000000, 183.521208)">
-                        <polygon
-                          id="Path-Copy"
-                          transform="translate(20.000000, 18.384776) rotate(135.000000) translate(-20.000000, -18.384776) "
-                          points="33 5.38477631 33 31.3847763 29 31.3847763 28.999 9.38379168 7 9.38477631 7 5.38477631"
-                        />
-                      </g>
+          </div>
+          <div class="form__group" id='uploadedgroup'>
+            <label for="uploaded">Upload Status:</label>
+            <div class="form__svg">
+              <svg class="form__select-svg" xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink" width="20px" height="20px" viewBox="0 0 38 22" version="1.1">
+                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                  <g transform="translate(-539.000000, -199.000000)" fill="#ffffff" fill-rule="nonzero">
+                    <g transform="translate(538.000000, 183.521208)">
+                      <polygon id="Path-Copy"
+                        transform="translate(20.000000, 18.384776) rotate(135.000000) translate(-20.000000, -18.384776) "
+                        points="33 5.38477631 33 31.3847763 29 31.3847763 28.999 9.38379168 7 9.38477631 7 5.38477631" />
                     </g>
                   </g>
-                </svg>
-              <select
-                name="uploaded"
-                id="uploadedFilter"
-                class="form__select"
-              >
+                </g>
+              </svg>
+              <select name="uploaded" id="uploadedFilter" class="form__select">
                 <option value="">Any</option>
                 <option value="null">Not Uploaded</option>
                 <option value="true">Uploaded</option>
@@ -139,239 +87,168 @@
             </div>
           </div>
           <div class="form__group" id='viewcountgroup'>
-              <label for="viewCount">Minimum Twitch Views:</label>
-              <input
-                name="minViewCount"
-                id="viewCount"
-                type="number"
-                min="0"
-                oninput="validity.valid||(value='');"
-                placeholder="View Count"
-                class="form__input"
-              />
-            </div>
-            <div class="form__group" id='startdategroup'>
-              <label for="startDate">Start Date:</label>
-              <input
-                name="startDate"
-                id="startDate"
-                type="date"
-                placeholder="Start Date"
-                class="form__input"
-              />
-            </div>
-            <div class="form__group" id='enddategroup'>
-              <label for="endDate">End Date:</label>
-              <input
-                name="endDate"
-                id="endDate"
-                type="date"
-                placeholder="End Date"
-                class="form__input"
-              />
-            </div>
+            <label for="viewCount">Minimum Twitch Views:</label>
+            <input name="minViewCount" id="viewCount" type="number" min="0" oninput="validity.valid||(value='');"
+              placeholder="View Count" class="form__input" />
           </div>
-          <button
-            class="sidebar__button"
-            type="submit"
-            id="applyFiltersButton"
-            type="reset"
-          >
-            <i class="fas fa-filter"></i>
-            <span class="btn-text">Apply Filters</span>
+          <div class="form__group" id='startdategroup'>
+            <label for="startDate">Start Date:</label>
+            <input name="startDate" id="startDate" type="date" placeholder="Start Date" class="form__input" />
+          </div>
+          <div class="form__group" id='enddategroup'>
+            <label for="endDate">End Date:</label>
+            <input name="endDate" id="endDate" type="date" placeholder="End Date" class="form__input" />
+          </div>
+        </div>
+        <button class="sidebar__button" type="submit" id="applyFiltersButton" type="reset">
+          <i class="fas fa-filter"></i>
+          <span class="btn-text">Apply Filters</span>
+        </button>
+      </form>
+
+      <button class="sidebar__button" id="tutorial" type="reset">
+        <i class="fas fa-redo"></i>
+        <span class="btn-text">Replay Tutorial</span>
+      </button>
+      <button class="sidebar__button" id="loadClips" type="reset">
+        <i class="fas fa-redo"></i>
+        <span class="btn-text">Check for new clips</span>
+      </button>
+      <button class="sidebar__button" id="close" type="reset">
+        <i class="fas fa-times-circle"></i>
+        <span class="btn-text">Close</span>
+      </button>
+    </nav>
+
+  </aside>
+  <div class="container" id='clipscontainer'>
+    <div style="text-align: center;">
+      <video id='currentclip' src="https://share.nyx.xyz/4XnZYjhZk2a" autoplay loop muted controls width="550px"
+        height="312px"></video>
+      <div class="morebuttons" id="clipsbuttons">
+        <div class="video-buttons">
+          <button class="btn video-button" id="prev" type="reset">
+            &lt;&lt;
           </button>
-        </form>
+          <button class="btn video-button status" id="approve" type="reset">
+            Approve
+          </button>
 
-        <button class="sidebar__button" id="tutorial" type="reset">
-          <i class="fas fa-redo"></i>
-          <span class="btn-text">Replay Tutorial</span>
-        </button>
-        <button class="sidebar__button" id="loadClips" type="reset">
-          <i class="fas fa-redo"></i>
-          <span class="btn-text">Check for new clips</span>
-        </button>
-        <button class="sidebar__button" id="close" type="reset">
-          <i class="fas fa-times-circle"></i>
-          <span class="btn-text">Close</span>
-        </button>
-      </nav>
-
-    </aside>
-    <div class="container" id='clipscontainer'>
-      <div style="text-align: center;">
-        <video
-          id='currentclip'
-          src="https://share.nyx.xyz/4XnZYjhZk2a"
-          autoplay
-          loop
-          muted
-          controls
-          width="550px"
-          height="312px"
-        ></video>
-        <div class="morebuttons" id="clipsbuttons">
-          <div class="video-buttons">
-            <button class="btn video-button" id="prev" type="reset">
-              &lt;&lt;
-            </button>
-            <button class="btn video-button status" id="approve" type="reset">
-              Approve
-            </button>
-
-            <button class="btn video-button status" id="reject" type="reset">
-              Reject
-            </button>
-            <button class="btn video-button" id="next" type="reset">
-              &gt;&gt;
-            </button>
-          </div>
+          <button class="btn video-button status" id="reject" type="reset">
+            Reject
+          </button>
+          <button class="btn video-button" id="next" type="reset">
+            &gt;&gt;
+          </button>
         </div>
-        <div id="clipDetails" class="clipDetails">
-          <div class="clip-status" id='approvaldiv'>
-            <div class="clip-status-label">
-              <span class="status-text">Status</span>
-            </div>
-            <input
-              id="approvalStatus"
-              type="text"
-              class="clip-status-input"
-              disabled
-              value="Clip status"
-            />
+      </div>
+      <div id="clipDetails" class="clipDetails">
+        <div class="clip-status" id='approvaldiv'>
+          <div class="clip-status-label">
+            <span class="status-text">Status</span>
           </div>
-          <div class="clip-status" id='uploadeddiv'>
-            <div class="clip-status-label">
-              <span class="status-text">Uploaded</span>
-            </div>
-            <input
-              id="uploadedStatus"
-              type="text"
-              class="clip-status-input"
-              disabled
-              value="Not uploaded"
-            />
-          </div>
+          <input id="approvalStatus" type="text" class="clip-status-input halfClipStatus" disabled value="Clip status" />
         </div>
-        <div class="form-group clipTextContainer" id="title-form">
-          <div class="form__group cliptitle clipText">
-            <div class="clip-status-label">
-              <span class="status-text">Default Title</span>
-            </div>
-            <input
-              type="text"
-              name="title"
-              oninput="validity.valid||(value='');"
-              id="title"
-              placeholder="Your clip title"
-              class="form__input"
-            />
-            <button class="btn save clipTextbtn" id="title-button">Save</button>
+        <div class="clip-status" id='uploadeddiv'>
+          <div class="clip-status-label">
+            <span class="status-text">Uploaded</span>
           </div>
-          <div class="form__group cliptitle clipText">
-            <div class="clip-status-label">
-              <span class="status-text"><img src='images/youtube.svg' class="youtubeLogo"></img> Title</span>
-            </div>
-            <input
-              type="text"
-              name="youtubeTitle"
-              oninput="validity.valid||(value='');"
-              id="youtubeTitle"
-              placeholder="Youtube Specific Title"
-              class="form__input"
-            />
-            <button class="btn save clipTextbtn" id="youtubeTitle-button">Save</button>
-          </div>
-          <div class="form__group cliptitle clipText">
-            <div class="clip-status-label">
-              <span class="status-text"><img src='images/youtube.svg' class="youtubeLogo"></img> Hashtags</span>
-            </div>
-            <input
-              type="text"
-              name="youtubeHashtags"
-              oninput="validity.valid||(value='');"
-              id="youtubeHashtags"
-              placeholder="Youtube Hashtags"
-              class="form__input"
-            />
-            <button class="btn save clipTextbtn" id="youtubeHashtags-button">Save</button>
-          </div>
-          <div class="form__group cliptitle clipText">
-            <div class="clip-status-label">
-              <span class="status-text"><img src='images/youtube.svg' class="youtubeLogo"></img> Tags</span>
-            </div>
-            <input
-              type="text"
-              name="youtubeTags"
-              oninput="validity.valid||(value='');"
-              id="youtubeTags"
-              placeholder="Youtube Tags"
-              class="form__input"
-            />
-            <button class="btn save clipTextbtn" id="youtubeTags-button">Save</button>
-          </div>
-          <div class="form__group cliptitle clipText">
-            <div class="clip-status-label">
-              <span class="status-text"><img src='images/youtube.svg' class="youtubeLogo"></img> Desc</span>
-            </div>
-            <input
-              type="text"
-              name="youtubeDescription"
-              oninput="validity.valid||(value='');"
-              id="youtubeDescription"
-              placeholder="Youtube Description"
-              class="form__input"
-            />
-            <button class="btn save clipTextbtn" id="youtubeDescription-button">Save</button>
-          </div>
-          <div class="form__group cliptitle clipText">
-            <div class="clip-status-label">
-              <span class="status-text"><img src='images/tiktaktwo.png' class="tiktokLogo"></img> Title</span>
-            </div>
-            <input
-              type="text"
-              name="tiktokTitle"
-              oninput="validity.valid||(value='');"
-              id="tiktokTitle"
-              placeholder="Tiktok specific title"
-              class="form__input"
-            />
-            <button class="btn save clipTextbtn" id="tiktokTitle-button">Save</button>
-          </div>
-          <div class="form__group cliptitle clipText">
-            <div class="clip-status-label">
-              <span class="status-text"><img src='images/tiktaktwo.png' class="tiktokLogo"></img> Hashtags</span>
-            </div>
-            <input
-              type="text"
-              name="tiktokHashtags"
-              oninput="validity.valid||(value='');"
-              id="tiktokHashtags"
-              placeholder="Tiktok Hashtags"
-              class="form__input"
-            />
-            <button class="btn save clipTextbtn" id="tiktokHashtags-button">Save</button>
-          </div>
+          <input id="uploadedStatus" type="text" class="clip-status-input halfClipStatus" disabled value="Not uploaded" />
         </div>
-
-        <div class="morebuttons" id="clipsbuttons">
-
-          <div class="crop-buttons">
-            <button class="btn" id="customCrop" type="reset">
-              Set Custom Crop
-            </button>
-            <button class="btn" id="customOrientation" type="reset">
-              Change Orientation
-            </button>
-            <button class="btn" id="reupload" type="reset">
-              Re-upload
-            </button>
-            <button class="btn" id="saveAll" type="reset">
-              Save Titles/Tags
-            </button>
+      </div>
+      <div id='trimDiv' class="clipDetails">
+        <div class="clip-status" id='startTimeDiv'>
+          <div class="clip-status-label">
+            <span class="status-text">Start Time</span>
           </div>
+          <input id="startTime" type="number" class="clip-status-input halfClipStatus" value="0" />
+        </div>
+        <div class="clip-status" id='endTimeDiv'>
+          <div class="clip-status-label">
+            <span class="status-text">End Time</span>
+          </div>
+          <input id="endTime" type="number" class="clip-status-input halfClipStatus" value="60" />
+        </div>
+      </div>
+      <div class="form-group clipTextContainer" id="title-form">
+        <div class="form__group cliptitle clipText">
+          <div class="clip-status-label">
+            <span class="status-text">Default Title</span>
+          </div>
+          <input type="text" name="title" oninput="validity.valid||(value='');" id="title" placeholder="Your clip title"
+            class="form__input" />
+          <button class="btn save clipTextbtn" id="title-button">Save</button>
+        </div>
+        <div class="form__group cliptitle clipText">
+          <div class="clip-status-label">
+            <span class="status-text"><img src='images/youtube.svg' class="youtubeLogo"></img> Title</span>
+          </div>
+          <input type="text" name="youtubeTitle" oninput="validity.valid||(value='');" id="youtubeTitle"
+            placeholder="Youtube Specific Title" class="form__input" />
+          <button class="btn save clipTextbtn" id="youtubeTitle-button">Save</button>
+        </div>
+        <div class="form__group cliptitle clipText">
+          <div class="clip-status-label">
+            <span class="status-text"><img src='images/youtube.svg' class="youtubeLogo"></img> Hashtags</span>
+          </div>
+          <input type="text" name="youtubeHashtags" oninput="validity.valid||(value='');" id="youtubeHashtags"
+            placeholder="Youtube Hashtags" class="form__input" />
+          <button class="btn save clipTextbtn" id="youtubeHashtags-button">Save</button>
+        </div>
+        <div class="form__group cliptitle clipText">
+          <div class="clip-status-label">
+            <span class="status-text"><img src='images/youtube.svg' class="youtubeLogo"></img> Tags</span>
+          </div>
+          <input type="text" name="youtubeTags" oninput="validity.valid||(value='');" id="youtubeTags"
+            placeholder="Youtube Tags" class="form__input" />
+          <button class="btn save clipTextbtn" id="youtubeTags-button">Save</button>
+        </div>
+        <div class="form__group cliptitle clipText">
+          <div class="clip-status-label">
+            <span class="status-text"><img src='images/youtube.svg' class="youtubeLogo"></img> Desc</span>
+          </div>
+          <input type="text" name="youtubeDescription" oninput="validity.valid||(value='');" id="youtubeDescription"
+            placeholder="Youtube Description" class="form__input" />
+          <button class="btn save clipTextbtn" id="youtubeDescription-button">Save</button>
+        </div>
+        <div class="form__group cliptitle clipText">
+          <div class="clip-status-label">
+            <span class="status-text"><img src='images/tiktaktwo.png' class="tiktokLogo"></img> Title</span>
+          </div>
+          <input type="text" name="tiktokTitle" oninput="validity.valid||(value='');" id="tiktokTitle"
+            placeholder="Tiktok specific title" class="form__input" />
+          <button class="btn save clipTextbtn" id="tiktokTitle-button">Save</button>
+        </div>
+        <div class="form__group cliptitle clipText">
+          <div class="clip-status-label">
+            <span class="status-text"><img src='images/tiktaktwo.png' class="tiktokLogo"></img> Hashtags</span>
+          </div>
+          <input type="text" name="tiktokHashtags" oninput="validity.valid||(value='');" id="tiktokHashtags"
+            placeholder="Tiktok Hashtags" class="form__input" />
+          <button class="btn save clipTextbtn" id="tiktokHashtags-button">Save</button>
+        </div>
+      </div>
+
+      <div class="morebuttons" id="clipsbuttons">
+
+        <div class="crop-buttons">
+          <button class="btn" id="customCrop" type="reset">
+            Set Custom Crop
+          </button>
+          <button class="btn" id="customOrientation" type="reset">
+            Change Orientation
+          </button>
+          <button class="btn" id="reupload" type="reset">
+            Re-upload
+          </button>
+          <button class="btn" id="saveAll" type="reset">
+            Save Titles/Tags
+          </button>
         </div>
       </div>
     </div>
-    <script src="script.js"></script>
-  </body>
+  </div>
+  <script src="script.js"></script>
+</body>
+
 </html>

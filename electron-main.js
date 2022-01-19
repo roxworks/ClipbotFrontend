@@ -221,7 +221,7 @@ if (process.argv[2] == 'test') {
 
     let clipsWindow = new BrowserWindow({
       width: 900,
-      height: 850,
+      height: 875,
       webPreferences: {
         nodeIntegration: true,
         contextIsolation: false,
