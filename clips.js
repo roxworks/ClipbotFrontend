@@ -57,7 +57,7 @@ const setClip = (newIndex) => {
     document.getElementById('title').placeholder =
       'No clips found, load more clips!';
     let vid = document.getElementsByTagName('video')[0];
-    vid.src = 'https://share.nyx.xyz/4XnZYjhZk2a';
+    vid.src = 'images/noMoClips.mp4';
     vid.pause();
     vid.controls = false;
     displayedClip = {};

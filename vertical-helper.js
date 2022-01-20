@@ -13,7 +13,7 @@ const selectCropType = async () => {
             <label for="cam-top" class='radio-label'>
                 <p>Cam Top</p>
                 <img
-                src="https://share.nyx.xyz/l6JIPJglW8Z" 
+                src="images/camTop.png"" 
                 />
             </label>
             
@@ -24,7 +24,7 @@ const selectCropType = async () => {
             <label for="no-cam" class='radio-label'>
                 <p>No Cam</p>
                 <img
-                src="https://share.nyx.xyz/qeDAjHo49me" 
+                src="images/noCam.png" 
                 />
             </label>
         </div>

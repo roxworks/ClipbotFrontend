@@ -10,7 +10,7 @@ const clipbotOnClass = 'alert-info';
 const clipbotOffClass = 'alert-info-off';
 
 let NEXT_UPLOAD_TIMEOUT_ID = undefined;
-const NO_CLIPS_URL = 'https://share.nyx.xyz/reWKYeJmokM';
+const NO_CLIPS_URL = 'images/noClips.png';
 
 // run this to update main window fields
 let newClipCheckerIntervalID = undefined;
@@ -66,6 +66,7 @@ const updateDisplayedSettings = async () => {
         document.querySelector('video').src != (clipToDisplay || NO_CLIPS_URL)
       ) {
         document.querySelector('video').src = clipToDisplay || NO_CLIPS_URL;
+        document.querySelector('video').poster = clipToDisplay ? '' : NO_CLIPS_URL;
         if (clipToDisplay == null) {
           document.querySelector('video').pause();
           document.querySelector('video').controls = false;
