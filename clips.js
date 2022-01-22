@@ -31,12 +31,92 @@ const getAllFieldsAsObject = () => {
   return newSettings;
 }
 
+const cropDisplay = (video, vidContainer, clipdata, partOfScreen) => {
+  /*"camCrop": {
+                "x": 0.846875,
+                "y": 0.003703703703703704,
+                "width": 0.15104166666666666,
+                "height": 0.2013888888888889,
+                "scaleX": 1,
+                "scaleY": 1,
+                "isNormalized": true
+            }, */
+  /*
+  container {
+     margin left: -x;
+      margin top: -y;
+  }
+  video {
+    width: width * videoWidth;
+    height: height * videoHeight;
+  }
+
+  */
+
+  const containerHeight = 317;
+  const containerWidth = 602;
+  let desiredWidth = 550;
+  let desiredHeight = 312;
+
+  if(clipdata?.screenCrop && partOfScreen == 'cam') {
+    // let heightRatio = clipdata?.screenCrop?.height / clipdata?.camCrop?.height;
+    let screenToCamRatio = clipdata?.screenCrop?.width / clipdata?.camCrop?.width;
+    desiredWidth = desiredWidth * screenToCamRatio;
+    desiredHeight = desiredHeight * screenToCamRatio;
+
+    
+  }
+
+  let widthDiff = containerWidth - desiredWidth;
+  let heightDiff = containerHeight - desiredHeight;
+
+  let cropToUse = partOfScreen == 'cam' ? clipdata?.camCrop : clipdata?.screenCrop;
+
+  if(cropToUse){
+    console.log('cropping frontend ' + partOfScreen);
+    console.log('crop: ', cropToUse);
+    console.log('video', video);
+    console.log('vidContainer', vidContainer);
+
+    // set container style
+    video.style.width = desiredWidth + 'px';
+    video.style.height = desiredHeight + 'px';
+    video.style.marginLeft  = (-cropToUse.x * desiredWidth) + 'px';
+    video.style.marginTop = (-cropToUse.y * desiredHeight ) + 'px';
+
+    // set video style
+    
+    vidContainer.style.overflow = 'hidden';
+    vidContainer.style.width = cropToUse.width * desiredWidth + 'px';
+    vidContainer.style.height = cropToUse.height * desiredHeight + 'px';
+    vidContainer.style.marginBottom = vidContainer.style.height + 'px';
+    if(partOfScreen == 'screen'){
+      vidContainer.style.display = 'block';
+    }
+  }
+  else {
+    console.log('no crop data');
+    console.log(clipdata);
+  }
+}
+
 const setClip = (newIndex) => {
   if (newIndex > -1 && newIndex < allClips.length) {
     let vid = document.getElementsByTagName('video')[0];
+    let vidContainer = document.getElementById('vidContainer');
+
+    let vid2 = document.getElementsByTagName('video')?.[1];
+    let vidContainer2 = document.getElementById('vidContainer2');
     vid.controls = true;
     displayedClip = allClips[newIndex];
     vid.src = displayedClip.download_url;
+    
+    cropDisplay(vid, vidContainer, displayedClip?.customCrop, 'cam');
+    if (displayedClip?.customCrop?.screenCrop) {
+      console.log('screen crop displaying');
+      vid2.src = displayedClip.download_url;
+      cropDisplay(vid2, vidContainer2, displayedClip?.customCrop, 'screen');
+    }
     clipsTotal = allClips.length;
     setPlaceholders();
     changeFrontendStatuses();

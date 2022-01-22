@@ -123,8 +123,15 @@
   </aside>
   <div class="container" id='clipscontainer'>
     <div style="text-align: center;">
-      <video id='currentclip' src="images/noMoClips.mp4" autoplay loop muted controls width="550px"
+      <div id='vidContainer'>
+        <video id='currentclip' src="images/noMoClips.mp4" autoplay loop muted controls width="550px"
+          height="312px"></video>
+
+      </div>
+      <div style='display: none;' id='vidContainer2'>
+        <video  id='screenclip' src="images/noMoClips.mp4" autoplay loop muted controls width="550px"
         height="312px"></video>
+      </div>
       <div class="morebuttons" id="clipsbuttons">
         <div class="video-buttons">
           <button class="btn video-button" id="prev" type="reset">
