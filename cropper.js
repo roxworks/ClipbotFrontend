@@ -271,7 +271,7 @@ let doAllCropperStuff = (
           cropType: cropType,
           isNormalized: true,
         },
-        camData: cropType == 'no-cam' ? scaleUpCrop(currCropDetails, video) : currCropDetails,
+        camData: cropType !== 'cam-top' ? scaleUpCrop(currCropDetails, video) : currCropDetails,
         callback: callback,
         isNormalized: true,
         clip: clip,
@@ -291,6 +291,12 @@ let doAllCropperStuff = (
     currRatio = roundTo4Digits(currAspectRatioNumber);
     cropper.setAspectRatio(currAspectRatioNumber);
     console.log('no-cam activated');
+  }
+  else if(cropType == 'freeform') {
+    ratioButton.style.display = 'none';
+    currAspectRatioNumber = NaN;
+    currRatio = NaN;
+    cropper.setAspectRatio(NaN);
   }
   else if(currRatio == roundTo4Digits(9/16)) {
     console.log('Changing ratio back');

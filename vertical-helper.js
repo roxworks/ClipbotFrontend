@@ -6,14 +6,14 @@ const selectCropType = async () => {
     let popup = SafeSwal.fire({
         title: 'Select crop type',
         html: /*html*/`
-        <div style='margin-top: 10px' id="cropTypeDiv">
+        <div style='margin-top: 10px' width="100%" id="cropTypeDiv">
             <input 
                 type="radio" name="cropType" checked
                 id="cam-top" class="input-hidden" onclick="changeSelection('cam-top')" />
             <label for="cam-top" class='radio-label'>
                 <p>Cam Top</p>
                 <img
-                src="images/camTop.png"" 
+                src="images/camTop.png"
                 />
             </label>
             
@@ -25,6 +25,17 @@ const selectCropType = async () => {
                 <p>No Cam</p>
                 <img
                 src="images/noCam.png" 
+                />
+            </label>
+
+            <input 
+            type="radio" name="cropType"
+            id="freeform" class="input-hidden" 
+            onclick="changeSelection('freeform')"/>
+            <label for="freeform" class='radio-label'>
+                <p>Freeform</p>
+                <img
+                src="images/freeform.png" 
                 />
             </label>
         </div>

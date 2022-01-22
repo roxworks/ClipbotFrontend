@@ -196,7 +196,7 @@ input[type=radio]:checked + label>img {
 input[type=radio] + label>img {
   border: 1px dashed #444;
   /* width: 150px; */
-  height: 400px;
+  height: 300px;
   transition: 500ms all;
 }
 
@@ -211,6 +211,11 @@ input[type=radio] + label>img {
   flex-direction: row;
   justify-content: space-around;
   margin-bottom: 10px;
+}
+
+.cropImage {
+  width: 40px;
+  height: 16/9 * 40px;
 }
 /* input[type=radio]:checked + label>img {
   transform: 

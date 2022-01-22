@@ -400,7 +400,7 @@ const listenForCropFinish = () => {
         let camCropDetails = JSON.parse(data);
         console.log('got data: ' + data);
         console.log('Updating settings with new cam crop...');
-        if(camCropDetails.cropType != 'no-cam' ) {
+        if(camCropDetails.cropType == 'cam-top' ) {
           console.log('opening screenvas');
           ipcRenderer.send('screenvas_open', camCropDetails);
         }
