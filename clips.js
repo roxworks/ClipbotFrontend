@@ -117,6 +117,9 @@ const setClip = (newIndex) => {
       vid2.src = displayedClip.download_url;
       cropDisplay(vid2, vidContainer2, displayedClip?.customCrop, 'screen');
     }
+    else {
+      vidContainer2.style.display = 'none';
+    }
     clipsTotal = allClips.length;
     setPlaceholders();
     changeFrontendStatuses();
