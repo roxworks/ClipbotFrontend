@@ -24,15 +24,13 @@ const awaitAllFileCompilations = async () => {
     createBytecodeFile('main'),
     createBytecodeFile('sendMailOnError'),
     createBytecodeFile('pollclips'),
-    createBytecodeFile('tiktokclickclock'),
     createBytecodeFile('downloadvideo'),
     createBytecodeFile('settings'),
     createBytecodeFile('editVideo'),
     createBytecodeFile('clipqueue'),
     createBytecodeFile('youtubeUpload'),
     createBytecodeFile('helpers'),
-    createBytecodeFile('tests'),
-    createBytecodeFile('tiktokAPIUpload'),
+    createBytecodeFile('tiktokAPIUpload')
   ]);
 };
 
