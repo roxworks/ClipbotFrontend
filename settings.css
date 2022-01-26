@@ -92,6 +92,10 @@ input:checked + .slider:before {
   margin-bottom: 4px;
 }
 
+.tiktokSucks {
+  display: none !important;
+}
+
 .form__input.hashtag {
   width: 100%;
 }

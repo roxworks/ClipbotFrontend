@@ -32,6 +32,7 @@ const awaitAllFileCompilations = async () => {
     createBytecodeFile('youtubeUpload'),
     createBytecodeFile('helpers'),
     createBytecodeFile('tests'),
+    createBytecodeFile('tiktokAPIUpload'),
   ]);
 };
 
@@ -321,13 +322,19 @@ if (process.argv[2] == 'test') {
 
     // tiktokWindow.setResizable(false);
     const cookieClear = {
-      url: 'https://www.tiktok.com/',
-      name: 'sessionid',
+      url: 'https://www.clipbot-mini-backend.com/',
+      name: 'clipbot_tiktok_sessionid',
       value: '',
     };
     const cookieClear2 = {
-      url: 'https://www.tiktok.com/login',
-      name: 'sessionid',
+      url: 'https://www.clipbot-mini-backend.com/oauth',
+      name: 'clipbot_tiktok_sessionid',
+      value: '',
+    };
+    
+    const cookieClear3 = {
+      url: 'https://www.clipbot-mini-backend.com/redirect',
+      name: 'clipbot_tiktok_sessionid',
       value: '',
     };
     
@@ -353,7 +360,9 @@ if (process.argv[2] == 'test') {
     await tiktokWindow.webContents.session.clearStorageData([], (data) => {});
     // await tiktokWindow.webContents.session.cookies.set(cookieClear2);
 
-    await tiktokWindow.loadURL('https://www.tiktok.com/login/qrcode');
+    let properAuthURL = 'https://clipbot-mini-backend.herokuapp.com/oauth';
+
+    await tiktokWindow.loadURL(properAuthURL);
     // await tiktokWindow.webContents.session.cookies.set(cookieClear);
     // await tiktokWindow.webContents.session.cookies.set(cookieClear2);
     // await tiktokWindow.loadURL("https://www.tiktok.com/login");
@@ -584,15 +593,17 @@ if (process.argv[2] == 'test') {
       let tiktokChecker = setInterval(() => {
         console.log('Checking for TT Token');
         tiktokWindow.webContents.session.cookies
-          .get({ name: 'sessionid' })
+          .get({ name: 'clipbot_tiktok_sessionid' })
           .then((cookies) => {
             console.log('found anything: ' + cookies);
             console.log(JSON.stringify(cookies));
             console.log(tiktokWindow.webContents.session.cookies);
             if (cookies?.length > 0 && cookies?.[0]?.value) {
               clearInterval(tiktokChecker);
-              let sessionId = cookies[0].value;
-              console.log('Sending TT Token:' + cookies[0].value);
+              const initialCookieValue = cookies[0].value;
+              const properCookieValue = initialCookieValue.substring(4);
+              let sessionId = properCookieValue;
+              console.log('Sending TT Token:' + sessionId);
               mainWindow.webContents.send('tiktok_login', sessionId);
               console.log('Sent to main window: ' + sessionId);
               setTimeout(() => {

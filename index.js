@@ -438,7 +438,7 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
     let successful = await fetch(
-      `http://localhost:42074/update?sessionId=${data}`
+      `http://localhost:42074/update?sessionId=${decodeURIComponent(data)}`
     );
     console.log('Adding sessionId successful?: ' + successful);
     SafeSwal.fire(`Successfully logged in to TikTok!`, '', 'success');
