@@ -38,6 +38,17 @@ const selectCropType = async () => {
                 src="images/freeform.png" 
                 />
             </label>
+
+            <input 
+            type="radio" name="cropType"
+            id="cam-freeform" class="input-hidden" 
+            onclick="changeSelection('cam-freeform')"/>
+            <label for="cam-freeform" class='radio-label'>
+                <p>Cam + Freeform</p>
+                <img
+                src="images/camFreeform.png" 
+                />
+            </label>
         </div>
         `,
         showCancelButton: true,

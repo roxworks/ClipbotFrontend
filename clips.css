@@ -199,9 +199,14 @@ input[type=radio]:checked + label>img {
 /* Stuff after this is only to make things more pretty */
 input[type=radio] + label>img {
   border: 1px dashed #444;
-  /* width: 150px; */
-  height: 300px;
+  width: 125px;
+  height: 222px;
   transition: 500ms all;
+}
+
+input[type=radio] + label {
+  width: 125px;
+  font-size: medium;
 }
 
 .radio-label {

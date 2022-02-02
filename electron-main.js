@@ -7,6 +7,7 @@ const fs = require('fs');
 const fetch = require('node-fetch');
 const util = require('util');
 const path = require('path');
+const {qrScan} = require('./qrtest.js');
 
 const WINDOWS = {
   main: null,
@@ -15,6 +16,7 @@ const WINDOWS = {
   camvas: null,
   screenvas: null,
   clips: null,
+  temp: null,
 };
 
 exports.WINDOWS = WINDOWS;
@@ -347,8 +349,8 @@ if (process.argv[2] == 'test') {
     
     mainWindow.on('closed', () => {
       //also close tiktokWindow
-      if (tiktokWindow) {
-        tiktokWindow.close();
+      if (WINDOWS.tiktok) {
+        tiktokWindow?.close();
         tiktokWindow = null;
         WINDOWS.tiktok = null;
       }
@@ -360,10 +362,48 @@ if (process.argv[2] == 'test') {
 
     let properAuthURL = 'https://clipbot-mini-backend.herokuapp.com/oauth';
 
+    tiktokWindow.webContents.on('did-stop-loading', async () => {
+      if(!tiktokWindow) return;
+      let url = tiktokWindow.webContents.getURL();
+      if(!url.includes('qr')) {
+        return ;
+      }
+      await tiktokWindow.webContents.executeJavaScript(`(async () => {
+        console.log('pre-spaghet');
+        function sleep(ms) {
+          return new Promise(resolve => setTimeout(resolve, ms));
+        }
+        await sleep(2000);
+        let src = document?.querySelector('img[alt=qrcode]')?.src || 'testin';
+        console.log(src || 'Spaghetti');
+        return src;
+      })()
+      `, true).then(qrScan).then(
+        (codeToRun) => {
+          // console.log('qrScan: ' + codeToRun);
+          let tempQrWindow = new BrowserWindow({
+            width: 164,
+            height: 164,
+            icon: './images/logo.png',
+            show: true,
+          });
+          WINDOWS.temp = tempQrWindow;
+          tempQrWindow.loadURL(path.join(__dirname, 'temp.png'));
+          tiktokWindow.webContents.on('page-title-updated', () => {
+            WINDOWS.temp?.close();
+            WINDOWS.temp = null;
+          });
+          // tiktokWindow.webContents.executeJavaScript(codeToRun);
+        }
+      );
+    })
+
     await tiktokWindow.loadURL(properAuthURL);
     // await tiktokWindow.webContents.session.cookies.set(cookieClear);
     // await tiktokWindow.webContents.session.cookies.set(cookieClear2);
     // await tiktokWindow.loadURL("https://www.tiktok.com/login");
+    // get data from qr code on screen
+
 
 
     return tiktokWindow;
@@ -515,7 +555,9 @@ if (process.argv[2] == 'test') {
       console.log('Status update from uploadClip');
       
       // if(BrowserWindow.getFocusedWindow() == WINDOWS.clips) {
+      if(WINDOWS.clips) {
         WINDOWS.clips.webContents.send('status_update', data);
+      }
       // }
       // else {
         WINDOWS.main.webContents.send('status_update', data);
@@ -588,6 +630,18 @@ if (process.argv[2] == 'test') {
           JSON.stringify(tiktokWindow?.webContents?.session?.cookies)
       );
       // send cookies to main window session_token exists
+    
+      
+
+      // let tempQrWindow = new BrowserWindow({
+      //   width: 164,
+      //   height: 164,
+      //   icon: './images/logo.png',
+      //   show: true,
+      // });
+      // tempQrWindow.loadURL(path.join(__dirname, 'temp.png'));
+      
+
       let tiktokChecker = setInterval(() => {
         console.log('Checking for TT Token');
         tiktokWindow.webContents.session.cookies
@@ -605,8 +659,13 @@ if (process.argv[2] == 'test') {
               mainWindow.webContents.send('tiktok_login', sessionId);
               console.log('Sent to main window: ' + sessionId);
               setTimeout(() => {
-                tiktokWindow.removeAllListeners();
-                tiktokWindow.close();
+                tiktokWindow?.removeAllListeners();
+                tiktokWindow?.close();
+                if(WINDOWS.temp) {
+                  WINDOWS.temp?.close();
+                  WINDOWS.temp = null;
+                }
+
               }, 3000);
             }
           })

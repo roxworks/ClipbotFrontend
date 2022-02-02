@@ -271,7 +271,7 @@ let doAllCropperStuff = (
           cropType: cropType,
           isNormalized: true,
         },
-        camData: cropType !== 'cam-top' ? scaleUpCrop(currCropDetails, video) : currCropDetails,
+        camData: cropType !== 'cam-top' && cropType !== 'cam-freeform' ? scaleUpCrop(currCropDetails, video) : currCropDetails,
         callback: callback,
         isNormalized: true,
         clip: clip,
@@ -332,19 +332,21 @@ let doAllCropperStuff = (
 
     const cropData = JSON.parse(arg);
     const camData = cropData.camData;
+    const cropType = cropData.cropType;
     const callback = cropData.callback; //new data from cam
+
 
     let aspectRatio = 1080 / 1320;
     console.log(camData);
-    if (camData) {
+    if (camData && cropType == 'cam-freeform') {
+      cropper.setAspectRatio(NaN);
+    }
+    else if (camData) {
       if (camData.width / camData.height < 1.5) {
         aspectRatio = 1080 / 1110;
       }
       // calculate aspect ratio based on camdata width and height
       cropper.setAspectRatio(aspectRatio);
-    }
-    else {
-
     }
     // log camData camCrop and screenCrop
     console.log(

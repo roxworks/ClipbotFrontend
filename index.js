@@ -721,7 +721,7 @@ document.addEventListener('DOMContentLoaded', async function (event) {
     // n: Update this as well
     // let result = await fetch("http://localhost:42074/update?camCrop=" + encodeURIComponent(JSON.stringify(camCropDetails)));
     // alert if the update succeeded or failed
-    if(camCropDetails.cropType == 'cam-top' ) {
+    if(camCropDetails.cropType == 'cam-top' || camCropDetails.cropType == 'cam-freeform') {
       console.log('opening screenvas');
       ipcRenderer.send('screenvas_open', camCropDetails);
     }
