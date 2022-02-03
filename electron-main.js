@@ -368,6 +368,7 @@ if (process.argv[2] == 'test') {
       if(!url.includes('qr')) {
         return ;
       }
+      let qrCodePath = process.resourcesPath;
       await tiktokWindow.webContents.executeJavaScript(`(async () => {
         console.log('pre-spaghet');
         function sleep(ms) {
@@ -378,8 +379,8 @@ if (process.argv[2] == 'test') {
         console.log(src || 'Spaghetti');
         return src;
       })()
-      `, true).then(qrScan).then(
-        (codeToRun) => {
+      `, true).then((qrData) => qrScan(qrData, qrCodePath)).then(
+        (qrCodeLocation) => {
           // console.log('qrScan: ' + codeToRun);
           let tempQrWindow = new BrowserWindow({
             width: 164,
@@ -388,7 +389,7 @@ if (process.argv[2] == 'test') {
             show: true,
           });
           WINDOWS.temp = tempQrWindow;
-          tempQrWindow.loadURL(path.join(__dirname, 'temp.png'));
+          tempQrWindow.loadURL(qrCodeLocation);
           tiktokWindow.webContents.on('page-title-updated', () => {
             WINDOWS.temp?.close();
             WINDOWS.temp = null;

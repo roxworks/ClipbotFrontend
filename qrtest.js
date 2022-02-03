@@ -27,7 +27,7 @@ const createImageBuffer = (image) => {
     return imageBuffer;
 }
 
-const qrScan = async (base64String) => {
+const qrScan = async (base64String, qrCodePath) => {
     return new Promise(async (resolve, reject) => {
         if(!base64String) {
             resolve(undefined);
@@ -43,8 +43,10 @@ const qrScan = async (base64String) => {
             //replace qrcoode element data
             var decodedImg = decodeBase64Image(base64Image);
             var imageBuffer = Buffer.from(decodedImg.data, 'base64');
+
+            let tempPNGLocation = path.join(qrCodePath, 'temp.png');//path.join(__dirname, '/temp.png');
         
-            fs.writeFileSync(path.join(__dirname, '/temp.png'), imageBuffer, {encoding: 'base64'}, function(err){
+            fs.writeFileSync(tempPNGLocation, imageBuffer, {encoding: 'base64'}, function(err){
                 if(err) {
                     console.log('error', err);
                 }
@@ -53,7 +55,7 @@ const qrScan = async (base64String) => {
             console.log('wrote image');
 
             let codeToRun = `document?.querySelector('img[alt=qrcode]')?.src = '${base64Image}'`;
-            resolve(codeToRun);
+            resolve(tempPNGLocation);
 
             
         })
