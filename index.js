@@ -777,7 +777,7 @@ document.addEventListener('DOMContentLoaded', async function (event) {
   // listen for new udpates available
   ipcRenderer.on('update_available', () => {
     console.log('update found');
-    ipcRenderer.removeAllListeners('update_available');
+    // ipcRenderer.removeAllListeners('update_available');
     SafeSwal.fire({
       icon: 'info',
       text: 'A new update is available. Do you want to start downloading it?',
