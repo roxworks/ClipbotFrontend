@@ -289,6 +289,31 @@ h1 {
     cursor: pointer;
 }
 
+.allButtons {
+    display: flex;
+    justify-content: space-evenly;
+    margin-top: 20px;
+}
+
+.allButton {
+    padding: 20px 30px;
+    font-size: large;
+}
+
+.sidebar__button__mini {
+    padding: 8px;
+    display: block;
+    background: rgb(140, 109, 197);
+    background: linear-gradient( 176deg, rgba(140, 109, 197, 1) 0%, rgba(45, 29, 73, 1) 100%);
+    border-bottom: 2px solid #2d1d49;
+    border-radius: 8px;
+    color: #fff;
+    font-weight: 700;
+    text-decoration: none;
+    text-shadow: 0 1px 2px #000;
+    cursor: pointer;
+}
+
 .sidebar__button.collapse {
     padding: 6px;
     border-bottom: 2px solid #2d1d49;
