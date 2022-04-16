@@ -8,6 +8,7 @@ let allSettings = [
   'hotkey',
   'youtubeTags',
   'youtubePrivacy',
+  'youtubeDescription'
 ];
 
 let canBeBlank = [
@@ -15,6 +16,7 @@ let canBeBlank = [
   'tiktokHashtags',
   'youtubeTags',
   'youtubePrivacy',
+  'youtubeDescription'
 ]
 
 // Listen to submit event on the <form> itself!
