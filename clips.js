@@ -129,9 +129,32 @@ const updateClipOnBackend = async (clipId, newSettings) => {
   return res;
 };
 
+const updateClipsOnBackend = async (newApprovalStatus) => {
+  let updatedClips = allClips.map((clip) => {
+    // update approve to newApprovalStatus
+    clip.approved = newApprovalStatus;
+    return clip;
+  });
+  //PUT to /clips with everything
+  let res = await fetch('http://localhost:42074/clips/', {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(updatedClips),
+  });
+  ipcRenderer.send('settings_updated');
+  return res;
+};
+
 const updateClipFrontendAndBackend = async (newSettings) => {
   await updateClipOnBackend(displayedClip.id, newSettings);
   return changeClipOnFrontend(newSettings);
+};
+
+const updateClipsFrontendAndBackend = async (newApprovalSetting) => {
+  await updateClipsOnBackend(newApprovalSetting);
+  return changeClipOnFrontend({approved: newApprovalSetting});
 };
 
 const changeTitle = async (dataToChange) => {
@@ -384,6 +407,48 @@ const setupApproveRejectButtons = () => {
       SafeSwal.fire({
         icon: 'error',
         title: 'Error rejecting clip',
+      });
+    }
+    return false;
+  });
+
+  //approveall
+  document.getElementById('approveAll').addEventListener('click', async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    let settings = await settingsDidLoad;
+    console.log('approve button clicked');
+    let result = await updateClipsFrontendAndBackend(true);
+    if (result.status === 200) {
+        SafeSwal.fire({
+          icon: 'success',
+          title: 'All Clips Approved',
+        });
+    } else {
+      SafeSwal.fire({
+        icon: 'error',
+        title: 'Error approving all clips',
+      });
+    }
+    return false;
+  });
+
+  //rejectall
+  document.getElementById('rejectAll').addEventListener('click', async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    let settings = await settingsDidLoad;
+    console.log('approve button clicked');
+    let result = await updateClipsFrontendAndBackend(false);
+    if (result.status === 200) {
+        SafeSwal.fire({
+          icon: 'success',
+          title: 'All Clips Rejected',
+        });
+    } else {
+      SafeSwal.fire({
+        icon: 'error',
+        title: 'Error rejecting all clips',
       });
     }
     return false;

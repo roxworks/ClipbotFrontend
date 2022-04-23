@@ -62,107 +62,84 @@
             class="form__input hashtag"
           />
         </div> -->
-        <div class="form__group settings" id="uploadEnabled-form">
+      <div class="form__group settings" id="uploadEnabled-form">
+        <label class="settings">
+          <div><img src="./images/check.png" class="icon" /> Clipbot</div>
+          <p class="what">Turn clipbot On/off to start/pause uploads</p>
+        </label>
+        <label class="switch">
+          <input type="checkbox" name="uploadEnabled" id="uploadEnabled" />
+          <span class="slider round"></span>
+        </label>
+      </div>
+      <div class="form__group settings" id="hotkey-form">
+        <label class="settings">
+          <div><img src="./images/arrow.png" class="icon" /> Clip Hotkey</div>
+          <p class="what">Press this to make a clip!</p>
+        </label>
+        <input id="hotkey" onkeyup="hotkeyHandler(event)" placeholder="F10" class="form__input settings" />
+      </div>
+      <h3 id='clipDefaultsHeader' class='settingsHeader3'>Clip Defaults <img  id='clipDefaultsChevron'
+          src='./images/chevron-right.svg' height='14px' , width='14px'></img></h3>
+      <div id='clipDefaults' class='hidden'>
+        <div class="form__group" id="youtubeHashtags-form">
+          <label class="settings hashtags">
+            <div>
+              <img src="./images/hashtag.png" class="icon" /> Youtube Hashtags
+              <span class="what">(What's this?)</span>
+            </div>
+          </label>
+          <input type="text" name="youtubeHashtags" id="youtubeHashtags" placeholder="" class="form__input hashtag" />
+        </div>
+
+        <div class="form__group" id="youtubeTags-form">
+          <label class="settings hashtags">
+            <div>
+              <img src="./images/hashtag.png" class="icon" /> Youtube Tags
+              <span class="what">(What's this?)</span>
+            </div>
+          </label>
+          <input type="text" name="youtubeTags" id="youtubeTags" placeholder="" class="form__input hashtag" />
+        </div>
+
+        <div class="form__group" id="youtubePrivacy-form">
           <label class="settings">
-            <div><img src="./images/check.png" class="icon" /> Clipbot</div>
-            <p class="what">Turn clipbot On/off to start/pause uploads</p>
+            <div>
+              <img src="./images/eye.png" class="icon" /> Youtube Video Visibility
+              <span class="what">(What's this?)</span>
+            </div>
           </label>
-          <label class="switch">
-            <input type="checkbox" name="uploadEnabled" id="uploadEnabled" />
-            <span class="slider round"></span>
+          <select name="youtubePrivacy" id="youtubePrivacy" placeholder="" class="form__input">
+            <option value="public">Public</option>
+            <option value="private">Private</option>
+            <option value="unlisted">Unlisted</option>
+          </select>
+        </div>
+
+        
+        <div class="form__group" id="youtubeDescription-form">
+          <label class="settings description">
+            <div>
+              <img src="./images/hashtag.png" class="icon" /> Youtube Description
+              <span class="what">(What's this?)</span>
+            </div>
           </label>
+          <textarea name="youtubeDescription" id="youtubeDescription" placeholder="" class="form__input hashtag" ></textarea>
         </div>
-        <div class="form__group settings" id="hotkey-form">
-          <label class="settings">
-            <div><img src="./images/arrow.png" class="icon" /> Clip Hotkey</div>
-            <p class="what">Press this to make a clip!</p>
+
+        
+
+        <div class="form__group tiktokSucks" id="tiktokHashtags-form">
+          <label class="settings hashtags">
+            <div>
+              <img src="./images/hashtag.png" class="icon" /> Tiktok Hashtags
+              <span class="what">(What's this?)</span>
+            </div>
           </label>
-          <input
-            id="hotkey"
-            onkeyup="hotkeyHandler(event)"
-            placeholder="F10"
-            class="form__input settings"
-          />
+          <input type="text" name="tiktokHashtags" id="tiktokHashtags" placeholder="" class="form__input hashtag" />
         </div>
-        <h3 id="clipDefaultsHeader" class="settingsHeader3">
-          Clip Defaults
-          <img
-            id="clipDefaultsChevron"
-            src="./images/chevron-right.svg"
-            height="14px"
-            ,
-            width="14px"
-          />
-        </h3>
-        <div id="clipDefaults" class="hidden">
-          <div class="form__group" id="youtubeHashtags-form">
-            <label class="settings hashtags">
-              <div>
-                <img src="./images/hashtag.png" class="icon" /> Youtube Hashtags
-                <span class="what">(What's this?)</span>
-              </div>
-            </label>
-            <input
-              type="text"
-              name="youtubeHashtags"
-              id="youtubeHashtags"
-              placeholder=""
-              class="form__input hashtag"
-            />
-          </div>
-
-          <div class="form__group" id="youtubeTags-form">
-            <label class="settings hashtags">
-              <div>
-                <img src="./images/hashtag.png" class="icon" /> Youtube Tags
-                <span class="what">(What's this?)</span>
-              </div>
-            </label>
-            <input
-              type="text"
-              name="youtubeTags"
-              id="youtubeTags"
-              placeholder=""
-              class="form__input hashtag"
-            />
-          </div>
-
-          <div class="form__group" id="youtubePrivacy-form">
-            <label class="settings">
-              <div>
-                <img src="./images/eye.png" class="icon" /> Youtube Video
-                Visibility
-                <span class="what">(What's this?)</span>
-              </div>
-            </label>
-            <select
-              name="youtubePrivacy"
-              id="youtubePrivacy"
-              placeholder=""
-              class="form__input"
-            >
-              <option value="public">Public</option>
-              <option value="private">Private</option>
-              <option value="unlisted">Unlisted</option>
-            </select>
-          </div>
-
-          <div class="form__group tiktokSucks" id="tiktokHashtags-form">
-            <label class="settings hashtags">
-              <div>
-                <img src="./images/hashtag.png" class="icon" /> Tiktok Hashtags
-                <span class="what">(What's this?)</span>
-              </div>
-            </label>
-            <input
-              type="text"
-              name="tiktokHashtags"
-              id="tiktokHashtags"
-              placeholder=""
-              class="form__input hashtag"
-            />
-          </div>
-        </div>
+      </div>
+      
         <h3 id="uploadSettingsHeader" class="settingsHeader3">
           Upload Settings
           <img

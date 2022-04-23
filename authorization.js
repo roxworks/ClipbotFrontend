@@ -168,6 +168,10 @@ const handleRandomError = (errorMessage, endpoint, passthrough) => {
                 onConfirm = () => {ipcRenderer.send("open-settings");}
                 endpointOptions.confirmButtonText = 'Open Settings';
                 break;
+            case 'restart':
+                onConfirm = () => {ipcRenderer.send("just_restart");}
+                endpointOptions.confirmButtonText = 'Restart';
+                break;
             case 'username':
                 onConfirm = doTwitchAuth;
                 break;
