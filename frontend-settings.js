@@ -17,13 +17,11 @@ let canBeBlank = [
   'youtubeTags',
   'youtubePrivacy',
   'youtubeDescription'
-]
+];
 
 // Listen to submit event on the <form> itself!
 document.addEventListener('DOMContentLoaded', async function (event) {
   document.getElementById('update').addEventListener('submit', async (e) => {
-    console.log('test2');
-
     e.preventDefault();
 
     // must match id of element in html
@@ -34,17 +32,15 @@ document.addEventListener('DOMContentLoaded', async function (event) {
       params[setting] = document.querySelector('#' + setting).value;
       if (params[setting]) {
         settingsWereChanged = true;
-      }
-      else if(!canBeBlank.includes(setting)) {
+      } else if (!canBeBlank.includes(setting)) {
         delete params[setting];
       }
-      
     }
 
-    if(params.youtubeTags) {
-      console.log('youtubeTags: ' + typeof(params.youtubeTags));
+    if (params.youtubeTags) {
+      console.log('youtubeTags: ' + typeof params.youtubeTags);
       params.youtubeTags = params.youtubeTags.split(',');
-      params.youtubeTags = params.youtubeTags.map(tag => tag.trim());
+      params.youtubeTags = params.youtubeTags.map((tag) => tag.trim());
       console.log('youtubeTags fixed: ' + params.youtubeTags?.length);
     }
 
@@ -57,10 +53,9 @@ document.addEventListener('DOMContentLoaded', async function (event) {
     params['youtubeUploadEnabled'] = document.querySelector(
       '#youtubeUploadEnabled'
     ).checked;
-    params['fastUploadEnabled'] = document.querySelector(
-      '#fastUploadEnabled'
-    ).checked;
-    
+    params['fastUploadEnabled'] =
+      document.querySelector('#fastUploadEnabled').checked;
+
     params['youtubeAutoCategorizationEnabled'] = document.querySelector(
       '#youtubeAutoCategorizationEnabled'
     ).checked;
@@ -106,23 +101,29 @@ const rotateChevron = (chevronSelector) => {
 };
 
 document.addEventListener('DOMContentLoaded', async function (event) {
-  document.getElementById('clipDefaultsHeader').addEventListener('click', async (e) => {
-    e.preventDefault();
-    document.querySelector('#clipDefaults').classList.toggle('hidden');
-    rotateChevron('#clipDefaultsChevron');
-  });
+  document
+    .getElementById('clipDefaultsHeader')
+    .addEventListener('click', async (e) => {
+      e.preventDefault();
+      document.querySelector('#clipDefaults').classList.toggle('hidden');
+      rotateChevron('#clipDefaultsChevron');
+    });
 
-  document.getElementById('AdvancedSettingsHeader').addEventListener('click', async (e) => {
-    e.preventDefault();
-    document.querySelector('#AdvancedSettings').classList.toggle('hidden');
-    rotateChevron('#AdvancedSettingsChevron');
-  });
+  document
+    .getElementById('AdvancedSettingsHeader')
+    .addEventListener('click', async (e) => {
+      e.preventDefault();
+      document.querySelector('#AdvancedSettings').classList.toggle('hidden');
+      rotateChevron('#AdvancedSettingsChevron');
+    });
 
-  document.getElementById('uploadSettingsHeader').addEventListener('click', async (e) => {
-    e.preventDefault();
-    document.querySelector('#uploadSettings').classList.toggle('hidden');
-    rotateChevron('#uploadSettingsChevron');
-  });
+  document
+    .getElementById('uploadSettingsHeader')
+    .addEventListener('click', async (e) => {
+      e.preventDefault();
+      document.querySelector('#uploadSettings').classList.toggle('hidden');
+      rotateChevron('#uploadSettingsChevron');
+    });
 });
 
 let updateFields = (fields) => {
@@ -133,15 +134,13 @@ let updateFields = (fields) => {
     console.log('val:' + fields[fieldName]);
 
     if (
-      (
-        (fields[fieldName] !== '' && fields[fieldName] !== undefined) 
-        || canBeBlank.includes(fieldName)
-      ) &&
+      ((fields[fieldName] !== '' && fields[fieldName] !== undefined) ||
+        canBeBlank.includes(fieldName)) &&
       fieldSpan
     ) {
       if (
         fieldName == 'defaultApprove' ||
-        fieldName.toLowerCase().includes('upload') || 
+        fieldName.toLowerCase().includes('upload') ||
         fieldName.toLowerCase().includes('categorization')
       ) {
         fieldSpan.checked = JSON.parse(fields[fieldName]);
@@ -149,7 +148,7 @@ let updateFields = (fields) => {
 
       fieldSpan.value = '';
       fieldSpan.placeholder = fields[fieldName];
-      if(fieldName == 'youtubePrivacy') {
+      if (fieldName == 'youtubePrivacy') {
         fieldSpan.value = fields[fieldName];
       }
 
@@ -157,18 +156,17 @@ let updateFields = (fields) => {
         fieldSpan.placeholder += ' hours';
       } else if (fieldName == 'minViewCount') {
         fieldSpan.placeholder += ' views';
-      }
-      else {
+      } else {
         fieldSpan.value = fields[fieldName];
       }
     }
   }
 };
 
-
 let checkFieldsAreValid = () => {
   const hashtagRegex = /^\s*(#\w+\s)*#\w+\s*$/;
-  const commaSeparatedWithManyWordsAllowedRegex = /^\s*((\w+\s*)*,\s*)*(\w+\s*)*$/;
+  const commaSeparatedWithManyWordsAllowedRegex =
+    /^\s*((\w+\s*)*,\s*)*(\w+\s*)*$/;
   // Ensure entire hashtags string is space separated and every tag starts with #
   // let hashtagsValue = document.querySelector('#hashtags').value;
   // if (hashtagsValue) {
@@ -182,7 +180,6 @@ let checkFieldsAreValid = () => {
   //   }
   // }
 
-  
   let hashtagsValue = document.querySelector('#youtubeHashtags').value;
   if (hashtagsValue) {
     let hashtagsAreValid = hashtagRegex.test(hashtagsValue);
@@ -194,7 +191,7 @@ let checkFieldsAreValid = () => {
       return false;
     }
   }
-  
+
   hashtagsValue = document.querySelector('#tiktokHashtags').value;
   if (hashtagsValue) {
     let hashtagsAreValid = hashtagRegex.test(hashtagsValue);
@@ -209,7 +206,8 @@ let checkFieldsAreValid = () => {
 
   ytTagsValue = document.querySelector('#youtubeTags').value;
   if (ytTagsValue) {
-    let ytTagsAreValid = commaSeparatedWithManyWordsAllowedRegex.test(ytTagsValue);
+    let ytTagsAreValid =
+      commaSeparatedWithManyWordsAllowedRegex.test(ytTagsValue);
     if (!ytTagsAreValid) {
       SafeSwal.fire({
         icon: 'error',
@@ -334,6 +332,25 @@ let descriptions = {
     Format: Positive number (hours)<br/>
     Example: 6
     `,
+  youtubeHashtags: `
+    Hashtags are keywords preceded by a # symbol. Hashtags allow creators to easily connect their content with other videos that share the same hashtag on YouTube. They also allow viewers to quickly find similar content that shares the same hashtag.
+    <br/><br/>
+
+    A list of hashtags seperated by spaces<br/>
+    Example: #twitchstreamer #roxkstar74 #twitchclip
+    `,
+  youtubeTags: `
+    Tags are descriptive keywords you can add to your video to help viewers find your content. Your video's title, thumbnail and description are more important pieces of metadata for your video's discovery. These main pieces of information help viewers to decide which videos to watch. 
+    <br/><br/>
+    Separate yours tags by using a comma.
+    <br/>
+    Example: twitch,streamer
+    `,
+  youtubePrivacy: `
+    Update the privacy settings of your video to control where your video can appear and who can watch it.
+    <br/><br/>
+
+    `,
 };
 document.addEventListener('DOMContentLoaded', async function (event) {
   let fields = Object.keys(descriptions);
@@ -346,7 +363,10 @@ document.addEventListener('DOMContentLoaded', async function (event) {
       let desc = descriptions[field];
       whatsThis.addEventListener('click', () => {
         SafeSwal.fire({
-          title: storedField.charAt(0).toUpperCase() + storedField.slice(1),
+          title: storedField
+            .split(/(?=[A-Z])/)
+            .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' '),
           html: desc,
         });
       });
@@ -363,9 +383,8 @@ console.log('garbo');
 
 let showSettingsNotSavedPopup = () => {
   document.getElementById('notsaved').style.display = 'block';
-}
-
+};
 
 let hideSettingsNotSavedPopup = () => {
   document.getElementById('notsaved').style.display = 'none';
-}
+};
