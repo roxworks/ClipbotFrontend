@@ -351,6 +351,10 @@ let descriptions = {
     <br/><br/>
 
     `,
+  youtubeDescription: `
+    Update the description of your video with links to your twitch channel, tiktok, and whatever else!
+
+  `
 };
 document.addEventListener('DOMContentLoaded', async function (event) {
   let fields = Object.keys(descriptions);
