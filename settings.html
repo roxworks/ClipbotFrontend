@@ -1,42 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Clipbot - Settings</title>
-  <meta name="description" content="Automatically upload your twitch clips to TikTok!" />
-  <meta name="author" content="Roxkstar74" />
-  <meta property="og:title" content="Clipbot" />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://www.Clipbot.tv/" />
-  <meta property="og:description" content="Automatically upload your twitch clips to TikTok!" />
-  <meta property="og:image" content="image.png" />
-  <!-- <link rel="icon" href="/favicon.ico">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Clipbot - Settings</title>
+    <meta
+      name="description"
+      content="Automatically upload your twitch clips to TikTok!"
+    />
+    <meta name="author" content="Roxkstar74" />
+    <meta property="og:title" content="Clipbot" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://www.Clipbot.tv/" />
+    <meta
+      property="og:description"
+      content="Automatically upload your twitch clips to TikTok!"
+    />
+    <meta property="og:image" content="image.png" />
+    <!-- <link rel="icon" href="/favicon.ico">
       <link rel="icon" href="/favicon.svg" type="image/svg+xml">
       <link rel="apple-touch-icon" href="/apple-touch-icon.png"> -->
-  <link rel="stylesheet" href="settings.css" />
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script src="safeswal.js"></script>
-  <link rel="stylesheet" href="electron.css" />
-  <script src="uploadClip.js"></script>
-  <script src="frontend-settings.js"></script>
-  <script src="hotkeyHandler.js"></script>
-</head>
+    <link rel="stylesheet" href="settings.css" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="safeswal.js"></script>
+    <link rel="stylesheet" href="electron.css" />
+    <script src="uploadClip.js"></script>
+    <script src="frontend-settings.js"></script>
+    <script src="hotkeyHandler.js"></script>
+  </head>
 
-<body id="settings" class="app">
-  <div class="container settings">
-    <header id="pageHeader">
-      <h3 class="page__heading" id="title">Settings</h3>
-      <div class="alert alert-info" id='notsaved' style='display: none'>
-        <p class="info__text">
-          <i class="fa fa-info-circle"></i>
-          <strong class="alert__info-header">Settings Not Saved!</strong>
-      </div>
-    </header>
-    <form class="form-group settings" id="update" onclick="showSettingsNotSavedPopup()" method="GET"
-      action="http://localhost:42074/update">
-      <!-- <div class="form__group" id="hashtags-form">
+  <body id="settings" class="app">
+    <div class="container settings">
+      <header id="pageHeader">
+        <h3 class="page__heading" id="title">Settings</h3>
+        <div class="alert alert-info" id="notsaved" style="display: none">
+          <p class="info__text">
+            <i class="fa fa-info-circle"></i>
+            <strong class="alert__info-header">Settings Not Saved!</strong>
+          </p>
+        </div>
+      </header>
+      <form
+        class="form-group settings"
+        id="update"
+        onclick="showSettingsNotSavedPopup()"
+        method="GET"
+        action="http://localhost:42074/update"
+      >
+        <!-- <div class="form__group" id="hashtags-form">
           <label class="settings hashtags">
             <div>
               <img src="./images/hashtag.png" class="icon" /> Hashtags
@@ -128,114 +139,186 @@
           <input type="text" name="tiktokHashtags" id="tiktokHashtags" placeholder="" class="form__input hashtag" />
         </div>
       </div>
-      <h3 id='uploadSettingsHeader' class='settingsHeader3'>Upload Settings <img  id='uploadSettingsChevron'
-          src='./images/chevron-right.svg' height='14px' , width='14px'></img></h3>
-      <div id='uploadSettings' class='hidden'>
-        <div class="form__group settings" id="minViewCount-form">
-          <label class="settings">
-            <div><img src="./images/eye.png" class="icon" /> Required views on Twitch</div>
-            <p class="what">
-              Clips must have this many views to get posted
-            </p>
-          </label>
-          <input type="number" name="minViewCount" id="minViewCount" min="0" oninput="validity.valid||(value='');"
-            placeholder="0" class="form__input settings" />
-        </div>
-        <div class="form__group settings" id="uploadFrequency-form">
-          <label class="settings">
-            <div>
-              <img src="./images/arrow.png" class="icon" /> Time Between Posts
-            </div>
-            <p class="what">Wait this long between posts</p>
-          </label>
-          <input type="number" name="uploadFrequency" min="1" oninput="validity.valid||(value='');" id="uploadFrequency"
-            placeholder="8" class="form__input settings" />
-        </div>
-        <div class="form__group settings" id="defaultApprove-form">
-          <label class="settings">
-            <div>
-              <img src="./images/check.png" class="icon" /> Default Approve
-            </div>
-            <p class="what">Upload any clip unless it has been rejected</p>
-          </label>
-          <label class="switch">
-            <input type="checkbox" name="defaultApprove" id="defaultApprove" />
-            <span class="slider round"></span>
-          </label>
-        </div>
-        
-        <div class="form__group settings" id="tiktokUploadEnabled-form">
-          <label class="settings">
-            <div>
-              <img src="./images/check.png" class="icon" /> Tiktok Uploads
-            </div>
-            <p class="what">Turn Tiktok Uploads On/off</p>
-          </label>
-          <label class="switch">
-            <input type="checkbox" name="tiktokUploadEnabled" id="tiktokUploadEnabled" />
-            <span class="slider round"></span>
-          </label>
-        </div>
-        <div class="form__group settings" id="youtubeUploadEnabled-form">
-          <label class="settings">
-            <div>
-              <img src="./images/check.png" class="icon" /> Youtube Uploads
-            </div>
-            <p class="what">Turn Youtube Uploads On/off</p>
-          </label>
-          <label class="switch">
-            <input type="checkbox" name="youtubeUploadEnabled" id="youtubeUploadEnabled" />
-            <span class="slider round"></span>
-          </label>
-        </div>
-      </div>
-      <h3 id='AdvancedSettingsHeader' class='settingsHeader3'>Advanced Settings <img  id='AdvancedSettingsChevron'
-          src='./images/chevron-right.svg' height='14px' , width='14px'></img></h3>
-      <div id='AdvancedSettings' class='hidden'>
-        <div class="form__group settings" id="delay-form">
-          <label class="settings">
-            <div><img src="./images/clock.png" class="icon" /> Clip Age</div>
-            <p class="what">Clips must be this old to get posted</p>
-          </label>
-          <input type="number" name="delay" id="delay" min="0" oninput="validity.valid||(value='');" placeholder="24"
-            class="form__input settings" />
-        </div>
-        <div class="form__group settings tiktokSucks" id="fastUploadEnabled-form">
-          <label class="settings">
-            <div>
-              <img src="./images/check.png" class="icon" /> Fast Uploads
-            </div>
-            <p class="what">Turn Fast Uploads On/off (Might lag computer)</p>
-          </label>
-          <label class="switch">
-            <input type="checkbox" name="fastUploadEnabled" id="fastUploadEnabled" />
-            <span class="slider round"></span>
-          </label>
-        </div>
-        <div class="form__group settings" id="youtubeAutoCategorizationEnabled-form">
-          <label class="settings">
-            <div>
-              <img src="./images/check.png" class="icon" /> Youtube Auto Game Category
-            </div>
-            <p class="what">Puts game name in YT title so YT can detect the right category</p>
-          </label>
-          <label class="switch">
-            <input type="checkbox" name="youtubeAutoCategorizationEnabled" id="youtubeAutoCategorizationEnabled" />
-            <span class="slider round"></span>
-          </label>
-        </div>
-      </div>
+      
+        <h3 id="uploadSettingsHeader" class="settingsHeader3">
+          Upload Settings
+          <img
+            id="uploadSettingsChevron"
+            src="./images/chevron-right.svg"
+            height="14px"
+            ,
+            width="14px"
+          />
+        </h3>
+        <div id="uploadSettings" class="hidden">
+          <div class="form__group settings" id="minViewCount-form">
+            <label class="settings">
+              <div>
+                <img src="./images/eye.png" class="icon" /> Required views on
+                Twitch
+                <br />
+                <span class="what">
+                  Clips must have this many views to get posted
+                </span>
+              </div>
+            </label>
+            <input
+              type="number"
+              name="minViewCount"
+              id="minViewCount"
+              min="0"
+              oninput="validity.valid||(value='');"
+              placeholder="0"
+              class="form__input settings"
+            />
+          </div>
+          <div class="form__group settings" id="uploadFrequency-form">
+            <label class="settings">
+              <div>
+                <img src="./images/arrow.png" class="icon" /> Time Between Posts
+                <br />
+                <span class="what">Wait this long between posts</span>
+              </div>
+            </label>
+            <input
+              type="number"
+              name="uploadFrequency"
+              min="1"
+              oninput="validity.valid||(value='');"
+              id="uploadFrequency"
+              placeholder="8"
+              class="form__input settings"
+            />
+          </div>
+          <div class="form__group settings" id="defaultApprove-form">
+            <label class="settings">
+              <div>
+                <img src="./images/check.png" class="icon" /> Default Approve
+              </div>
+              <p class="what">Upload any clip unless it has been rejected</p>
+            </label>
+            <label class="switch">
+              <input
+                type="checkbox"
+                name="defaultApprove"
+                id="defaultApprove"
+              />
+              <span class="slider round"></span>
+            </label>
+          </div>
 
-      <div class="split-container">
-        <button class="btn" type="" id="close">
-          Close
-        </button>
-        <button class="btn" type="submit" id="savesettings">
-          Save settings
-        </button>
-      </div>
-    </form>
-  </div>
-</body>
+          <div class="form__group settings" id="tiktokUploadEnabled-form">
+            <label class="settings">
+              <div>
+                <img src="./images/check.png" class="icon" /> Tiktok Uploads
+              </div>
+              <p class="what">Turn Tiktok Uploads On/off</p>
+            </label>
+            <label class="switch">
+              <input
+                type="checkbox"
+                name="tiktokUploadEnabled"
+                id="tiktokUploadEnabled"
+              />
+              <span class="slider round"></span>
+            </label>
+          </div>
+          <div class="form__group settings" id="youtubeUploadEnabled-form">
+            <label class="settings">
+              <div>
+                <img src="./images/check.png" class="icon" /> Youtube Uploads
+              </div>
+              <p class="what">Turn Youtube Uploads On/off</p>
+            </label>
+            <label class="switch">
+              <input
+                type="checkbox"
+                name="youtubeUploadEnabled"
+                id="youtubeUploadEnabled"
+              />
+              <span class="slider round"></span>
+            </label>
+          </div>
+        </div>
+        <h3 id="AdvancedSettingsHeader" class="settingsHeader3">
+          Advanced Settings
+          <img
+            id="AdvancedSettingsChevron"
+            src="./images/chevron-right.svg"
+            height="14px"
+            ,
+            width="14px"
+          />
+        </h3>
+        <div id="AdvancedSettings" class="hidden">
+          <div class="form__group settings" id="delay-form">
+            <label class="settings">
+              <div>
+                <img src="./images/clock.png" class="icon" /> Clip Age
+                <br />
+                <span class="what">Clips must be this old to get posted</span>
+              </div>
+            </label>
+            <input
+              type="number"
+              name="delay"
+              id="delay"
+              min="0"
+              oninput="validity.valid||(value='');"
+              placeholder="24"
+              class="form__input settings"
+            />
+          </div>
+          <div
+            class="form__group settings tiktokSucks"
+            id="fastUploadEnabled-form"
+          >
+            <label class="settings">
+              <div>
+                <img src="./images/check.png" class="icon" /> Fast Uploads
+              </div>
+              <p class="what">Turn Fast Uploads On/off (Might lag computer)</p>
+            </label>
+            <label class="switch">
+              <input
+                type="checkbox"
+                name="fastUploadEnabled"
+                id="fastUploadEnabled"
+              />
+              <span class="slider round"></span>
+            </label>
+          </div>
+          <div
+            class="form__group settings"
+            id="youtubeAutoCategorizationEnabled-form"
+          >
+            <label class="settings">
+              <div>
+                <img src="./images/check.png" class="icon" /> Youtube Auto Game
+                Category
+              </div>
+              <p class="what">
+                Puts game name in YT title so YT can detect the right category
+              </p>
+            </label>
+            <label class="switch">
+              <input
+                type="checkbox"
+                name="youtubeAutoCategorizationEnabled"
+                id="youtubeAutoCategorizationEnabled"
+              />
+              <span class="slider round"></span>
+            </label>
+          </div>
+        </div>
 
+        <div class="split-container">
+          <button class="btn" type="" id="close">Close</button>
+          <button class="btn" type="submit" id="savesettings">
+            Save settings
+          </button>
+        </div>
+      </form>
+    </div>
+  </body>
 </html>
