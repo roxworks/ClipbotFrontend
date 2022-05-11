@@ -163,6 +163,7 @@ const handleRandomError = (errorMessage, endpoint, passthrough) => {
                 break;
             case 'youtubeAuth':
                 onConfirm = doYoutubeAuth;
+                endpointOptions.confirmButtonText = 'Login to YouTube';
                 break;
             case 'settings':
                 onConfirm = () => {ipcRenderer.send("open-settings");}
