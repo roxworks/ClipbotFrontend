@@ -132,8 +132,10 @@ const updateClipOnBackend = async (clipId, newSettings) => {
 const updateClipsOnBackend = async (newApprovalStatus) => {
   let updatedClips = allClips.map((clip) => {
     // update approve to newApprovalStatus
-    clip.approved = newApprovalStatus;
-    return clip;
+    let newClip = {};
+    newClip.approved = newApprovalStatus;
+    newClip.id = clip.id;
+    return newClip;
   });
   //PUT to /clips with everything
   let res = await fetch('http://localhost:42074/clips/', {
@@ -423,6 +425,8 @@ const setupApproveRejectButtons = () => {
         SafeSwal.fire({
           icon: 'success',
           title: 'All Clips Approved',
+        }).then(() => {
+          window.location.reload();
         });
     } else {
       SafeSwal.fire({
@@ -444,6 +448,8 @@ const setupApproveRejectButtons = () => {
         SafeSwal.fire({
           icon: 'success',
           title: 'All Clips Rejected',
+        }).then(() => {
+          window.location.reload();
         });
     } else {
       SafeSwal.fire({
