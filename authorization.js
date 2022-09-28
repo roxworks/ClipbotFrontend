@@ -382,60 +382,55 @@ let checkLicenseRequired = async () => {
 }
 
 let doYoutubeAuth = async () => {
-    // call youtube auth endpoint and open the authURL of the body in a new window if not authorized
-    console.log('requesting youtube auth');
-    let result = await fetch("http://localhost:42074/youtubeAuth");
-    console.log('post auth req');
-    if(result.status == 200) {
-        console.log('we are already authed');
-        return SafeSwal.fire({
-            icon: 'success',
-            title: 'Already Logged In',
-            text: 'You are already logged in to Youtube'
-        });
-    }
-    else {
-        console.log('unauthed');
-        let resJSON = await result.json();
-        let authURL = resJSON.authURL;
-        console.log(JSON.stringify(resJSON));
-        console.log(authURL);
-        // SafeSwal.fire an input textbox for the Youtube auth code
-        window.shell.openExternal(authURL);
-        return SafeSwal.fire({
-            title: 'Enter Youtube Code',
-            text: 'Please login on the other window, and copy your Youtube Code into this box to enable Youtube uploads!',
-            input: 'text',
-            inputAttributes: {
-                autocapitalize: 'off'
-            },
-            confirmButtonText: 'Submit',
-            showLoaderOnConfirm: true,
-            showCancelButton: true,
-        }).then(async (codeInput) => {
-            if(codeInput.isDismissed) {
-                return;
-            }
-            let code = codeInput?.value;
-            console.log(`code: ${code}`);
-            let result = await fetch(`http://localhost:42074/youtubeAuth?code=${code}`);
-            console.log(`result: ${result}`);
-            if (result.status == 200) {
-                console.log('we are now authed');
-                ipcRenderer.send('youtube-auth-success');
-                return SafeSwal.fire({
-                    icon: 'success',
-                    title: 'Successfully logged in to Youtube!',
-                    text: 'You can now upload clips to Youtube.'
-                });
-            }
-            else {
-                console.log('failed to auth');
-                let errorBody = await result.json();
-                errMsg = errorBody.error;
-                return handleRandomError(errMsg, errorBody.endpoint);
-            }
-        });
+  // call youtube auth endpoint and open the authURL of the body in a new window if not authorized
+  console.log('requesting youtube auth');
+  let result = await fetch('http://localhost:42074/youtubeAuth');
+  console.log('post auth req');
+  if (result.status == 200) {
+    console.log('we are already authed');
+    return SafeSwal.fire({
+      icon: 'success',
+      title: 'Already Logged In',
+      text: 'You are already logged in to Youtube',
+    });
+  } else {
+    console.log('unauthed');
+    let resJSON = await result.json();
+    let authURL = resJSON.authURL;
+    console.log(JSON.stringify(resJSON));
+    console.log(authURL);
+    // SafeSwal.fire an input textbox for the Youtube auth code
+    window.shell.openExternal(authURL);
 
-    }
-}
+    return SafeSwal.fire({
+      title: 'Youtube Auth',
+      text: 'Please login on the other window, and click "Done" once signed in',
+
+      confirmButtonText: 'Done',
+      showLoaderOnConfirm: true,
+      showCancelButton: true,
+    }).then(async (codeInput) => {
+      if (codeInput.isDismissed) {
+        return;
+      }
+      let code = codeInput?.value;
+      console.log(`code: ${code}`);
+      let result = await fetch(`http://localhost:42074/youtubeAuth`);
+      console.log(`result: ${result}`);
+      if (result.status == 200) {
+        console.log('we are now authed');
+        ipcRenderer.send('youtube-auth-success');
+        return SafeSwal.fire({
+          icon: 'success',
+          title: 'Successfully logged in to Youtube!',
+          text: 'You can now upload clips to Youtube.',
+        });
+      } else {
+        console.log('failed to auth');
+        let errorBody = await result.json();
+        errMsg = errorBody.error;
+        return handleRandomError(errMsg, errorBody.endpoint);
+      }
+    });
+  }
+};
