@@ -193,13 +193,13 @@ const setFrontendClips = async (clips) => {
     let possibleCurrentClipIndex = allClips.findIndex(
       (clip) => clip.id === state.currentClipId
     );
-    currentIndex = possibleCurrentClipIndex >= 0 ? possibleCurrentClipIndex : 0;
+    currentIndex = possibleCurrentClipIndex >= 0 ? possibleCurrentClipIndex : allClips.length - 1;
     if (allClips.length == 0) {
       currentIndex = -1;
     }
   } else {
     allClips = clips;
-    currentIndex = 0;
+    currentIndex = allClips.length - 1;
   }
 
   setClip(currentIndex);
