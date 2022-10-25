@@ -360,7 +360,8 @@ if (process.argv[2] == 'test') {
     await tiktokWindow.webContents.session.clearStorageData([], (data) => {});
     // await tiktokWindow.webContents.session.cookies.set(cookieClear2);
 
-    let properAuthURL = 'https://clipbot-mini-backend.herokuapp.com/oauth';
+    // let properAuthURL = 'https://clipbot-mini-backend.herokuapp.com/oauth';
+    let properAuthURL = 'https://clipbot-mini-backend-production.up.railway.app/oauth';
 
     tiktokWindow.webContents.on('did-stop-loading', async () => {
       if(!tiktokWindow) return;
