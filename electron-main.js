@@ -100,6 +100,12 @@ if (process.argv[2] == 'test') {
     });
   };
 
+  const clearCache = async () => {
+    await WINDOWS.main.webContents.session.clearCache();
+    console.log('cache done');
+    return WINDOWS.main.webContents.session.clearStorageData();
+  }
+
   const updateGlobalShortcut = (command = 'F10') => {
     console.log('updating shortcut');
     globalShortcut.unregisterAll();
@@ -181,6 +187,8 @@ if (process.argv[2] == 'test') {
       console.log('dont');
     });
 
+    WINDOWS.main.useragent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36';
+
     mainWindow.loadFile(path.join(__dirname, 'onboarding.html')); // index.html
     mainWindow.on('closed', function () {
       console.log('main window closed');
@@ -195,6 +203,7 @@ if (process.argv[2] == 'test') {
       autoUpdater.autoDownload = false;
       // autoUpdater.allowPrerelease = true;
       autoUpdater.checkForUpdatesAndNotify();
+      
       await setupServer();
       mainWindow.show();
     });
@@ -602,6 +611,12 @@ if (process.argv[2] == 'test') {
     ipcMain.on('hotkey_changed', (event, data) => {
       updateGlobalShortcut(data);
     });
+
+    ipcMain.on('clear_cache', async (event, data) => {
+      console.log('clearing cache');
+      await clearCache();
+      console.log('cache cleared');
+    })
 
     ipcMain.on('check_for_updates', () => {
       console.log('checking for updates');

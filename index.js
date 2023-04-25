@@ -296,6 +296,10 @@ document.addEventListener('DOMContentLoaded', async function (event) {
           <i class="fas fa-redo"></i> 
           Redo Tutorial
         </button>
+        <button type="button" role="button" id="clear-cache" tabindex="0" style='font-size: 26px;' class="btn loginbtn">
+          <i class="fas fa-times"></i> 
+          Clear Cache
+        </button>
       </div>`;
 
   //help menu button popup helpmenuhtml
@@ -1067,6 +1071,16 @@ const setupHelpMenu = () => {
         text: 'To cancel your subscription, send an email to rox@rox.works with the email associated with your account titled "Cancel Clipbot.tv Subscription"'
       });
     });
+
+    
+  document.getElementById('clear-cache').addEventListener('click', function(event) {
+    event.preventDefault();
+    ipcRenderer.send('clear_cache');
+    Swal.fire({
+      title: 'Cache cleared!',
+      icon: 'success'
+    })
+  })
 
     
     
